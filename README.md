@@ -26,12 +26,12 @@ Ce projet est réalisé dans le cadre de la validation du **TP CDA**. Il permet 
 
 ## 📁 Technologies utilisées
 
-| Plateforme | Technologies |
-|------------|--------------|
-| Web        | PHP 8, Symfony 6, HTML5, CSS3, JavaScript |
-| Mobile     | Flutter / Dart |
-| Bureau     | Python / Tkinter |
-| Base de données | MySQL (relationnelle) & MongoDB (NoSQL) |
+| Plateforme | Technologies                                                            |
+|------------|-------------------------------------------------------------------------|
+| Web        | PHP 8, Symfony 7, HTML5, CSS3, JavaScript                               |
+| Mobile     | Flutter / Dart                                                          |
+| Bureau     | Python / Tkinter                                                        |
+| Base de données | MySQL (relationnelle) & MongoDB (NoSQL)                                 |
 | Outils     | Git, GitHub, Composer, Node.js, Webpack Encore, Yarn, VS Code, PhpStorm |
 
 ---
