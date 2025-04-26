@@ -71,6 +71,7 @@ class Incident
         return $this;
     }
 
+
     public function getRoom(): ?Room
     {
         return $this->room;
@@ -78,7 +79,7 @@ class Incident
 
     public function setRoom(?Room $room): static
     {
-        $this->setRoom() = $room;
+        $this->room = $room;
 
         return $this;
     }

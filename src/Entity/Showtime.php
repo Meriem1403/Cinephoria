@@ -22,6 +22,9 @@ class Showtime
     #[ORM\JoinColumn(nullable: false)]
     private ?Room $room = null;
 
+    #[ORM\ManyToOne]
+    private ?Incident $incident = null;
+
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $date = null;
 
@@ -57,7 +60,6 @@ class Showtime
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $notes = null;
-    // ajouter relation avec incident
 
     public function getId(): ?int
     {
@@ -84,6 +86,18 @@ class Showtime
     public function setRoom(?Room $room): static
     {
         $this->room = $room;
+
+        return $this;
+    }
+
+    public function getIncident(): ?Incident
+    {
+        return $this->incident;
+    }
+
+    public function setIncident(?Incident $incident): static
+    {
+        $this->incident = $incident;
 
         return $this;
     }
@@ -232,3 +246,4 @@ class Showtime
         return $this;
     }
 }
+
