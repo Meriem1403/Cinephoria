@@ -32,7 +32,7 @@ class Movie
     #[ORM\Column(length: 5, nullable: true)]
     private ?string $ageRating = null;
 
-    #[ORM\Column(length: 5, nullable: true)]
+    #[ORM\Column(length: 100)]
     private ?string $genre = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
