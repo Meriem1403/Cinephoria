@@ -1,0 +1,28 @@
+<section id="hero-wrapper" class="relative h-screen w-full overflow-hidden">
+    <div id="hero-carousel" class="flex h-full w-full transition-transform duration-[2000ms] ease-in-out">
+        {% for img in heroImages %}
+            <div class="w-full h-full flex-shrink-0 bg-cover bg-center" style="background-image: url('{{ img }}');">
+                <div class="h-full w-full bg-gradient-to-b from-black/0 via-black/0 to-white"></div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="absolute inset-0 flex flex-col justify-center items-center text-center z-10 px-4">
+        <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">
+            {{ title|default('Titre par défaut')|raw }}
+        </h1>
+        <p class="text-lg md:text-2xl text-white mb-8">
+            {{ subtitle|default('Sous-titre par défaut') }}
+        </p>
+        <a href="#movies"
+           class="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-full text-white font-semibold transition">
+            Get start
+        </a>
+    </div>
+</section>
+
+<script>
+    window.heroImages = {{ heroImages|json_encode|raw }};
+    window.footerImages = window.heroImages;
+</script>
+

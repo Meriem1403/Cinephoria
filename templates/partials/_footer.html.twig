@@ -1,0 +1,64 @@
+<footer class="relative text-white overflow-hidden h-auto">
+
+    {#Carrousel#}
+    <div id="footer-carousel" class="absolute top-0 left-0 w-full h-full flex z-0 transition-transform duration-[2000ms] ease-in-out">
+        {% for img in heroImages %}
+            <div class="w-full h-full flex-shrink-0 bg-cover bg-center" style="background-image: url('{{ img }}');">
+                <div class="h-full w-full bg-black/60"></div>
+            </div>
+        {% endfor %}
+    </div>
+
+
+    {# Contenu footer#}
+    <div class="relative z-10 w-full bg-black/70">
+        <div class="max-w-7xl mx-auto px-6 py-16">
+
+            <!-- Logo -->
+            <div class="mb-10 py-10 text-center md:text-left">
+                <img src="{{ asset('pictures/logo.png') }}" alt="Cinéphoria Logo" class="h-20 mx-auto md:mx-0">
+            </div>
+
+            <!-- Grille x3 -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 text-sm mb-12">
+                <div class="text-white/90 leading-relaxed">
+                    Cinéphoria is more than just a cinema.<br>
+                    Every screening is designed to offer a unique, immersive, and responsible experience.<br><br>
+                    Present in several French cities, Cinéphoria reinvests 20% of its revenue into eco-conscious initiatives.
+                </div>
+                <div>
+                    <h3 class="text-white font-semibold mb-3">Our Theaters</h3>
+                    <ul class="space-y-1 text-white/80">
+                        <li>Nantes</li><li>Paris</li><li>Bordeaux</li><li>Toulouse</li><li>Lille</li><li>Charleroi</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-white font-semibold mb-3">Help & Support</h3>
+                    <p class="text-white/80 leading-relaxed">
+                        Check our FAQ for quick answers about bookings, accounts, and loyalty cards.<br><br>
+                        You can also contact our support team — we’re available 7 days a week.<br><br>
+                        Read our terms and conditions to better understand our services.
+                    </p>
+                </div>
+            </div>
+
+            <!-- cpyr protocols.. -->
+            <div class="border-t border-white/10 pt-4 text-xs text-white/70 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex flex-wrap justify-center md:justify-start gap-4">
+                    <a href="#" class="hover:underline">Safety Protocols</a>
+                    <a href="#" class="hover:underline">Terms of Use</a>
+                    <a href="#" class="hover:underline">Privacy Policy</a>
+                </div>
+                <div class="text-center">
+                    © 2025 Cinéphoria, All Rights Reserved
+                </div>
+            </div>
+
+        </div>
+    </div>
+</footer>
+
+<script>
+    window.heroImages = {{ heroImages|json_encode|raw }};
+    window.footerImages = window.heroImages;
+</script>

@@ -47,6 +47,9 @@ class Movie
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
 
+    #[ORM\Column]
+    private ?bool $atCinema = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -180,6 +183,18 @@ class Movie
     public function setCreatedAt(\DateTimeInterface $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function isAtCinema(): ?bool
+    {
+        return $this->atCinema;
+    }
+
+    public function setAtCinema(bool $atCinema): static
+    {
+        $this->atCinema = $atCinema;
 
         return $this;
     }
