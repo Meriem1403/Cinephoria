@@ -3,8 +3,11 @@
 namespace App\Entity;
 
 use App\Repository\ShowtimeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use DateTimeInterface;
 
 #[ORM\Entity(repositoryClass: ShowtimeRepository::class)]
 class Showtime
@@ -22,17 +25,17 @@ class Showtime
     #[ORM\JoinColumn(nullable: false)]
     private ?Room $room = null;
 
-    #[ORM\ManyToOne]
-    private ?Incident $incident = null;
+    #[ORM\OneToMany(targetEntity: Incident::class, mappedBy: 'showtime', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $incidents;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $date = null;
+    private ?DateTimeInterface $date = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE)]
-    private ?\DateTimeInterface $startTime = null;
+    private ?DateTimeInterface $startTime = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE)]
-    private ?\DateTimeInterface $endTime = null;
+    private ?DateTimeInterface $endTime = null;
 
     #[ORM\Column(length: 5)]
     private ?string $language = null;
@@ -61,6 +64,11 @@ class Showtime
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $notes = null;
 
+    public function __construct()
+    {
+        $this->incidents = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -71,7 +79,7 @@ class Showtime
         return $this->movie;
     }
 
-    public function setMovie(?Movie $movie): static
+    public function setMovie(?Movie $movie): self
     {
         $this->movie = $movie;
 
@@ -83,55 +91,72 @@ class Showtime
         return $this->room;
     }
 
-    public function setRoom(?Room $room): static
+    public function setRoom(?Room $room): self
     {
         $this->room = $room;
 
         return $this;
     }
 
-    public function getIncident(): ?Incident
+    /**
+     * @return Collection<int, Incident>
+     */
+    public function getIncidents(): Collection
     {
-        return $this->incident;
+        return $this->incidents;
     }
 
-    public function setIncident(?Incident $incident): static
+    public function addIncident(Incident $incident): self
     {
-        $this->incident = $incident;
+        if (!$this->incidents->contains($incident)) {
+            $this->incidents[] = $incident;
+            $incident->setShowtime($this);
+        }
 
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function removeIncident(Incident $incident): self
+    {
+        if ($this->incidents->removeElement($incident)) {
+            if ($incident->getShowtime() === $this) {
+                $incident->setShowtime(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getDate(): ?DateTimeInterface
     {
         return $this->date;
     }
 
-    public function setDate(\DateTimeInterface $date): static
+    public function setDate(DateTimeInterface $date): self
     {
         $this->date = $date;
 
         return $this;
     }
 
-    public function getStartTime(): ?\DateTimeInterface
+    public function getStartTime(): ?DateTimeInterface
     {
         return $this->startTime;
     }
 
-    public function setStartTime(\DateTimeInterface $startTime): static
+    public function setStartTime(DateTimeInterface $startTime): self
     {
         $this->startTime = $startTime;
 
         return $this;
     }
 
-    public function getEndTime(): ?\DateTimeInterface
+    public function getEndTime(): ?DateTimeInterface
     {
         return $this->endTime;
     }
 
-    public function setEndTime(\DateTimeInterface $endTime): static
+    public function setEndTime(DateTimeInterface $endTime): self
     {
         $this->endTime = $endTime;
 
@@ -143,7 +168,7 @@ class Showtime
         return $this->language;
     }
 
-    public function setLanguage(string $language): static
+    public function setLanguage(string $language): self
     {
         $this->language = $language;
 
@@ -155,7 +180,7 @@ class Showtime
         return $this->projectionType;
     }
 
-    public function setProjectionType(?string $projectionType): static
+    public function setProjectionType(?string $projectionType): self
     {
         $this->projectionType = $projectionType;
 
@@ -167,7 +192,7 @@ class Showtime
         return $this->status;
     }
 
-    public function setStatus(string $status): static
+    public function setStatus(string $status): self
     {
         $this->status = $status;
 
@@ -179,7 +204,7 @@ class Showtime
         return $this->availableSeats;
     }
 
-    public function setAvailableSeats(int $availableSeats): static
+    public function setAvailableSeats(int $availableSeats): self
     {
         $this->availableSeats = $availableSeats;
 
@@ -191,7 +216,7 @@ class Showtime
         return $this->pmrSeats;
     }
 
-    public function setPmrSeats(?int $pmrSeats): static
+    public function setPmrSeats(?int $pmrSeats): self
     {
         $this->pmrSeats = $pmrSeats;
 
@@ -203,7 +228,7 @@ class Showtime
         return $this->price;
     }
 
-    public function setPrice(float $price): static
+    public function setPrice(float $price): self
     {
         $this->price = $price;
 
@@ -215,7 +240,7 @@ class Showtime
         return $this->specialPrice;
     }
 
-    public function setSpecialPrice(bool $specialPrice): static
+    public function setSpecialPrice(bool $specialPrice): self
     {
         $this->specialPrice = $specialPrice;
 
@@ -227,7 +252,7 @@ class Showtime
         return $this->label;
     }
 
-    public function setLabel(?string $label): static
+    public function setLabel(?string $label): self
     {
         $this->label = $label;
 
@@ -239,11 +264,10 @@ class Showtime
         return $this->notes;
     }
 
-    public function setNotes(?string $notes): static
+    public function setNotes(?string $notes): self
     {
         $this->notes = $notes;
 
         return $this;
     }
 }
-

@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion à Cinéphoria{% endblock %}
+
+{% block body %}
+    <style>
+        body {
+            background: url('{{ asset('pictures/hp.jpg') }}') no-repeat center center fixed;
+            background-size: cover;
+        }
+    </style>
+
+    <div class="min-h-screen flex items-center justify-center px-4 text-white">
+        <div class="bg-gradient-to-b from-black/20 to-white/20 p-6 sm:p-10 rounded-lg shadow-lg w-full max-w-xl backdrop-blur-sm">
+            <div class="flex justify-center mb-6">
+                <img src="{{ asset('pictures/logo.png') }}" alt="Cinéphoria" class="h-28 pb-7">
+            </div>
+
+            <h1 class="text-center text-2xl font-semibold mb-6">Log In</h1>
+
+            {% if error %}
+                <div class="bg-red-600 text-white p-2 rounded mb-4">
+                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                </div>
+            {% endif %}
+
+            <form method="post" class="space-y-6">
+                <input type="hidden" name="_csrf_token"
+                       value="{{ csrf_token('authenticate') }}">
+                <div>
+                    <label for="inputEmail" class="sr-only">Email</label>
+                    <div class="flex items-center bg-white text-black rounded px-3 py-2">
+                        <i data-lucide="mail" class="w-5 h-5 text-gray-500 mr-2"></i>
+                        <input type="email" value="{{ last_username }}" name="_username" id="inputEmail"
+                               placeholder="Your email"
+                               required autofocus
+                               class="w-full bg-transparent outline-none">
+                    </div>
+                    <p class="text-sm mt-1">Have you forgotten your username? <a href="#" class="text-blue-400 underline">Click here</a></p>
+                </div>
+
+                <div>
+                    <label for="inputPassword" class="sr-only">Mot de passe</label>
+                    <div class="flex items-center bg-white text-black rounded px-3 py-2">
+                        <i data-lucide="lock" class="w-5 h-5 text-gray-500 mr-2"></i>
+                        <input type="password" name="_password" id="inputPassword"
+                               placeholder="Password"
+                               required
+                               class="w-full bg-transparent outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <button type="submit"
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition">
+                        Log In
+                    </button>
+                    <div class="text-right text-sm mt-2">
+                        <a href="#" class="text-blue-400 underline">Forgot password?</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
+    </script>
+{% endblock %}

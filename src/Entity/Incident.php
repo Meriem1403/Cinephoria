@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\IncidentRepository;
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -18,11 +19,12 @@ class Incident
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'incidents')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Showtime $showtime = null;
 
     #[ORM\ManyToOne]
-    private ?Room $relation = null;
+    private ?Room $room = null;
 
     #[ORM\ManyToOne]
     private ?Seat $seat = null;
@@ -37,10 +39,10 @@ class Incident
     private ?string $status = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $createdAt = null;
+    private ?DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $resolvedAt = null;
+    private ?DateTimeInterface $resolvedAt = null;
 
     public function getId(): ?int
     {
@@ -71,7 +73,6 @@ class Incident
         return $this;
     }
 
-
     public function getRoom(): ?Room
     {
         return $this->room;
@@ -80,7 +81,6 @@ class Incident
     public function setRoom(?Room $room): static
     {
         $this->room = $room;
-
         return $this;
     }
 
@@ -132,24 +132,24 @@ class Incident
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): static
+    public function setCreatedAt(DateTimeInterface $createdAt): static
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getResolvedAt(): ?\DateTimeInterface
+    public function getResolvedAt(): ?DateTimeInterface
     {
         return $this->resolvedAt;
     }
 
-    public function setResolvedAt(?\DateTimeInterface $resolvedAt): static
+    public function setResolvedAt(?DateTimeInterface $resolvedAt): static
     {
         $this->resolvedAt = $resolvedAt;
 

@@ -3,11 +3,14 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -15,7 +18,7 @@ class User
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $firtName = null;
+    private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
     private ?string $lastName = null;
@@ -27,7 +30,7 @@ class User
     private ?string $password = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $birthDate = null;
+    private ?DateTimeInterface $birthDate = null;
 
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $phone = null;
@@ -45,10 +48,10 @@ class User
     private ?string $country = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $createdAt = null;
+    private ?DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $lastLogin = null;
+    private ?DateTimeInterface $lastLogin = null;
 
     #[ORM\Column]
     private ?bool $isActive = null;
@@ -57,20 +60,41 @@ class User
     #[ORM\JoinColumn(nullable: false)]
     private ?Role $role = null;
 
+
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
+    }
+
+    public function getRoles(): array
+    {
+        return [$this->role ? $this->role->getName() : 'ROLE_USER'];
+    }
+
+    public function eraseCredentials(): void
+    {
+        // logique pour effacer les données sensibles après login
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getFirtName(): ?string
+    public function getFirstName(): ?string
     {
-        return $this->firtName;
+        return $this->firstName;
     }
 
-    public function setFirtName(string $firtName): static
+    public function setFirstName(string $firstName): static
     {
-        $this->firtName = $firtName;
-
+        $this->firstName = $firstName;
         return $this;
     }
 
@@ -82,7 +106,6 @@ class User
     public function setLastName(string $lastName): static
     {
         $this->lastName = $lastName;
-
         return $this;
     }
 
@@ -94,31 +117,23 @@ class User
     public function setEmail(string $email): static
     {
         $this->email = $email;
-
         return $this;
-    }
-
-    public function getPassword(): ?string
-    {
-        return $this->password;
     }
 
     public function setPassword(string $password): static
     {
         $this->password = $password;
-
         return $this;
     }
 
-    public function getBirthDate(): ?\DateTimeInterface
+    public function getBirthDate(): ?DateTimeInterface
     {
         return $this->birthDate;
     }
 
-    public function setBirthDate(?\DateTimeInterface $birthDate): static
+    public function setBirthDate(?DateTimeInterface $birthDate): static
     {
         $this->birthDate = $birthDate;
-
         return $this;
     }
 
@@ -130,7 +145,6 @@ class User
     public function setPhone(?string $phone): static
     {
         $this->phone = $phone;
-
         return $this;
     }
 
@@ -142,7 +156,6 @@ class User
     public function setAdress(string $adress): static
     {
         $this->adress = $adress;
-
         return $this;
     }
 
@@ -154,7 +167,6 @@ class User
     public function setPostalCode(?string $postalCode): static
     {
         $this->postalCode = $postalCode;
-
         return $this;
     }
 
@@ -166,7 +178,6 @@ class User
     public function setCity(?string $city): static
     {
         $this->city = $city;
-
         return $this;
     }
 
@@ -178,31 +189,28 @@ class User
     public function setCountry(?string $country): static
     {
         $this->country = $country;
-
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): static
+    public function setCreatedAt(DateTimeInterface $createdAt): static
     {
         $this->createdAt = $createdAt;
-
         return $this;
     }
 
-    public function getLastLogin(): ?\DateTimeInterface
+    public function getLastLogin(): ?DateTimeInterface
     {
         return $this->lastLogin;
     }
 
-    public function setLastLogin(?\DateTimeInterface $lastLogin): static
+    public function setLastLogin(?DateTimeInterface $lastLogin): static
     {
         $this->lastLogin = $lastLogin;
-
         return $this;
     }
 
@@ -214,7 +222,6 @@ class User
     public function setIsActive(bool $isActive): static
     {
         $this->isActive = $isActive;
-
         return $this;
     }
 
@@ -226,7 +233,6 @@ class User
     public function setRole(?Role $role): static
     {
         $this->role = $role;
-
         return $this;
     }
 }
