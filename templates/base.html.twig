@@ -5,16 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Cinéphoria{% endblock %}</title>
 
-    {{ encore_entry_link_tags('app') }}
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-{# main #}
-{% block body %}{% endblock %}
+{% block body %}
+    {# Contenu principal de ta homepage ou autres pages #}
+{% endblock %}
 
-{# footer#}
-{% include 'partials/_footer.html.twig' %}
+{# Footer #}
+{% if app.request.attributes.get('_route') != 'app_login' %}
+    {% include 'partials/_footer.html.twig' %}
+{% endif %}
 
-{{ encore_entry_script_tags('app') }}
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
 </body>
 </html>

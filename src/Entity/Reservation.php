@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ReservationRepository;
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -23,7 +24,7 @@ class Reservation
     private ?Showtime $showtime = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $reservationDate = null;
+    private ?DateTimeInterface $reservationDate = null;
 
     #[ORM\Column(length: 50)]
     private ?string $status = null;
@@ -60,12 +61,12 @@ class Reservation
         return $this;
     }
 
-    public function getReservationDate(): ?\DateTimeInterface
+    public function getReservationDate(): ?DateTimeInterface
     {
         return $this->reservationDate;
     }
 
-    public function setReservationDate(\DateTimeInterface $reservationDate): static
+    public function setReservationDate(DateTimeInterface $reservationDate): static
     {
         $this->reservationDate = $reservationDate;
 

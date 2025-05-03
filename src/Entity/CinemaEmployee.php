@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTimeInterface;
 use App\Repository\CinemaEmployeeRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -26,7 +27,7 @@ class CinemaEmployee
     private ?string $jobTitle = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $assignedSince = null;
+    private ? DateTimeInterface $assignedSince = null;
 
     #[ORM\Column]
     private ?bool $isActive = null;
@@ -72,12 +73,12 @@ class CinemaEmployee
         return $this;
     }
 
-    public function getAssignedSince(): ?\DateTimeInterface
+    public function getAssignedSince(): ?DateTimeInterface
     {
         return $this->assignedSince;
     }
 
-    public function setAssignedSince(?\DateTimeInterface $assignedSince): static
+    public function setAssignedSince(?DateTimeInterface $assignedSince): static
     {
         $this->assignedSince = $assignedSince;
 
