@@ -4,10 +4,12 @@ namespace App\Entity;
 
 use App\Repository\MovieRepository;
 use DateTimeInterface;
+use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MovieRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Movie
 {
     #[ORM\Id]
@@ -51,6 +53,14 @@ class Movie
     #[ORM\Column]
     private ?bool $atCinema = null;
 
+    #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    {
+        if ($this->createdAt === null) {
+            $this->createdAt = new DateTimeImmutable();
+        }
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -61,10 +71,9 @@ class Movie
         return $this->title;
     }
 
-    public function setTitle(string $title): static
+    public function setTitle(string $title): self
     {
         $this->title = $title;
-
         return $this;
     }
 
@@ -73,10 +82,9 @@ class Movie
         return $this->description;
     }
 
-    public function setDescription(?string $description): static
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
-
         return $this;
     }
 
@@ -85,10 +93,9 @@ class Movie
         return $this->duration;
     }
 
-    public function setDuration(int $duration): static
+    public function setDuration(int $duration): self
     {
         $this->duration = $duration;
-
         return $this;
     }
 
@@ -97,10 +104,9 @@ class Movie
         return $this->releaseDate;
     }
 
-    public function setReleaseDate(DateTimeInterface $releaseDate): static
+    public function setReleaseDate(DateTimeInterface $releaseDate): self
     {
         $this->releaseDate = $releaseDate;
-
         return $this;
     }
 
@@ -109,10 +115,9 @@ class Movie
         return $this->language;
     }
 
-    public function setLanguage(string $language): static
+    public function setLanguage(string $language): self
     {
         $this->language = $language;
-
         return $this;
     }
 
@@ -121,10 +126,9 @@ class Movie
         return $this->ageRating;
     }
 
-    public function setAgeRating(?string $ageRating): static
+    public function setAgeRating(?string $ageRating): self
     {
         $this->ageRating = $ageRating;
-
         return $this;
     }
 
@@ -133,10 +137,9 @@ class Movie
         return $this->genre;
     }
 
-    public function setGenre(?string $genre): static
+    public function setGenre(?string $genre): self
     {
         $this->genre = $genre;
-
         return $this;
     }
 
@@ -145,22 +148,20 @@ class Movie
         return $this->posterUrl;
     }
 
-    public function setPosterUrl(?string $posterUrl): static
+    public function setPosterUrl(?string $posterUrl): self
     {
         $this->posterUrl = $posterUrl;
-
         return $this;
     }
 
-    public function isFavorite(): ?bool
+    public function getIsFavorite(): ?bool
     {
         return $this->isFavorite;
     }
 
-    public function setIsFavorite(bool $isFavorite): static
+    public function setIsFavorite(bool $isFavorite): self
     {
         $this->isFavorite = $isFavorite;
-
         return $this;
     }
 
@@ -169,10 +170,9 @@ class Movie
         return $this->rating;
     }
 
-    public function setRating(?float $rating): static
+    public function setRating(?float $rating): self
     {
         $this->rating = $rating;
-
         return $this;
     }
 
@@ -181,22 +181,20 @@ class Movie
         return $this->createdAt;
     }
 
-    public function setCreatedAt(DateTimeInterface $createdAt): static
+    public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
-
         return $this;
     }
 
-    public function isAtCinema(): ?bool
+    public function getIsAtCinema(): ?bool
     {
         return $this->atCinema;
     }
 
-    public function setAtCinema(bool $atCinema): static
+    public function setAtCinema(bool $atCinema): self
     {
         $this->atCinema = $atCinema;
-
         return $this;
     }
 }

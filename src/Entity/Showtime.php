@@ -3,11 +3,11 @@
 namespace App\Entity;
 
 use App\Repository\ShowtimeRepository;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use DateTimeInterface;
 
 #[ORM\Entity(repositoryClass: ShowtimeRepository::class)]
 class Showtime
@@ -17,16 +17,19 @@ class Showtime
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'showtimes')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Movie $movie = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'showtimes')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Room $room = null;
 
     #[ORM\OneToMany(targetEntity: Incident::class, mappedBy: 'showtime', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $incidents;
+
+    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'showtime', orphanRemoval: true)]
+    private Collection $reservations;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?DateTimeInterface $date = null;
@@ -67,6 +70,7 @@ class Showtime
     public function __construct()
     {
         $this->incidents = new ArrayCollection();
+        $this->reservations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -82,7 +86,6 @@ class Showtime
     public function setMovie(?Movie $movie): self
     {
         $this->movie = $movie;
-
         return $this;
     }
 
@@ -94,13 +97,10 @@ class Showtime
     public function setRoom(?Room $room): self
     {
         $this->room = $room;
-
         return $this;
     }
 
-    /**
-     * @return Collection<int, Incident>
-     */
+    /** @return Collection<int, Incident> */
     public function getIncidents(): Collection
     {
         return $this->incidents;
@@ -112,7 +112,6 @@ class Showtime
             $this->incidents[] = $incident;
             $incident->setShowtime($this);
         }
-
         return $this;
     }
 
@@ -123,7 +122,31 @@ class Showtime
                 $incident->setShowtime(null);
             }
         }
+        return $this;
+    }
 
+    /** @return Collection<int, Reservation> */
+    public function getReservations(): Collection
+    {
+        return $this->reservations;
+    }
+
+    public function addReservation(Reservation $reservation): self
+    {
+        if (!$this->reservations->contains($reservation)) {
+            $this->reservations[] = $reservation;
+            $reservation->setShowtime($this);
+        }
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): self
+    {
+        if ($this->reservations->removeElement($reservation)) {
+            if ($reservation->getShowtime() === $this) {
+                $reservation->setShowtime(null);
+            }
+        }
         return $this;
     }
 
@@ -135,7 +158,6 @@ class Showtime
     public function setDate(DateTimeInterface $date): self
     {
         $this->date = $date;
-
         return $this;
     }
 
@@ -147,7 +169,6 @@ class Showtime
     public function setStartTime(DateTimeInterface $startTime): self
     {
         $this->startTime = $startTime;
-
         return $this;
     }
 
@@ -159,7 +180,6 @@ class Showtime
     public function setEndTime(DateTimeInterface $endTime): self
     {
         $this->endTime = $endTime;
-
         return $this;
     }
 
@@ -171,7 +191,6 @@ class Showtime
     public function setLanguage(string $language): self
     {
         $this->language = $language;
-
         return $this;
     }
 
@@ -183,7 +202,6 @@ class Showtime
     public function setProjectionType(?string $projectionType): self
     {
         $this->projectionType = $projectionType;
-
         return $this;
     }
 
@@ -195,7 +213,6 @@ class Showtime
     public function setStatus(string $status): self
     {
         $this->status = $status;
-
         return $this;
     }
 
@@ -207,7 +224,6 @@ class Showtime
     public function setAvailableSeats(int $availableSeats): self
     {
         $this->availableSeats = $availableSeats;
-
         return $this;
     }
 
@@ -219,7 +235,6 @@ class Showtime
     public function setPmrSeats(?int $pmrSeats): self
     {
         $this->pmrSeats = $pmrSeats;
-
         return $this;
     }
 
@@ -231,11 +246,10 @@ class Showtime
     public function setPrice(float $price): self
     {
         $this->price = $price;
-
         return $this;
     }
 
-    public function isSpecialPrice(): ?bool
+    public function getIsSpecialPrice(): ?bool
     {
         return $this->specialPrice;
     }
@@ -243,7 +257,6 @@ class Showtime
     public function setSpecialPrice(bool $specialPrice): self
     {
         $this->specialPrice = $specialPrice;
-
         return $this;
     }
 
@@ -255,7 +268,6 @@ class Showtime
     public function setLabel(?string $label): self
     {
         $this->label = $label;
-
         return $this;
     }
 
@@ -267,7 +279,6 @@ class Showtime
     public function setNotes(?string $notes): self
     {
         $this->notes = $notes;
-
         return $this;
     }
 }

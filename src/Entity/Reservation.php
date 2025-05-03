@@ -4,10 +4,14 @@ namespace App\Entity;
 
 use App\Repository\ReservationRepository;
 use DateTimeInterface;
+use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Reservation
 {
     #[ORM\Id]
@@ -15,11 +19,11 @@ class Reservation
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Showtime $showtime = null;
 
@@ -32,6 +36,22 @@ class Reservation
     #[ORM\Column]
     private ?float $totalPrice = null;
 
+    #[ORM\OneToMany(targetEntity: ReservationSeats::class, mappedBy: 'reservation', cascade: ['persist'], orphanRemoval: true)]
+    private Collection $reservationSeats;
+
+    public function __construct()
+    {
+        $this->reservationSeats = new ArrayCollection();
+    }
+
+    #[ORM\PrePersist]
+    public function setReservationDateValue(): void
+    {
+        if ($this->reservationDate === null) {
+            $this->reservationDate = new DateTimeImmutable();
+        }
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -42,10 +62,9 @@ class Reservation
         return $this->user;
     }
 
-    public function setUser(?User $user): static
+    public function setUser(?User $user): self
     {
         $this->user = $user;
-
         return $this;
     }
 
@@ -54,10 +73,9 @@ class Reservation
         return $this->showtime;
     }
 
-    public function setShowtime(?Showtime $showtime): static
+    public function setShowtime(?Showtime $showtime): self
     {
         $this->showtime = $showtime;
-
         return $this;
     }
 
@@ -66,10 +84,9 @@ class Reservation
         return $this->reservationDate;
     }
 
-    public function setReservationDate(DateTimeInterface $reservationDate): static
+    public function setReservationDate(DateTimeInterface $reservationDate): self
     {
         $this->reservationDate = $reservationDate;
-
         return $this;
     }
 
@@ -78,10 +95,9 @@ class Reservation
         return $this->status;
     }
 
-    public function setStatus(string $status): static
+    public function setStatus(string $status): self
     {
         $this->status = $status;
-
         return $this;
     }
 
@@ -90,10 +106,36 @@ class Reservation
         return $this->totalPrice;
     }
 
-    public function setTotalPrice(float $totalPrice): static
+    public function setTotalPrice(float $totalPrice): self
     {
         $this->totalPrice = $totalPrice;
+        return $this;
+    }
 
+    /**
+     * @return Collection<int, ReservationSeats>
+     */
+    public function getReservationSeats(): Collection
+    {
+        return $this->reservationSeats;
+    }
+
+    public function addReservationSeat(ReservationSeats $reservationSeat): self
+    {
+        if (!$this->reservationSeats->contains($reservationSeat)) {
+            $this->reservationSeats[] = $reservationSeat;
+            $reservationSeat->setReservation($this);
+        }
+        return $this;
+    }
+
+    public function removeReservationSeat(ReservationSeats $reservationSeat): self
+    {
+        if ($this->reservationSeats->removeElement($reservationSeat)) {
+            if ($reservationSeat->getReservation() === $this) {
+                $reservationSeat->setReservation(null);
+            }
+        }
         return $this;
     }
 }

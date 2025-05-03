@@ -24,12 +24,16 @@ class IncidentFixtures extends Fixture implements DependentFixtureInterface
         $incident->setSeat($this->getReference('seat-1', Seat::class));
 
         $incident->setTitle('Projecteur en panne');
+        $incident->setCategory('Projecteur');
         $incident->setDescription('Le projecteur principal ne fonctionne plus depuis 10 minutes.');
         $incident->setStatus('en_attente');
         $incident->setCreatedAt(new DateTimeImmutable());
         $incident->setResolvedAt(null);
 
         $manager->persist($incident);
+
+        $this->addReference('incident-1', $incident);
+
         $manager->flush();
     }
 

@@ -22,6 +22,9 @@ class CinemaEmployeeFixtures extends Fixture implements DependentFixtureInterfac
         $employee->setIsActive(true);
 
         $manager->persist($employee);
+
+        $this->addReference('cinema-employee-1', $employee);
+
         $manager->flush();
     }
 

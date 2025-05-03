@@ -20,10 +20,9 @@ class RoomFixtures extends Fixture implements DependentFixtureInterface
         $room->setCinema($this->getReference('cinema-1', Cinema::class));
 
         $manager->persist($room);
-        $manager->flush();
-
-        // 🔗 Pour les autres fixtures comme Showtime, Incident, etc.
         $this->addReference('room-1', $room);
+
+        $manager->flush();
     }
 
     public function getDependencies(): array

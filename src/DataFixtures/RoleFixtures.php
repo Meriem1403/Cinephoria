@@ -10,23 +10,20 @@ class RoleFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $admin = new Role();
-        $admin->setName('ROLE_ADMIN');
-        $admin->setDescription('Administrateur');
-        $manager->persist($admin);
-        $this->addReference('role_admin', $admin);
+        $roles = [
+            ['name' => 'ROLE_ADMIN', 'description' => 'Administrateur', 'ref' => 'role_admin'],
+            ['name' => 'ROLE_EMPLOYE', 'description' => 'Employé du cinéma', 'ref' => 'role_employe'],
+            ['name' => 'ROLE_USER', 'description' => 'Client enregistré', 'ref' => 'role_user'],
+        ];
 
-        $employe = new Role();
-        $employe->setName('ROLE_EMPLOYE');
-        $employe->setDescription('Employé du cinéma');
-        $manager->persist($employe);
-        $this->addReference('role_employe', $employe);
+        foreach ($roles as $data) {
+            $role = new Role();
+            $role->setName($data['name']);
+            $role->setDescription($data['description']);
 
-        $user = new Role();
-        $user->setName('ROLE_USER');
-        $user->setDescription('Client enregistré');
-        $manager->persist($user);
-        $this->addReference('role_user', $user);
+            $manager->persist($role);
+            $this->addReference($data['ref'], $role);
+        }
 
         $manager->flush();
     }

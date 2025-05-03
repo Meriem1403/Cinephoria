@@ -13,7 +13,7 @@ class CinemaFixtures extends Fixture
         $cinema = new Cinema();
         $cinema->setName('Cinéphoria Lyon');
         $cinema->setCity('Lyon');
-        $cinema->setAdress('8 rue Lumière');
+        $cinema->setAddress('8 rue Lumière');
         $cinema->setPostalCode('69001');
         $cinema->setCountry('France');
         $cinema->setPhone('04 78 00 00 00');
