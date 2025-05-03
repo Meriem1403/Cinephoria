@@ -22,6 +22,9 @@ class ReservationSeatsFixtures extends Fixture implements DependentFixtureInterf
         $reservationSeat->setIsValid(true);
 
         $manager->persist($reservationSeat);
+
+        $this->addReference('reservation-seat-1', $reservationSeat);
+
         $manager->flush();
     }
 

@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
-use DateTimeInterface;
 use App\Repository\CinemaEmployeeRepository;
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -15,11 +15,11 @@ class CinemaEmployee
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'employees')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'employees')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Cinema $cinema = null;
 
@@ -27,7 +27,7 @@ class CinemaEmployee
     private ?string $jobTitle = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ? DateTimeInterface $assignedSince = null;
+    private ?DateTimeInterface $assignedSince = null;
 
     #[ORM\Column]
     private ?bool $isActive = null;
@@ -42,10 +42,9 @@ class CinemaEmployee
         return $this->user;
     }
 
-    public function setUser(?User $user): static
+    public function setUser(?User $user): self
     {
         $this->user = $user;
-
         return $this;
     }
 
@@ -54,10 +53,9 @@ class CinemaEmployee
         return $this->cinema;
     }
 
-    public function setCinema(?Cinema $cinema): static
+    public function setCinema(?Cinema $cinema): self
     {
         $this->cinema = $cinema;
-
         return $this;
     }
 
@@ -66,10 +64,9 @@ class CinemaEmployee
         return $this->jobTitle;
     }
 
-    public function setJobTitle(?string $jobTitle): static
+    public function setJobTitle(?string $jobTitle): self
     {
         $this->jobTitle = $jobTitle;
-
         return $this;
     }
 
@@ -78,22 +75,21 @@ class CinemaEmployee
         return $this->assignedSince;
     }
 
-    public function setAssignedSince(?DateTimeInterface $assignedSince): static
+    public function setAssignedSince(?DateTimeInterface $assignedSince): self
     {
         $this->assignedSince = $assignedSince;
-
         return $this;
     }
 
-    public function isActive(): ?bool
+    public function getIsActive(): ?bool
     {
         return $this->isActive;
     }
 
-    public function setIsActive(bool $isActive): static
+    public function setIsActive(bool $isActive): self
     {
         $this->isActive = $isActive;
-
         return $this;
     }
 }
+

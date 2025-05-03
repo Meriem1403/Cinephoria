@@ -33,9 +33,9 @@ class ShowtimeFixtures extends Fixture implements DependentFixtureInterface
         $showtime->setNotes('Salle climatisée, sous-titres disponibles.');
 
         $manager->persist($showtime);
-        $manager->flush();
-
         $this->addReference('showtime-1', $showtime);
+
+        $manager->flush();
     }
 
     public function getDependencies(): array

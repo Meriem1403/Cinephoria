@@ -27,8 +27,8 @@ class MovieFixtures extends Fixture
         $movie->setAtCinema(false);
 
         $manager->persist($movie);
-        $manager->flush();
-
         $this->addReference('movie-inception', $movie);
+
+        $manager->flush();
     }
 }

@@ -4,10 +4,12 @@ namespace App\Entity;
 
 use App\Repository\ReviewRepository;
 use DateTimeInterface;
+use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ReviewRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Review
 {
     #[ORM\Id]
@@ -15,11 +17,11 @@ class Review
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'reviews')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'reviews')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Movie $movie = null;
 
@@ -35,6 +37,14 @@ class Review
     #[ORM\Column]
     private ?bool $isApproved = null;
 
+    #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    {
+        if ($this->createdAt === null) {
+            $this->createdAt = new DateTimeImmutable();
+        }
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -45,10 +55,9 @@ class Review
         return $this->user;
     }
 
-    public function setUser(?User $user): static
+    public function setUser(?User $user): self
     {
         $this->user = $user;
-
         return $this;
     }
 
@@ -57,10 +66,9 @@ class Review
         return $this->movie;
     }
 
-    public function setMovie(?Movie $movie): static
+    public function setMovie(?Movie $movie): self
     {
         $this->movie = $movie;
-
         return $this;
     }
 
@@ -69,10 +77,9 @@ class Review
         return $this->rating;
     }
 
-    public function setRating(float $rating): static
+    public function setRating(float $rating): self
     {
         $this->rating = $rating;
-
         return $this;
     }
 
@@ -81,10 +88,9 @@ class Review
         return $this->comment;
     }
 
-    public function setComment(?string $comment): static
+    public function setComment(?string $comment): self
     {
         $this->comment = $comment;
-
         return $this;
     }
 
@@ -93,22 +99,20 @@ class Review
         return $this->createdAt;
     }
 
-    public function setCreatedAt(DateTimeInterface $createdAt): static
+    public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
-
         return $this;
     }
 
-    public function isApproved(): ?bool
+    public function getIsApproved(): ?bool
     {
         return $this->isApproved;
     }
 
-    public function setIsApproved(bool $isApproved): static
+    public function setIsApproved(bool $isApproved): self
     {
         $this->isApproved = $isApproved;
-
         return $this;
     }
 }

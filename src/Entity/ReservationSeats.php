@@ -13,11 +13,11 @@ class ReservationSeats
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'reservationSeats')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Reservation $reservation = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'reservationSeats')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Seat $seat = null;
 
@@ -40,10 +40,9 @@ class ReservationSeats
         return $this->reservation;
     }
 
-    public function setReservation(?Reservation $reservation): static
+    public function setReservation(?Reservation $reservation): self
     {
         $this->reservation = $reservation;
-
         return $this;
     }
 
@@ -52,10 +51,9 @@ class ReservationSeats
         return $this->seat;
     }
 
-    public function setSeat(?Seat $seat): static
+    public function setSeat(?Seat $seat): self
     {
         $this->seat = $seat;
-
         return $this;
     }
 
@@ -64,34 +62,31 @@ class ReservationSeats
         return $this->price;
     }
 
-    public function setPrice(float $price): static
+    public function setPrice(float $price): self
     {
         $this->price = $price;
-
         return $this;
     }
 
-    public function isPMR(): ?bool
+    public function getIsPMR(): ?bool
     {
         return $this->isPMR;
     }
 
-    public function setIsPMR(?bool $isPMR): static
+    public function setIsPMR(?bool $isPMR): self
     {
         $this->isPMR = $isPMR;
-
         return $this;
     }
 
-    public function isValid(): ?bool
+    public function getIsValid(): ?bool
     {
         return $this->isValid;
     }
 
-    public function setIsValid(bool $isValid): static
+    public function setIsValid(bool $isValid): self
     {
         $this->isValid = $isValid;
-
         return $this;
     }
 }

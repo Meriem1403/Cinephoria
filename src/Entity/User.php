@@ -3,13 +3,17 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use DateTimeImmutable;
 use DateTimeInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -36,7 +40,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $phone = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    private ?string $adress = null;
+    private ?string $address = null;
 
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $postalCode = null;
@@ -56,11 +60,37 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $isActive = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Role $role = null;
 
+    #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $reviews;
 
+    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $reservations;
+
+    #[ORM\OneToMany(targetEntity: Incident::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $incidents;
+
+    #[ORM\OneToMany(targetEntity: CinemaEmployee::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $cinemaEmployees;
+
+    public function __construct()
+    {
+        $this->reviews = new ArrayCollection();
+        $this->reservations = new ArrayCollection();
+        $this->incidents = new ArrayCollection();
+        $this->cinemaEmployees = new ArrayCollection();
+    }
+
+    #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    {
+        if ($this->createdAt === null) {
+            $this->createdAt = new DateTimeImmutable();
+        }
+    }
 
     public function getUserIdentifier(): string
     {
@@ -74,12 +104,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials(): void
     {
-        // logique pour effacer les données sensibles après login
+        // sensitive data
     }
 
     public function getPassword(): ?string
     {
         return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+        return $this;
     }
 
     public function getId(): ?int
@@ -92,7 +128,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->firstName;
     }
 
-    public function setFirstName(string $firstName): static
+    public function setFirstName(string $firstName): self
     {
         $this->firstName = $firstName;
         return $this;
@@ -103,7 +139,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->lastName;
     }
 
-    public function setLastName(string $lastName): static
+    public function setLastName(string $lastName): self
     {
         $this->lastName = $lastName;
         return $this;
@@ -114,15 +150,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(string $email): self
     {
         $this->email = $email;
-        return $this;
-    }
-
-    public function setPassword(string $password): static
-    {
-        $this->password = $password;
         return $this;
     }
 
@@ -131,7 +161,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->birthDate;
     }
 
-    public function setBirthDate(?DateTimeInterface $birthDate): static
+    public function setBirthDate(?DateTimeInterface $birthDate): self
     {
         $this->birthDate = $birthDate;
         return $this;
@@ -142,20 +172,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->phone;
     }
 
-    public function setPhone(?string $phone): static
+    public function setPhone(?string $phone): self
     {
         $this->phone = $phone;
         return $this;
     }
 
-    public function getAdress(): ?string
+    public function getAddress(): ?string
     {
-        return $this->adress;
+        return $this->address;
     }
 
-    public function setAdress(string $adress): static
+    public function setAddress(string $address): self
     {
-        $this->adress = $adress;
+        $this->address = $address;
         return $this;
     }
 
@@ -164,7 +194,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->postalCode;
     }
 
-    public function setPostalCode(?string $postalCode): static
+    public function setPostalCode(?string $postalCode): self
     {
         $this->postalCode = $postalCode;
         return $this;
@@ -175,7 +205,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->city;
     }
 
-    public function setCity(?string $city): static
+    public function setCity(?string $city): self
     {
         $this->city = $city;
         return $this;
@@ -186,7 +216,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->country;
     }
 
-    public function setCountry(?string $country): static
+    public function setCountry(?string $country): self
     {
         $this->country = $country;
         return $this;
@@ -197,7 +227,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->createdAt;
     }
 
-    public function setCreatedAt(DateTimeInterface $createdAt): static
+    public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
         return $this;
@@ -208,18 +238,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->lastLogin;
     }
 
-    public function setLastLogin(?DateTimeInterface $lastLogin): static
+    public function setLastLogin(?DateTimeInterface $lastLogin): self
     {
         $this->lastLogin = $lastLogin;
         return $this;
     }
 
-    public function isActive(): ?bool
+    public function getIsActive(): ?bool
     {
         return $this->isActive;
     }
 
-    public function setIsActive(bool $isActive): static
+    public function setIsActive(bool $isActive): self
     {
         $this->isActive = $isActive;
         return $this;
@@ -230,9 +260,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->role;
     }
 
-    public function setRole(?Role $role): static
+    public function setRole(?Role $role): self
     {
         $this->role = $role;
         return $this;
+    }
+
+    /** @return Collection<int, Review> */
+    public function getReviews(): Collection
+    {
+        return $this->reviews;
+    }
+
+    /** @return Collection<int, Reservation> */
+    public function getReservations(): Collection
+    {
+        return $this->reservations;
+    }
+
+    /** @return Collection<int, Incident> */
+    public function getIncidents(): Collection
+    {
+        return $this->incidents;
+    }
+
+    /** @return Collection<int, CinemaEmployee> */
+    public function getCinemaEmployees(): Collection
+    {
+        return $this->cinemaEmployees;
     }
 }

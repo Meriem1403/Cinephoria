@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SeatRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SeatRepository::class)]
@@ -28,9 +30,17 @@ class Seat
     #[ORM\Column(nullable: true)]
     private ?bool $isBroken = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'seats')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Room $room = null;
+
+    #[ORM\OneToMany(targetEntity: ReservationSeats::class, mappedBy: 'seat', orphanRemoval: true)]
+    private Collection $reservationSeats;
+
+    public function __construct()
+    {
+        $this->reservationSeats = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -42,10 +52,9 @@ class Seat
         return $this->rowLabel;
     }
 
-    public function setRowLabel(string $rowLabel): static
+    public function setRowLabel(string $rowLabel): self
     {
         $this->rowLabel = $rowLabel;
-
         return $this;
     }
 
@@ -54,46 +63,42 @@ class Seat
         return $this->seatNumber;
     }
 
-    public function setSeatNumber(int $seatNumber): static
+    public function setSeatNumber(int $seatNumber): self
     {
         $this->seatNumber = $seatNumber;
-
         return $this;
     }
 
-    public function isPMR(): ?bool
+    public function getIsPMR(): ?bool
     {
         return $this->isPMR;
     }
 
-    public function setIsPMR(?bool $isPMR): static
+    public function setIsPMR(?bool $isPMR): self
     {
         $this->isPMR = $isPMR;
-
         return $this;
     }
 
-    public function isReserved(): ?bool
+    public function getIsReserved(): ?bool
     {
         return $this->isReserved;
     }
 
-    public function setIsReserved(?bool $isReserved): static
+    public function setIsReserved(?bool $isReserved): self
     {
         $this->isReserved = $isReserved;
-
         return $this;
     }
 
-    public function isBroken(): ?bool
+    public function getIsBroken(): ?bool
     {
         return $this->isBroken;
     }
 
-    public function setIsBroken(?bool $isBroken): static
+    public function setIsBroken(?bool $isBroken): self
     {
         $this->isBroken = $isBroken;
-
         return $this;
     }
 
@@ -102,10 +107,34 @@ class Seat
         return $this->room;
     }
 
-    public function setRoom(?Room $room): static
+    public function setRoom(?Room $room): self
     {
         $this->room = $room;
+        return $this;
+    }
 
+    /** @return Collection<int, ReservationSeats> */
+    public function getReservationSeats(): Collection
+    {
+        return $this->reservationSeats;
+    }
+
+    public function addReservationSeat(ReservationSeats $reservationSeat): self
+    {
+        if (!$this->reservationSeats->contains($reservationSeat)) {
+            $this->reservationSeats[] = $reservationSeat;
+            $reservationSeat->setSeat($this);
+        }
+        return $this;
+    }
+
+    public function removeReservationSeat(ReservationSeats $reservationSeat): self
+    {
+        if ($this->reservationSeats->removeElement($reservationSeat)) {
+            if ($reservationSeat->getSeat() === $this) {
+                $reservationSeat->setSeat(null);
+            }
+        }
         return $this;
     }
 }

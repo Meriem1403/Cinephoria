@@ -23,10 +23,9 @@ class ReservationFixtures extends Fixture implements DependentFixtureInterface
         $reservation->setTotalPrice(18.50);
 
         $manager->persist($reservation);
-        $manager->flush();
-
-        // Ajout de référence si besoin (optionnel)
         $this->addReference('reservation-1', $reservation);
+
+        $manager->flush();
     }
 
     public function getDependencies(): array

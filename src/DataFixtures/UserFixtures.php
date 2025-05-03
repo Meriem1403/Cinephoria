@@ -27,7 +27,11 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $admin->setLastName('Cinéphoria');
         $admin->setEmail('admin@cinephoria.fr');
         $admin->setPassword($this->passwordHasher->hashPassword($admin, 'adminpass'));
-        $admin->setAdress('123 rue du cinéma, Paris');
+        $admin->setAddress('123 rue du cinéma, Paris');
+        $admin->setPostalCode('75001');
+        $admin->setCity('Paris');
+        $admin->setCountry('France');
+        $admin->setPhone('0102030405');
         $admin->setCreatedAt(new DateTimeImmutable());
         $admin->setIsActive(true);
         $admin->setRole($this->getReference('role_admin', Role::class));
@@ -40,7 +44,11 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $employee->setLastName('Dupont');
         $employee->setEmail('employe1@cinephoria.fr');
         $employee->setPassword($this->passwordHasher->hashPassword($employee, 'employepass'));
-        $employee->setAdress('10 avenue des cinémas, Lyon');
+        $employee->setAddress('10 avenue des cinémas, Lyon');
+        $employee->setPostalCode('69000');
+        $employee->setCity('Lyon');
+        $employee->setCountry('France');
+        $employee->setPhone('0607080910');
         $employee->setCreatedAt(new DateTimeImmutable());
         $employee->setIsActive(true);
         $employee->setRole($this->getReference('role_employe', Role::class));
@@ -53,7 +61,11 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $user->setLastName('Martin');
         $user->setEmail('client1@cinephoria.fr');
         $user->setPassword($this->passwordHasher->hashPassword($user, 'userpass'));
-        $user->setAdress('42 rue des spectateurs, Lille');
+        $user->setAddress('42 rue des spectateurs, Lille');
+        $user->setPostalCode('59000');
+        $user->setCity('Lille');
+        $user->setCountry('France');
+        $user->setPhone('0611223344');
         $user->setCreatedAt(new DateTimeImmutable());
         $user->setIsActive(true);
         $user->setRole($this->getReference('role_user', Role::class));
