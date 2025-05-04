@@ -1,0 +1,106 @@
+
+:root {
+
+    /* Arrière-plan */
+    --body-bg: #F5F6FA;
+    --sidebar-bg: #FFFFFF;
+
+    /* Boutons généraux */
+    --button-primary-bg: #0D99FF;
+    --button-primary-color: #FFFFFF;
+    --border-radius: 4px;
+
+    /* Bouton Confirmed */
+    --button-confirmed-bg: #00B69B;
+    --button-confirmed-color: #FFFFFF;
+
+    /* Bouton Pending */
+    --button-pending-bg: #FCBE2D;
+    --button-pending-color: #FFFFFF;
+
+    /* Bouton Cancelled */
+    --button-cancelled-bg: #FD5454;
+    --button-cancelled-color: #FFFFFF;
+
+    /* Bouton Expired */
+    --button-expired-bg: #979797;
+    --button-expired-color: #FFFFFF;
+
+    /* Boutons d'action EasyAdmin */
+    --ea-button-edit-bg: #FFFFFF;
+    --ea-button-edit-color: #99B2C6;
+    --ea-button-edit-border: 1px solid #99B2C6;
+
+    --ea-button-detail-bg: #FFFFFF;
+    --ea-button-detail-color: #12AFF0;
+    --ea-button-detail-border: 1px solid #12AFF0;
+
+    --ea-button-delete-bg: #FFFFFF;
+    --ea-button-delete-color: #F94D63;
+    --ea-button-delete-border: 1px solid #F94D63;
+}
+
+.sidebar {
+    background-color: var(--sidebar-bg);
+}
+
+.ea-button-edit {
+    background-color: var(--ea-button-edit-bg);
+    color: var(--ea-button-edit-color);
+    border: var(--ea-button-edit-border);
+    border-radius: var(--border-radius);
+}
+
+.ea-button-detail {
+    background-color: var(--ea-button-detail-bg);
+    color: var(--ea-button-detail-color);
+    border: var(--ea-button-detail-border);
+    border-radius: var(--border-radius);
+}
+
+.ea-button-delete {
+    background-color: var(--ea-button-delete-bg);
+    color: var(--ea-button-delete-color);
+    border: var(--ea-button-delete-border);
+    border-radius: var(--border-radius);
+}
+
+.btn-confirmed {
+    background-color: var(--button-confirmed-bg);
+    color: var(--button-confirmed-color);
+    border-radius: var(--border-radius);
+}
+
+.btn-pending {
+    background-color: var(--button-pending-bg);
+    color: var(--button-pending-color);
+    border-radius: var(--border-radius);
+}
+
+.btn-cancelled {
+    background-color: var(--button-cancelled-bg);
+    color: var(--button-cancelled-color);
+    border-radius: var(--border-radius);
+}
+
+.btn-expired {
+    background-color: var(--button-expired-bg);
+    color: var(--button-expired-color);
+    border-radius: var(--border-radius);
+}
+
+.btn-active {
+    background-color: #DFFCEF;
+    color: #1AD598;
+    border: 1px solid rgba(26, 213, 152, 0.4);
+    border-radius: 12px;
+    padding: 4px 12px;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-active .icon {
+    color: #1AD598;
+}

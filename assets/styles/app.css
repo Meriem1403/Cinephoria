@@ -1,12 +1,17 @@
-@import "tailwindcss";
+@import "tailwindcss/preflight";
+@import "tailwindcss/utilities";
+@import "tailwindcss/theme.css";
+@import "tailwindcss/index.css";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+body {
+    background-color: white;
+}
 
 .fade-hero {
     @apply opacity-0 scale-95 transition-all duration-1000 ease-in-out;
 }
+
 .fade-hero.visible {
     @apply opacity-100 scale-100;
 }
+

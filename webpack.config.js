@@ -5,6 +5,7 @@ Encore
     .setPublicPath('/build')
 
     .addEntry('app', './assets/app.js')
+    .addStyleEntry('admin', './assets/styles/admin.css')
 
     .enablePostCssLoader()
 

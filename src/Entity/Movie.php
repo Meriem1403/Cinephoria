@@ -187,7 +187,7 @@ class Movie
         return $this;
     }
 
-    public function getIsAtCinema(): ?bool
+    public function getAtCinema(): ?bool
     {
         return $this->atCinema;
     }
