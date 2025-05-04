@@ -59,6 +59,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $user = new User();
         $user->setFirstName('Alice');
         $user->setLastName('Martin');
+        $user->setAvatar('meriem.jpg');
         $user->setEmail('client1@cinephoria.fr');
         $user->setPassword($this->passwordHasher->hashPassword($user, 'userpass'));
         $user->setAddress('42 rue des spectateurs, Lille');
@@ -69,6 +70,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $user->setCreatedAt(new DateTimeImmutable());
         $user->setIsActive(true);
         $user->setRole($this->getReference('role_user', Role::class));
+        $user->setAvatar('meriem.jpg');
         $manager->persist($user);
         $this->addReference('user-client-1', $user);
 

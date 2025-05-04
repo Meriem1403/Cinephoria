@@ -21,6 +21,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $avatar = null;
+
     #[ORM\Column(length: 255)]
     private ?string $firstName = null;
 
@@ -264,6 +267,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->role = $role;
         return $this;
+    }
+
+    public function getAvatar(): ?string
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?string $avatar): self
+    {
+        $this->avatar = $avatar;
+        return $this;
+    }
+
+    public function getAvatarUrl(): ?string
+    {
+        return $this->avatar ? '/pictures/uploads/' . $this->avatar : null;
     }
 
     /** @return Collection<int, Review> */

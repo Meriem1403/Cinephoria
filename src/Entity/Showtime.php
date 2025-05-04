@@ -249,7 +249,7 @@ class Showtime
         return $this;
     }
 
-    public function getIsSpecialPrice(): ?bool
+    public function getSpecialPrice(): ?bool
     {
         return $this->specialPrice;
     }
