@@ -97,12 +97,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getUserIdentifier(): string
     {
-        return $this->email;
+        return (string) $this->email;
     }
 
     public function getRoles(): array
     {
-        return [$this->role ? $this->role->getName() : 'ROLE_USER'];
+        return [$this->role->getName() ?? 'ROLE_USER'];
     }
 
     public function eraseCredentials(): void
@@ -146,6 +146,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->lastName = $lastName;
         return $this;
+    }
+
+    public function getFullName(): ?string
+    {
+        return $this->firstName . ' ' . $this->lastName;
     }
 
     public function getEmail(): ?string
@@ -284,6 +289,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->avatar ? '/pictures/uploads/' . $this->avatar : null;
     }
+
 
     /** @return Collection<int, Review> */
     public function getReviews(): Collection

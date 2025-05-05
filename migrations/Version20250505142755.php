@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250429132133 extends AbstractMigration
+final class Version20250505142755 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -21,7 +21,7 @@ final class Version20250429132133 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
-            ALTER TABLE movie ADD at_cinema TINYINT(1) NOT NULL
+            ALTER TABLE movie ADD genre JSON NOT NULL, ADD language JSON NOT NULL
         SQL);
     }
 
@@ -29,7 +29,7 @@ final class Version20250429132133 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
-            ALTER TABLE movie DROP at_cinema
+            ALTER TABLE movie DROP genre, DROP language
         SQL);
     }
 }
