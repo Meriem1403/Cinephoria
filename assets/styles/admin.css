@@ -40,30 +40,51 @@
     --ea-button-delete-border: 1px solid #F94D63;
 }
 
+
+
+/* sidebar */
+
+
 .sidebar {
     background-color: var(--sidebar-bg);
 }
 
+
+
+/* ea button */
+
+
 .ea-button-edit {
     background-color: var(--ea-button-edit-bg);
     color: var(--ea-button-edit-color);
-    border: var(--ea-button-edit-border);
-    border-radius: var(--border-radius);
+    border: var(--ea-button-edit-color);
+    border-radius: 2px;
+    display: inline-flex;
+    align-items: center;
 }
 
 .ea-button-detail {
-    background-color: var(--ea-button-detail-bg);
-    color: var(--ea-button-detail-color);
-    border: var(--ea-button-detail-border);
-    border-radius: var(--border-radius);
+    background-color: #FFFFFF;
+    color: #12AFF0;
+    border:#12AFF0;
+    border-radius: 2px;
+    display: inline-flex;
+    align-items: center;
 }
 
 .ea-button-delete {
     background-color: var(--ea-button-delete-bg);
     color: var(--ea-button-delete-color);
-    border: var(--ea-button-delete-border);
-    border-radius: var(--border-radius);
+    border: var(--ea-button-delete-color);
+    border-radius: 2px;
+    display: inline-flex;
+    align-items: center;
 }
+
+
+
+/* btn */
+
 
 .btn-confirmed {
     background-color: var(--button-confirmed-bg);
@@ -103,4 +124,71 @@
 
 .btn-active .icon {
     color: #1AD598;
+}
+
+
+
+/* sections */
+
+
+.section-panel {
+    padding-left: 1rem;
+    border-left: 4px solid var(--color-primary);
+    font-size: var(--font-size-xl);
+    margin-top: 3rem;
+    color: var(--color-primary);
+}
+
+.panel-section {
+    margin-top: 3rem;
+    padding-left: 1rem;
+    border-left: 4px solid var(--color-primary);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+
+
+/* badge */
+
+
+.badge-status .badge {
+    background-color: var(--badge-success-bg);
+    color: var(--badge-success-color);
+}
+
+
+
+/* fields */
+
+.field-name input {
+    border: 1px solid var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(92, 112, 214, 0.2);
+}
+
+.field-avatar .image-avatar {
+    border-radius: 50%;
+    box-shadow: var(--shadow-md);
+    max-width: 100px;
+}
+
+
+.field-boolean .badge-boolean-true {
+    background-color: rgba(26, 213, 152, 0.1);
+    border: 1px solid rgba(26, 213, 152, 0.4);
+    color: #1AD598;
+}
+.field-boolean .badge-boolean-false {
+    background: rgba(249,77,99, 0.1);
+    border: 1px solid rgba(249,77,99);
+    color: #F94D63;
+}
+
+
+.field-text input.form-control {
+    border-radius: var(--border-radius);
+    border: 1px solid var(--form-input-border-color);
+    padding: 6px 12px;
+    box-shadow: var(--form-input-shadow);
 }

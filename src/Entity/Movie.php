@@ -29,14 +29,9 @@ class Movie
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?DateTimeInterface $releaseDate = null;
 
-    #[ORM\Column(length: 5)]
-    private ?string $language = null;
 
     #[ORM\Column(length: 5, nullable: true)]
     private ?string $ageRating = null;
-
-    #[ORM\Column(length: 100)]
-    private ?string $genre = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $posterUrl = null;
@@ -52,6 +47,15 @@ class Movie
 
     #[ORM\Column]
     private ?bool $atCinema = null;
+
+    #[ORM\Column(type: 'json')]
+    private array $genre = [];
+
+    #[ORM\Column(type: 'json')]
+    private array $language = [];
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $heroImage = null;
 
     #[ORM\PrePersist]
     public function setCreatedAtValue(): void
@@ -110,17 +114,6 @@ class Movie
         return $this;
     }
 
-    public function getLanguage(): ?string
-    {
-        return $this->language;
-    }
-
-    public function setLanguage(string $language): self
-    {
-        $this->language = $language;
-        return $this;
-    }
-
     public function getAgeRating(): ?string
     {
         return $this->ageRating;
@@ -129,17 +122,6 @@ class Movie
     public function setAgeRating(?string $ageRating): self
     {
         $this->ageRating = $ageRating;
-        return $this;
-    }
-
-    public function getGenre(): ?string
-    {
-        return $this->genre;
-    }
-
-    public function setGenre(?string $genre): self
-    {
-        $this->genre = $genre;
         return $this;
     }
 
@@ -153,6 +135,7 @@ class Movie
         $this->posterUrl = $posterUrl;
         return $this;
     }
+
 
     public function getIsFavorite(): ?bool
     {
@@ -197,4 +180,35 @@ class Movie
         $this->atCinema = $atCinema;
         return $this;
     }
+    public function getGenre(): array
+    {
+        return $this->genre;
+    }
+
+    public function setGenre(array $genre): self
+    {
+        $this->genre = $genre;
+        return $this;
+    }
+    public function getLanguage(): array
+    {
+        return $this->language;
+    }
+
+    public function setLanguage(array $language): self
+    {
+        $this->language = $language;
+        return $this;
+    }
+    public function getHeroImage(): ?string
+    {
+        return $this->heroImage;
+    }
+
+    public function setHeroImage(?string $heroImage): self
+    {
+        $this->heroImage = $heroImage;
+        return $this;
+    }
+
 }
