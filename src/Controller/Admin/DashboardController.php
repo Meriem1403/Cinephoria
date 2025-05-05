@@ -99,5 +99,11 @@ class DashboardController extends AbstractDashboardController
         return parent::configureAssets()
             ->addWebpackEncoreEntry('admin');
     }
+    public function configureCrud(): Crud
+    {
+        return Crud::new()
+
+            ->setPaginatorPageSize(5);
+    }
 
 }

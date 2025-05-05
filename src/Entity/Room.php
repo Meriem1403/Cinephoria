@@ -22,9 +22,6 @@ class Room
     #[ORM\Column]
     private ?int $capacity = null;
 
-    #[ORM\Column(length: 100, nullable: true)]
-    private ?string $projectionEquipment = null;
-
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $notes = null;
 
@@ -40,6 +37,9 @@ class Room
 
     #[ORM\OneToMany(targetEntity: Incident::class, mappedBy: 'room', orphanRemoval: true)]
     private Collection $incidents;
+
+    #[ORM\Column(nullable: true)]
+    private ?array $projectionEquipment = null;
 
     public function __construct()
     {
@@ -72,17 +72,6 @@ class Room
     public function setCapacity(int $capacity): self
     {
         $this->capacity = $capacity;
-        return $this;
-    }
-
-    public function getProjectionEquipment(): ?string
-    {
-        return $this->projectionEquipment;
-    }
-
-    public function setProjectionEquipment(?string $projectionEquipment): self
-    {
-        $this->projectionEquipment = $projectionEquipment;
         return $this;
     }
 
@@ -180,6 +169,18 @@ class Room
                 $incident->setRoom(null);
             }
         }
+        return $this;
+    }
+
+    public function getProjectionEquipment(): ?array
+    {
+        return $this->projectionEquipment;
+    }
+
+    public function setProjectionEquipment(?array $projectionEquipment): static
+    {
+        $this->projectionEquipment = $projectionEquipment;
+
         return $this;
     }
 }

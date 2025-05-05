@@ -14,6 +14,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
@@ -31,8 +32,23 @@ class UserCrudController extends AbstractCrudController
     {
         return [
             IdField::new('id')->hideOnForm(),
-            FormField::addPanel('Informations personnelles')->addCssClass('panel-section'),
-            AvatarField::new('avatar')->onlyOnForms(),
+
+            FormField::addPanel('Personnel information')->addCssClass('panel-section'),
+
+            AvatarField::new('avatar')
+            ->formatValue(static function ($value, User $user) {
+                return $user->getAvatarUrl();
+            })
+            ->hideOnForm(),
+
+            ImageField::new('avatar')
+            ->setBasePath('/pictures/uploads/')
+            ->setUploadDir('public/pictures/uploads/')
+                ->setUploadedFileNamePattern('[slug]-[timestamp].[extension]')
+            ->setHelp('Choose a picture for your profile')
+            ->OnlyOnForms(),
+
+
             TextField::new('firstName')->onlyOnForms(),
             TextField::new('lastName')->onlyOnForms(),
             TextField::new('fullName')->onlyOnIndex(),

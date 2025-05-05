@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Room;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
@@ -23,12 +24,15 @@ class RoomCrudController extends AbstractCrudController
 
         return [
             TextField::new('name', 'Room Name'),
+            AssociationField::new('cinema', 'Cinema'),
             NumberField::new('capacity', 'Capacity'),
+            TextEditorField::new('notes', 'Notes'),
 
             ChoiceField::new('projectionEquipment', 'Projection Equipment')
                 ->setChoices(array_combine($projectionOptions, $projectionOptions))
                 ->allowMultipleChoices()
                 ->renderExpanded()
+                ->renderAsBadges(),
         ];
     }
 
