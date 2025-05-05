@@ -15,7 +15,7 @@ class RoomFixtures extends Fixture implements DependentFixtureInterface
         $room = new Room();
         $room->setName('Salle 1');
         $room->setCapacity(120);
-        $room->setProjectionEquipment('4K HDR + Son Dolby Atmos');
+        $room->setProjectionEquipment(['4K HDR, Son Dolby Atmos']);
         $room->setNotes('Salle rénovée en 2023 avec sièges confort premium.');
         $room->setCinema($this->getReference('cinema-1', Cinema::class));
 
