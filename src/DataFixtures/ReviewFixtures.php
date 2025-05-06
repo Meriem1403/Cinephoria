@@ -18,7 +18,7 @@ class ReviewFixtures extends Fixture implements DependentFixtureInterface
 
         $review->setUser($this->getReference('employee-user-1', User::class));
         $review->setMovie($this->getReference('movie-inception', Movie::class));
-        $review->setRating(4.5);
+        $review->setRating(2);
         $review->setComment('Très bon film, scénario original et visuellement impressionnant.');
         $review->setCreatedAt(new DateTimeImmutable());
         $review->setIsApproved(true);

@@ -34,8 +34,8 @@ class Review
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?DateTimeInterface $createdAt = null;
 
-    #[ORM\Column]
-    private ?bool $isApproved = null;
+    #[ORM\Column(type: 'boolean')]
+    private ?bool $isApproved = false;
 
     #[ORM\PrePersist]
     public function setCreatedAtValue(): void

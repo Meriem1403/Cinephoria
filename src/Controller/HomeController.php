@@ -25,6 +25,7 @@ final class HomeController extends AbstractController
         }
 
         // à supprimer
+        /*
         $dummyMovies = [
             ['title' => 'The alto knights', 'pictures' => 'pictures/films/ak1.jpg'],
             ['title' => 'Aznavour', 'pictures' => 'pictures/films/az1.jpg'],
@@ -44,6 +45,28 @@ final class HomeController extends AbstractController
             'dramaMovies' => $dummyMovies,
             'fantasyMovies' => $dummyMovies,
         ]);
+        */
+
+        $moviesAtCinema = $movieRepository->createQueryBuilder('m')
+            ->where('m.atCinema = :val')
+            ->setParameter('val', true)
+            ->getQuery()
+            ->getResult();
+
+        $dramaMovies = array_filter($moviesAtCinema, function ($movie) {
+            return in_array('drama', $movie->getGenre(), true);
+        });
+
+        $fantasyMovies = array_filter($moviesAtCinema, function ($movie) {
+            return in_array('fantasy', $movie->getGenre(), true);
+        });
+
+
+        return $this->render('home/index.html.twig', [
+            'heroImages' => $heroImages,
+            'moviesAtCinema' => $moviesAtCinema,
+            'dramaMovies' => $dramaMovies,
+            'fantasyMovies' => $fantasyMovies,
+        ]);
     }
 }
-
