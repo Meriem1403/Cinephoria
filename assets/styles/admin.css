@@ -38,6 +38,10 @@
     --ea-button-delete-bg: #FFFFFF;
     --ea-button-delete-color: #F94D63;
     --ea-button-delete-border: 1px solid #F94D63;
+
+    .main-content {
+        margin-bottom: 100px;
+    }
 }
 
 

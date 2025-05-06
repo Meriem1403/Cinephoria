@@ -19,7 +19,6 @@ class MovieFixtures extends Fixture
         $movie->setReleaseDate(new DateTime('2010-07-16'));
         $movie->setLanguage(['VO']);
         $movie->setAgeRating('16');
-        $movie->setGenre(['Science-fiction']);
         $movie->setPosterUrl('fo1.jpg');
         $movie->setIsFavorite(true);
         $movie->setRating(8.8);

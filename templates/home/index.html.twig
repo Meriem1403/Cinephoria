@@ -20,18 +20,22 @@
         withGradientBottom: false
     } %}
 
+    {% if dramaMovies is not empty %}
     {% include 'partials/_section_movies.html.twig' with {
         title: 'Drama',
         movies: dramaMovies,
         withGradientTop: false,
         withGradientBottom: false
     } %}
+    {% endif %}
 
+    {% if fantasyMovies is not empty %}
     {% include 'partials/_section_movies.html.twig' with {
         title: 'Fantasy',
         movies: fantasyMovies,
         withGradientTop: false,
         withGradientBottom: true
     } %}
+    {% endif %}
 
 {% endblock %}

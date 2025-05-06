@@ -6,6 +6,7 @@ use App\Entity\Movie;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
@@ -43,10 +44,20 @@ class MovieCrudController extends AbstractCrudController
             ->setUploadDir('public/pictures/hero/')
             ->setBasePath('pictures/hero/')
             ->setUploadedFileNamePattern('[slug]-[timestamp].[extension]')
-            ->setRequired(false)
             ->hideOnIndex();
 
-        $fields[] = ArrayField::new('genre', 'Genres')->hideOnIndex();
+        $fields[] = ChoiceField::new('genre', 'Genres')
+            ->allowMultipleChoices()
+            ->setChoices(['Action' => 'action',
+                'Drama' => 'drama',
+                'Fantasy' => 'fantasy',
+                'Comedy' => 'comedy',
+                'Thriller' => 'thriller',
+                'Animation' => 'animation',
+                'Horror' => 'horror',
+                ])
+            ->renderExpanded();
+
         $fields[] = ArrayField::new('language', 'Languages');
 
         $fields[] = DateField::new('releaseDate', 'Release Date')->hideOnIndex();

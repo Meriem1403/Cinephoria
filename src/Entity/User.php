@@ -290,6 +290,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->avatar ? '/pictures/uploads/' . $this->avatar : null;
     }
 
+    public function __toString(): string
+    {
+        return $this->getFullName();
+    }
+
 
     /** @return Collection<int, Review> */
     public function getReviews(): Collection

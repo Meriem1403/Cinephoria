@@ -65,7 +65,7 @@ class UserCrudController extends AbstractCrudController
             FormField::addPanel('Connexion')->addCssClass('panel-section'),
             TextField::new('password')->hideOnIndex(),
             BooleanField::new('isActive')->renderAsSwitch(false),
-            AssociationField::new('role')->setLabel('Role')->setHelp('Sélectionnez un rôle pour cet utilisateur'),
+            AssociationField::new('role')->setLabel('Role')->autocomplete()->setHelp('Sélectionnez un rôle pour cet utilisateur'),
 
             FormField::addPanel('Système')->addCssClass('panel-section')->onlyOnDetail(),
             DateTimeField::new('createdAt')->onlyOnDetail(),

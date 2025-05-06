@@ -210,5 +210,9 @@ class Movie
         $this->heroImage = $heroImage;
         return $this;
     }
+    public function __toString(): string
+    {
+        return $this->title;
+    }
 
 }
