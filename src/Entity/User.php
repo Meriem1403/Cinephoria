@@ -9,11 +9,18 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\HasLifecycleCallbacks]
+#[UniqueEntity(
+    fields: ['email'],
+    message: 'Email is already used.',
+)]
+
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -30,6 +37,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $lastName = null;
 
+
+    #[Assert\NotBlank(message: 'Email is required.')]
+    #[Assert\Email(message: 'Email is not valid.')]
     #[ORM\Column(length: 255, unique: true)]
     private ?string $email = null;
 
@@ -60,8 +70,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?DateTimeInterface $lastLogin = null;
 
-    #[ORM\Column]
-    private ?bool $isActive = null;
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private ?bool $isActive = false;
 
     #[ORM\ManyToOne(inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
@@ -85,6 +95,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->reservations = new ArrayCollection();
         $this->incidents = new ArrayCollection();
         $this->cinemaEmployees = new ArrayCollection();
+        $this->isActive = false;
     }
 
     #[ORM\PrePersist]
@@ -92,6 +103,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->createdAt === null) {
             $this->createdAt = new DateTimeImmutable();
+        }
+        if ($this->isActive === null) {
+            $this->isActive = false;
         }
     }
 
@@ -152,6 +166,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->firstName . ' ' . $this->lastName;
     }
+
+
 
     public function getEmail(): ?string
     {

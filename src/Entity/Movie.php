@@ -7,6 +7,9 @@ use DateTimeInterface;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+
 
 #[ORM\Entity(repositoryClass: MovieRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -42,6 +45,9 @@ class Movie
     #[ORM\Column(nullable: true)]
     private ?float $rating = null;
 
+    #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'movie', orphanRemoval: true)]
+    private Collection $reviews;
+
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?DateTimeInterface $createdAt = null;
 
@@ -63,6 +69,27 @@ class Movie
         if ($this->createdAt === null) {
             $this->createdAt = new DateTimeImmutable();
         }
+    }
+
+    public function getReviews(): Collection
+    {
+        return $this->reviews;
+    }
+
+    public function setRating(?float $rating): self
+    {
+        $this->rating = $rating;
+        return $this;
+    }
+
+    public function getRating(): ?float
+    {
+        return $this->rating;
+    }
+
+    public function __construct()
+    {
+        $this->reviews = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -145,17 +172,6 @@ class Movie
     public function setIsFavorite(bool $isFavorite): self
     {
         $this->isFavorite = $isFavorite;
-        return $this;
-    }
-
-    public function getRating(): ?float
-    {
-        return $this->rating;
-    }
-
-    public function setRating(?float $rating): self
-    {
-        $this->rating = $rating;
         return $this;
     }
 

@@ -27,14 +27,25 @@ use Exception;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
+use Symfony\UX\Chartjs\Model\Chart;
 
 #[IsGranted('ROLE_ADMIN')]
 #[AdminDashboard(routePath: '/admin', routeName: 'admin')]
 class DashboardController extends AbstractDashboardController
 {
+    private ChartBuilderInterface $chartBuilder;
+
+    public function __construct(ChartBuilderInterface $chartBuilder)
+    {
+        $this->chartBuilder = $chartBuilder;
+    }
+
     public function index(): Response
     {
-        return $this->render('admin/dashboard.html.twig');
+        return $this->render('admin/index.html.twig', [
+            'chart' => $this->createChart(),
+        ]);
     }
 
     public function configureDashboard(): Dashboard
@@ -86,8 +97,9 @@ class DashboardController extends AbstractDashboardController
         if (!$user instanceof User) {
             throw new Exception('Wrong user.');
         }
+
         return parent::configureUserMenu($user)
-        ->setAvatarUrl($user->getAvatarUrl())
+            ->setAvatarUrl($user->getAvatarUrl())
             ->setMenuItems([
                 MenuItem::linkToUrl('My profile', 'fa-solid fa-user', $this->generateUrl('home')),
                 MenuItem::linkToLogout('Logout', 'fa-solid fa-sign-out-alt'),
@@ -99,11 +111,38 @@ class DashboardController extends AbstractDashboardController
         return parent::configureAssets()
             ->addWebpackEncoreEntry('admin');
     }
+
     public function configureCrud(): Crud
     {
         return Crud::new()
-
-            ->setPaginatorPageSize(5);
+            ->showEntityActionsInlined()
+            ->setPaginatorPageSize(8);
     }
 
+    private function createChart(): Chart
+    {
+        $chart = $this->chartBuilder->createChart(Chart::TYPE_LINE);
+        $chart->setData([
+            'labels' => ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+            'datasets' => [
+                [
+                    'label' => 'My First dataset',
+                    'backgroundColor' => 'rgb(255, 99, 132)',
+                    'borderColor' => 'rgb(255, 99, 132)',
+                    'data' => [0, 10, 5, 2, 20, 30, 45],
+                ],
+            ],
+        ]);
+
+        $chart->setOptions([
+            'scales' => [
+                'y' => [
+                    'suggestedMin' => 0,
+                    'suggestedMax' => 100,
+                ],
+            ],
+        ]);
+
+        return $chart;
+    }
 }

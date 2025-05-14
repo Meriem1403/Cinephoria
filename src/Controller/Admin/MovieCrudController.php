@@ -15,10 +15,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TimeField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TimezoneField;
-use Symfony\Component\Form\Extension\Core\Type\LanguageType;
-
 class MovieCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
@@ -55,7 +51,7 @@ class MovieCrudController extends AbstractCrudController
                 'Thriller' => 'thriller',
                 'Animation' => 'animation',
                 'Horror' => 'horror',
-                ])
+            ])
             ->renderExpanded();
 
         $fields[] = ArrayField::new('language', 'Languages');
@@ -64,14 +60,22 @@ class MovieCrudController extends AbstractCrudController
         $fields[] = NumberField::new('duration', 'Duration (minutes)')->hideOnIndex();
         $fields[] = NumberField::new('ageRating', 'Age Rating')->hideOnIndex();
 
-        $fields[] = TextEditorField::new('description', 'Description')->hideOnIndex();
+        $fields[] = Field::new('rating', 'Total votes')->onlyOnIndex()
+            ->formatValue(function ($value) {
+                return $value / 3;
+            })
+            ->setTextAlign('right')
+            ->setTemplatePath('/admin/field/movie_rating.html.twig')
+            ->onlyOnIndex();
 
-        $fields[] = BooleanField::new('atCinema', 'Currently in Cinemas');
+        $fields[] = TextEditorField::new('description', 'Synopsis');
+
+        $fields[] = BooleanField::new('atCinema', 'Currently in Cinemas')
+        ->renderAsSwitch(false);
         $fields[] = BooleanField::new('isFavorite', 'Marked as Favorite');
 
         $fields[] = DateTimeField::new('createdAt', 'Created At')->onlyOnDetail();
 
         return $fields;
     }
-
 }

@@ -11,7 +11,7 @@ class CinemaFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $cinema = new Cinema();
-        $cinema->setName('Cinéphoria Lyon');
+        $cinema->setName('Cinéphoria Horizon');
         $cinema->setCity('Lyon');
         $cinema->setAddress('8 rue Lumière');
         $cinema->setPostalCode('69001');

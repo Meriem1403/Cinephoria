@@ -137,4 +137,21 @@ class Seat
         }
         return $this;
     }
+    public function getLabel(): string
+    {
+        return strtoupper($this->rowLabel . $this->seatNumber);
+    }
+    public function getStatus(): string
+    {
+        if ($this->isBroken) return 'defective';
+        if ($this->isReserved) return 'reserved';
+        if ($this->isPMR) return 'pmr';
+        return 'standard';
+    }
+    public function isCurrentlyReserved(): bool
+    {
+        return !$this->reservationSeats->isEmpty();
+    }
+
+
 }

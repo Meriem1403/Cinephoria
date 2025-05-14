@@ -2,7 +2,7 @@
 
     {#Carrousel#}
     <div id="footer-carousel" class="absolute top-0 left-0 w-full h-full flex z-0 transition-transform duration-[2000ms] ease-in-out">
-        {% for img in heroImages %}
+        {% for img in heroImages|default([]) %}
             <div class="w-full h-full flex-shrink-0 bg-cover bg-center" style="background-image: url('{{ img }}');">
                 <div class="h-full w-full bg-black/60"></div>
             </div>
@@ -59,6 +59,7 @@
 </footer>
 
 <script>
-    window.heroImages = {{ heroImages|json_encode|raw }};
+    window.heroImages = {{ heroImages|default([])|json_encode|raw }};
     window.footerImages = window.heroImages;
 </script>
+

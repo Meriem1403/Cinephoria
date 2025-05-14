@@ -1,0 +1,108 @@
+{# templates/security/register.html.twig #}
+{% extends 'base.html.twig' %}
+{% set hide_footer = true %} {# Désactive le footer pour cette page #}
+
+{% block title %}Create an account — Cinéphoria{% endblock %}
+
+{% block body %}
+    <div style="
+            background: url('{{ asset('pictures/hp.jpg') }}') no-repeat center center fixed;
+            background-size: cover;
+            ">
+        <div class="min-h-screen flex items-center justify-center px-4 text-white">
+            <div class="bg-gradient-to-b from-black/20 to-white/20 p-8 sm:p-12 rounded-lg shadow-lg w-full max-w-2xl backdrop-blur-sm space-y-8">
+                <div class="flex justify-center mb-4">
+                    <img src="{{ asset('pictures/logo.png') }}" alt="Cinéphoria Logo" class="h-24">
+                </div>
+
+                <h1 class="text-center text-3xl font-bold">Create Your account</h1>
+
+                {{ form_start(registrationForm, {
+                    action: path('app_register'),
+                    attr: { class: 'space-y-6' }
+                }) }}
+
+                {# === Personal Info === #}
+                <h2 class="text-xl font-semibold">Personal Information</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {{ form_widget(registrationForm.firstName, {
+                        attr: { placeholder: 'First name', class: 'input-field' }
+                    }) }}
+                    {{ form_widget(registrationForm.lastName, {
+                        attr: { placeholder: 'Last name', class: 'input-field' }
+                    }) }}
+                </div>
+
+                {# === Account Credentials === #}
+                <h2 class="text-xl font-semibold">Account Credentials</h2>
+                <div class="space-y-4">
+                    {{ form_widget(registrationForm.email, {
+                        attr: { placeholder: 'Email address', class: 'input-field' }
+                    }) }}
+                    {{ form_widget(registrationForm.plainPassword, {
+                        attr: {
+                            placeholder: 'Password',
+                            autocomplete: 'new-password',
+                            class: 'input-field'
+                        }
+                    }) }}
+                </div>
+
+                {# === Additional Details === #}
+                <h2 class="text-xl font-semibold">Additional Details</h2>
+                <div class="space-y-4">
+                    {{ form_widget(registrationForm.birthDate, {
+                        attr: { placeholder: 'Date of birth', class: 'input-field' }
+                    }) }}
+                    {{ form_widget(registrationForm.phone, {
+                        attr: { placeholder: 'Phone', class: 'input-field' }
+                    }) }}
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {{ form_widget(registrationForm.address, {
+                            attr: { placeholder: 'Address', class: 'input-field' }
+                        }) }}
+                        {{ form_widget(registrationForm.postalCode, {
+                            attr: { placeholder: 'Postal code', class: 'input-field' }
+                        }) }}
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        {{ form_widget(registrationForm.city, {
+                            attr: { placeholder: 'City', class: 'input-field' }
+                        }) }}
+                        {{ form_widget(registrationForm.country, {
+                            attr: { placeholder: 'Country', class: 'input-field' }
+                        }) }}
+                    </div>
+                </div>
+
+                {# === Submit & Link === #}
+                <div class="space-y-4">
+                    <button type="submit"
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded transition">
+                        Sign Up
+                    </button>
+                    <p class="text-center text-sm">
+                        Already have an account?
+                        <a href="{{ path('app_login') }}" class="text-blue-400 underline hover:text-blue-500">
+                            Log In
+                        </a>
+                    </p>
+                </div>
+
+                {{ form_end(registrationForm) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
+    </script>
+{% endblock %}

@@ -1,22 +1,54 @@
+{# templates/base.html.twig #}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Cinéphoria{% endblock %}</title>
-
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
     {% endblock %}
 </head>
+
+<script>
+    document.addEventListener('click', function(event) {
+        const btn = document.getElementById('accountBtn');
+        const menu = document.getElementById('accountDropdown');
+        if (!btn || !menu) return;
+
+        if (btn.contains(event.target)) {
+            const isHidden = menu.classList.contains('hidden');
+            menu.classList.toggle('hidden', !isHidden);
+            menu.classList.toggle('scale-100', isHidden);
+            menu.classList.toggle('opacity-100', isHidden);
+            menu.classList.toggle('scale-95', !isHidden);
+            menu.classList.toggle('opacity-0', !isHidden);
+        } else if (!menu.contains(event.target)) {
+            menu.classList.add('hidden', 'scale-95', 'opacity-0');
+            menu.classList.remove('scale-100', 'opacity-100');
+        }
+    });
+</script>
+
 <body class="min-h-screen flex flex-col justify-between">
+
+{# === Flash messages === #}
+<div class="fixed top-0 inset-x-0 mt-4 px-4">
+    {% for label, messages in app.flashes %}
+        <div class="mb-2 alert alert-{{ label }}">
+            {% for msg in messages %}
+                <p>{{ msg }}</p>
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>
 
 {% block body %}
     {# Contenu principal de ta homepage ou autres pages #}
 {% endblock %}
 
-{# Footer #}
-{% if app.request.attributes.get('_route') != 'app_login' %}
+{# Footer (masqué si la variable hide_footer est définie ou si on est sur la page login) #}
+{% if hide_footer is not defined and app.request.attributes.get('_route') != 'app_login' %}
     {% include 'partials/_footer.html.twig' %}
 {% endif %}
 

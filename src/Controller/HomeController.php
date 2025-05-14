@@ -24,29 +24,6 @@ final class HomeController extends AbstractController
             }
         }
 
-        // à supprimer
-        /*
-        $dummyMovies = [
-            ['title' => 'The alto knights', 'pictures' => 'pictures/films/ak1.jpg'],
-            ['title' => 'Aznavour', 'pictures' => 'pictures/films/az1.jpg'],
-            ['title' => 'Le compte de Montecristo', 'pictures' => 'pictures/films/cm1.jpg'],
-            ['title' => 'Dune', 'pictures' => 'pictures/films/du1.jpg'],
-            ['title' => 'Joker', 'pictures' => 'pictures/films/jo1.jpg'],
-            ['title' => 'La haine', 'pictures' => 'pictures/films/lh1.jpg'],
-            ['title' => 'Locked', 'pictures' => 'pictures/films/lo1.jpg'],
-            ['title' => 'Minecraft le film', 'pictures' => 'pictures/films/mi1.jpg'],
-            ['title' => 'Narnia', 'pictures' => 'pictures/films/mn1.jpg'],
-            ['title' => 'Retour vers le futur', 'pictures' => 'pictures/films/oe1.jpg'],
-        ];
-
-        return $this->render('home/index.html.twig', [
-            'heroImages' => $heroImages,
-            'moviesAtCinema' => $dummyMovies,
-            'dramaMovies' => $dummyMovies,
-            'fantasyMovies' => $dummyMovies,
-        ]);
-        */
-
         $moviesAtCinema = $movieRepository->createQueryBuilder('m')
             ->where('m.atCinema = :val')
             ->setParameter('val', true)

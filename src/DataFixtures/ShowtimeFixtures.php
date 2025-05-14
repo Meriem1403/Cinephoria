@@ -22,7 +22,7 @@ class ShowtimeFixtures extends Fixture implements DependentFixtureInterface
         $showtime->setDate(new DateTimeImmutable('2024-05-05'));
         $showtime->setStartTime(new DateTimeImmutable('2024-05-05 20:00'));
         $showtime->setEndTime(new DateTimeImmutable('2024-05-05 22:30'));
-        $showtime->setLanguage('FR');
+        $showtime->setLanguage(['VO']);
         $showtime->setProjectionType('4K');
         $showtime->setStatus('disponible');
         $showtime->setAvailableSeats(120);

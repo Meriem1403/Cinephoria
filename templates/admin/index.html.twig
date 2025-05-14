@@ -1,0 +1,66 @@
+{# templates/admin/index.html.twig #}
+{% extends '@EasyAdmin/page/content.html.twig' %}
+{% trans_default_domain ea.i18n.translationDomain %}
+
+{% block page_title %}Cinephoria Dashboard{% endblock %}
+
+{% block main %}
+    {# Utilise un container-fluid avec padding horizontal #}
+    <div class="container-fluid px-3 px-md-4">
+        {# — Chart dans une carte full-width avec gutters — #}
+        <div class="row">
+            <div class="col-12">
+                <div class="stats-card">
+                    <h3 class="stats-card__title">Reviews Over Time</h3>
+                    <div class="chart-wrapper">
+                        {{ render_chart(reviews_chart()) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# — Deux cartes côte à côte — #}
+        <div class="row gx-4 gy-4 mt-4 stats-lists">
+            <div class="col-12 col-lg-6">
+                <div class="stats-card">
+                    <h3 class="stats-card__title">Latest Reviews</h3>
+                    <ul class="stats-list">
+                        {% for review in latest_reviews() %}
+                            <li class="stats-list__item">
+                                <a href="{{ path('admin_review_detail', { entityId: review.id }) }}"
+                                   class="stats-list__link">
+                                    {{ review.movie.title }}
+                                </a>
+                                <time class="stats-list__date">
+                                    {{ review.createdAt|date('Y-m-d H:i') }}
+                                </time>
+                            </li>
+                        {% else %}
+                            <li class="stats-list__empty">No recent reviews.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="stats-card">
+                    <h3 class="stats-card__title">Top Voted Reviews</h3>
+                    <ul class="stats-list">
+                        {% for review in top_voted_reviews() %}
+                            <li class="stats-list__item">
+                                <a href="{{ path('admin_review_detail', { entityId: review.id }) }}"
+                                   class="stats-list__link">
+                                    {{ review.movie.title }}
+                                </a>
+                                <time class="stats-list__date">
+                                    {{ review.createdAt|date('Y-m-d H:i') }}
+                                </time>
+                            </li>
+                        {% else %}
+                            <li class="stats-list__empty">No top voted reviews.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
