@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Movie;
+use App\Repository\CinemaRepository;
+use App\Repository\ShowtimeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,30 +51,20 @@ final class MovieController extends AbstractController
         ]);
     }
 
-    #[Route('/movie/{id}', name: 'movie_show')]
-    public function show(int $id, MovieRepository $movieRepository): Response
+    #[Route('/movies/{id}', name: 'movie_show')]
+    public function show(
+        Movie              $movie,
+        CinemaRepository   $cinemaRepository,
+        ShowtimeRepository $showtimeRepository
+    ): Response
     {
-        $movie = $movieRepository->find($id);
-
-        if (!$movie) {
-            throw $this->createNotFoundException('Movie not found.');
-        }
-
-        // Organiser les séances par cinéma et date
-        $groupedShowtimes = [];
-
-        foreach ($movie->getShowtimes() as $showtime) {
-            $cinemaName = $showtime->getRoom()->getCinema()->getCity() . ' – ' . $showtime->getRoom()->getCinema()->getName();
-            $dateKey = $showtime->getDate()->format('Y-m-d');
-
-            $groupedShowtimes[$cinemaName][$dateKey][] = $showtime;
-        }
-
-        ksort($groupedShowtimes);
+        $cinemas = $cinemaRepository->findAll();
+        $showtimes = $showtimeRepository->findBy(['movie' => $movie]);
 
         return $this->render('movie/show.html.twig', [
             'movie' => $movie,
-            'groupedShowtimes' => $groupedShowtimes,
+            'cinemas' => $cinemas,
+            'showtimes' => $showtimes,
         ]);
     }
 }
