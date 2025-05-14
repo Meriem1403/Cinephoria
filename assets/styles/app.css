@@ -28,4 +28,106 @@ body {
     font-size: 1.25rem;
     font-weight: bold;
 }
+/* assets/styles/app.css */
+
+/* Reset Password Email Template Styles */
+.reset-email-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 40px auto;
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.reset-email-header {
+    background-color: #1f2937;
+    padding: 20px;
+    text-align: center;
+}
+
+.reset-email-header img {
+    max-height: 40px;
+}
+
+.reset-email-content {
+    padding: 30px 20px;
+    color: #333;
+    font-family: Arial, sans-serif;
+}
+
+.reset-email-content h1 {
+    font-size: 24px;
+    margin-bottom: 16px;
+    color: #111827;
+}
+
+.reset-email-content p {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 16px;
+}
+
+.reset-email-button {
+    display: inline-block;
+    background-color: #3b82f6;
+    color: #fff !important;
+    padding: 12px 24px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.reset-email-footer {
+    background-color: #f3f4f6;
+    text-align: center;
+    padding: 16px;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+/* Auth container */
+.auth-container {
+    @apply bg-gradient-to-b from-black/20 to-white/20 p-6 sm:p-10 rounded-lg shadow-lg w-full max-w-xl backdrop-blur-sm;
+}
+
+/* Logo */
+.logo-image {
+    @apply h-28 pb-7;
+}
+
+/* Title */
+.auth-title {
+    @apply text-center text-2xl font-semibold mb-6;
+}
+
+/* Text paragraphs */
+.auth-text {
+    @apply text-base;
+}
+
+/* Primary link */
+.link-primary {
+    @apply text-blue-400 underline hover:text-blue-500;
+}
+
+/* Primary button */
+.btn-primary {
+    @apply inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded transition;
+}
+
+
+.flash-error {
+    @apply bg-red-600 text-white p-2 rounded mb-4;
+}
+
+.input-field {
+    @apply w-full bg-white text-black rounded px-3 py-2 outline-none;
+}
+.btn-primary:hover {
+    background-color: #1e40af;
+}
+
+
 

@@ -23,14 +23,14 @@ final class MovieController extends AbstractController
             ->getQuery()
             ->getResult();
 
-        // Filtrer par genre si un genre est demandé
+        // Filtrer par genre
         if (!empty($genre)) {
             $moviesAtCinema = array_filter($moviesAtCinema, function ($movie) use ($genre) {
                 return in_array($genre, array_map('strtolower', $movie->getGenre()), true);
             });
         }
 
-        // Charger les images pour le footer (carousel)
+        // Charger les images pour le footer
         $heroImages = [];
         $dirPath = __DIR__ . '/../../public/pictures/hero';
 
@@ -44,7 +44,34 @@ final class MovieController extends AbstractController
         return $this->render('movie/list.html.twig', [
             'movies' => $moviesAtCinema,
             'selectedGenre' => $genre,
-            'heroImages' => $heroImages, // ✅ pour le footer
+            'heroImages' => $heroImages,
+        ]);
+    }
+
+    #[Route('/movie/{id}', name: 'movie_show')]
+    public function show(int $id, MovieRepository $movieRepository): Response
+    {
+        $movie = $movieRepository->find($id);
+
+        if (!$movie) {
+            throw $this->createNotFoundException('Movie not found.');
+        }
+
+        // Organiser les séances par cinéma et date
+        $groupedShowtimes = [];
+
+        foreach ($movie->getShowtimes() as $showtime) {
+            $cinemaName = $showtime->getRoom()->getCinema()->getCity() . ' – ' . $showtime->getRoom()->getCinema()->getName();
+            $dateKey = $showtime->getDate()->format('Y-m-d');
+
+            $groupedShowtimes[$cinemaName][$dateKey][] = $showtime;
+        }
+
+        ksort($groupedShowtimes);
+
+        return $this->render('movie/show.html.twig', [
+            'movie' => $movie,
+            'groupedShowtimes' => $groupedShowtimes,
         ]);
     }
 }

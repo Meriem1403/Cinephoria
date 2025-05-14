@@ -40,8 +40,8 @@ class Showtime
     #[ORM\Column(type: Types::TIME_MUTABLE)]
     private ?DateTimeInterface $endTime = null;
 
-    #[ORM\Column(length: 5)]
-    private ?string $language = null;
+    #[ORM\Column(type: Types::JSON)]
+    private array $language = [];
 
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $projectionType = null;
@@ -61,11 +61,17 @@ class Showtime
     #[ORM\Column]
     private ?bool $specialPrice = null;
 
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $specialPrices = [];
+
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $label = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $notes = null;
+
+    #[ORM\Column(length: 10, nullable: true)]
+    private ?string $chosenLanguage = null;
 
     public function __construct()
     {
@@ -183,12 +189,12 @@ class Showtime
         return $this;
     }
 
-    public function getLanguage(): ?string
+    public function getLanguage(): array
     {
         return $this->language;
     }
 
-    public function setLanguage(string $language): self
+    public function setLanguage(array $language): self
     {
         $this->language = $language;
         return $this;
@@ -260,6 +266,17 @@ class Showtime
         return $this;
     }
 
+    public function getSpecialPrices(): ?array
+    {
+        return $this->specialPrices;
+    }
+
+    public function setSpecialPrices(?array $specialPrices): self
+    {
+        $this->specialPrices = $specialPrices;
+        return $this;
+    }
+
     public function getLabel(): ?string
     {
         return $this->label;
@@ -279,6 +296,18 @@ class Showtime
     public function setNotes(?string $notes): self
     {
         $this->notes = $notes;
+        return $this;
+    }
+
+    public function getChosenLanguage(): ?string
+    {
+        return $this->chosenLanguage;
+    }
+
+    public function setChosenLanguage(?string $chosenLanguage): static
+    {
+        $this->chosenLanguage = $chosenLanguage;
+
         return $this;
     }
 }

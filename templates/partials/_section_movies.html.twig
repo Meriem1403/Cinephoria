@@ -23,15 +23,17 @@
                 {% for movie in movies %}
                     <div class="swiper-slide">
                         <div class="group text-center transition duration-300 ease-in-out hover:scale-105 py-4">
-                            <img src="{{ asset('pictures/films/' ~ movie.posterUrl) }}"
-                                 alt="{{ movie.title }}"
-                                 class="w-[160px] sm:w-[180px] md:w-[200px] lg:w-[220px]
-                                        h-[240px] sm:h-[270px] md:h-[300px] lg:h-[330px]
-                                        object-cover rounded-xl shadow-md mx-auto" />
-                            <p class="mt-4 text-base sm:text-lg font-medium group-hover:font-semibold transition
-                                {{ withGradientBottom ? 'text-white' : 'text-gray-900' }}">
-                                {{ movie.title }}
-                            </p>
+                            <a href="{{ path('movie_show', { id: movie.id }) }}" class="group block transition duration-300 ease-in-out hover:scale-105 py-4">
+                                <img src="{{ asset('pictures/films/' ~ movie.posterUrl) }}"
+                                     alt="{{ movie.title }}"
+                                     class="w-[160px] sm:w-[180px] md:w-[200px] lg:w-[220px]
+                h-[240px] sm:h-[270px] md:h-[300px] lg:h-[330px]
+                object-cover rounded-xl shadow-md mx-auto" />
+                                <p class="mt-4 text-base sm:text-lg font-medium group-hover:font-semibold transition
+       {{ withGradientBottom ? 'text-white' : 'text-gray-900' }}">
+                                    {{ movie.title }}
+                                </p>
+                            </a>
                         </div>
                     </div>
                 {% endfor %}

@@ -1,0 +1,13 @@
+{# templates/admin/custom_action.html.twig #}
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+<a href="{{ action.url }}"
+   class="ea-action btn btn-{{ action.name|lower }}"
+   title="{{ action.label }}">
+    {% if action.icon %}
+        <i class="{{ action.icon }}"></i>
+    {% endif %}
+</a>

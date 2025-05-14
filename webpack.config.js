@@ -4,8 +4,10 @@ Encore
     .setOutputPath('public/build/')
     .setPublicPath('/build')
 
+    .enableStimulusBridge('./assets/controllers.json')
+
     .addEntry('app', './assets/app.js')
-    .addStyleEntry('admin', './assets/styles/admin.css')
+    .addEntry('admin', './assets/admin.js')
 
     .enablePostCssLoader()
 

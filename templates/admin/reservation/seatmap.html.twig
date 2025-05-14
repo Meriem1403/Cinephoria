@@ -1,0 +1,58 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}Seat Map – {{ room.name }}{% endblock %}
+
+{% block main %}
+        <div>
+
+
+    {# Regroupement par rangée #}
+    {% set grouped = {} %}
+    {% for seat in room.seats %}
+        {% set row = seat.rowLabel %}
+        {% set grouped = grouped|merge({ (row): (grouped[row]|default([]))|merge([seat]) }) %}
+    {% endfor %}
+    {% set rows = grouped|keys|sort %}
+
+    <div class="seat-grid">
+        {% for row in rows %}
+            <div class="seat-row">
+                {% for seat in grouped[row] %}
+                    {% set colorClass =
+                        seat.isBroken   ? 'seat--broken'   :
+                        seat.isReserved ? 'seat--reserved' :
+                        seat.isPMR      ? 'seat--pmr'      :
+                        'seat--standard'
+                    %}
+                    <div class="seat {{ colorClass }}">
+                        <span>{{ seat.getLabel() }}</span>
+                        <a href="{{ ea_url().setController('App\\Controller\\Admin\\SeatCrudController').setAction('edit').setEntityId(seat.id) }}"
+                           class="text-xs underline mt-1 text-center block"
+                           style="color: inherit;">
+                            Edit
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+
+    </div>
+
+    <div class="legend">
+        <div class="legend-item"><span class="legend-color legend-standard"></span> Standard</div>
+        <div class="legend-item"><span class="legend-color legend-pmr"></span> PMR</div>
+        <div class="legend-item"><span class="legend-color legend-reserved"></span> Reserved</div>
+        <div class="legend-item"><span class="legend-color legend-broken"></span> Defective</div>
+    </div>
+
+    <div>
+        <a href="{{ ea_url().setController('App\\Controller\\Admin\\RoomCrudController').setAction('index') }}"
+           class="back-to-room">
+            ← Back to Room list
+        </a>
+
+    </div>
+
+
+{% endblock %}

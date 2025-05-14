@@ -1,0 +1,16 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{% if field.value == 1 %}
+    <span class="fas fa-thumbs-down text-soft-danger"></span>
+{% elseif field.value == 2 %}
+    <span class="fas fa-thumbs-up text-soft-warning"></span>
+{% elseif field.value == 3 %}
+    <span class="fas fa-thumbs-up text-soft-success"></span>
+    <span class="fas fa-thumbs-up text-soft-success ml-1"></span>
+{% else %}
+    <span class="text-muted">No rating</span>
+{% endif %}
+

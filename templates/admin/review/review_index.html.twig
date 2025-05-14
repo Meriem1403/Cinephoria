@@ -1,0 +1,158 @@
+{# templates/admin/review_index.html.twig #}
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var paginator \EasyCorp\Bundle\EasyAdminBundle\Orm\EntityPaginator #}
+
+{% extends '@EasyAdmin/crud/index.html.twig' %}
+{% trans_default_domain 'EasyAdminBundle' %}
+
+{% set some_results_are_hidden = false %}
+
+{% block page_actions %}
+    {{ parent() }}
+{% endblock %}
+
+{% block main %}
+    <div class="custom-grid p-2"
+         style="display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                gap: 1.5rem;
+                margin-top: 1rem;">
+        {% for entity in paginator.results %}
+            <div class="custom-card"
+                 style="border: 1px solid #e0e0e0;
+                        border-radius: 12px;
+                        padding: 1.2rem;
+                        background-color: #fff;
+                        box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;">
+
+                <div class="card-actions"
+                     style="display: flex; justify-content: flex-end; gap: 0.4rem; margin-bottom: 0.6rem;">
+                    <a href="{{ ea_url().setAction('detail').setEntityId(entity.id) }}"
+                       class="btn btn-sm ea-button-detail" title="Détails">
+                        <i class="fa fa-eye"></i>
+                    </a>
+                    <a href="{{ ea_url().setAction('edit').setEntityId(entity.id) }}"
+                       class="btn btn-sm ea-button-edit" title="Modifier">
+                        <i class="fa fa-pen"></i>
+                    </a>
+                    <a href="#"
+                       class="btn btn-sm ea-button-delete"
+                       title="delete"
+                       data-bs-toggle="modal"
+                       data-bs-target="#modal-delete"
+                       data-delete-url="{{ ea_url().setAction('delete').setEntityId(entity.id) }}">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                </div>
+
+                <h3 style="margin-bottom: 0.5rem;">{{ entity.getMovie().getTitle() }}</h3>
+                <p><strong>User :</strong> {{ entity.getUser().getEmail() }}</p>
+                <p><strong>Date :</strong> {{ entity.getCreatedAt()|date('d/m/Y') }}</p>
+                <p><strong>Votes :</strong>
+                    {% if entity.getRating() == 1 %}
+                        <i class="fas fa-thumbs-down text-danger"></i>
+                    {% elseif entity.getRating() == 2 %}
+                        <i class="fas fa-thumbs-up text-warning"></i>
+                    {% elseif entity.getRating() == 3 %}
+                        <i class="fas fa-thumbs-up text-success"></i>
+                        <i class="fas fa-thumbs-up text-success ms-1"></i>
+                    {% else %}
+                        <span class="text-muted">Not rating</span>
+                    {% endif %}
+                </p>
+                <p><strong>Comment :</strong><br>{{ entity.getComment() }}</p>
+            </div>
+        {% else %}
+            <p>Not rated yet.</p>
+        {% endfor %}
+    </div>
+
+    {# Formulaire caché pour suppression #}
+    <form class="d-none" method="post" id="delete-form">
+        {% guard function csrf_token %}
+            <input type="hidden" name="token" value="{{ csrf_token('ea-delete') }}" />
+        {% endguard %}
+    </form>
+
+    {# Modal de confirmation de suppression #}
+    <div id="modal-delete" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h4>{{ 'delete_modal.title'|trans }}</h4>
+                    <p>{{ 'delete_modal.content'|trans }}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-bs-dismiss="modal" class="btn btn-secondary">
+                        <span class="btn-label">{{ 'action.cancel'|trans }}</span>
+                    </button>
+                    <button type="submit" class="btn btn-danger" id="modal-delete-button" form="delete-form">
+                        <span class="btn-label">{{ 'action.delete'|trans }}</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Script pour mettre à jour l'URL d'action du formulaire #}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var deleteModalEl = document.getElementById('modal-delete');
+            deleteModalEl.addEventListener('show.bs.modal', function (event) {
+                var triggerButton = event.relatedTarget;
+                var deleteUrl = triggerButton.getAttribute('data-delete-url');
+                var form = document.getElementById('delete-form');
+                if (deleteUrl) {
+                    form.setAttribute('action', deleteUrl);
+                }
+            });
+        });
+    </script>
+
+    {# Pagination #}
+    <div class="list-pagination">
+        <div class="list-pagination-counter">
+            {{ 'paginator.results'|trans({'%count%': paginator.numResults|format})|raw }}
+        </div>
+        {% if paginator.hasPreviousPage or paginator.hasNextPage %}
+            <nav class="pager list-pagination-paginator {{ not paginator.hasPreviousPage ? 'first-page' }} {{ not paginator.hasNextPage ? 'last-page' }}">
+                <ul class="pagination">
+                    <li class="page-item page-item-previous {{ not paginator.hasPreviousPage ? 'disabled' }}">
+                        <a class="page-link" href="{{ not paginator.hasPreviousPage ? '#' : paginator.generateUrlForPage(paginator.previousPage) }}">
+                            {% if 'rtl' == ea.i18n.textDirection %}
+                                <twig:ea:Icon name="internal:chevron-right" class="mx-1" aria-hidden="true" />
+                            {% else %}
+                                <twig:ea:Icon name="internal:chevron-left" class="mx-1" aria-hidden="true" />
+                            {% endif %}
+                            <span class="btn-label">{{ 'paginator.previous'|trans }}</span>
+                        </a>
+                    </li>
+
+                    {% for page in paginator.pageRange %}
+                        <li class="page-item {{ page == paginator.currentPage ? 'active' }} {{ page is null ? 'disabled' }}">
+                            {% if page is null %}
+                                <span class="page-link">&hellip;</span>
+                            {% else %}
+                                <a class="page-link" href="{{ paginator.generateUrlForPage(page) }}">{{ page }}</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+
+                    <li class="page-item page-item-next {{ not paginator.hasNextPage ? 'disabled' }}">
+                        <a class="page-link" href="{{ not paginator.hasNextPage ? '#' : paginator.generateUrlForPage(paginator.nextPage) }}">
+                            <span class="btn-label">{{ 'paginator.next'|trans }}</span>
+                            {% if 'rtl' == ea.i18n.textDirection %}
+                                <twig:ea:Icon name="internal:chevron-left" class="mx-1" aria-hidden="true" />
+                            {% else %}
+                                <twig:ea:Icon name="internal:chevron-right" class="mx-1" aria-hidden="true" />
+                            {% endif %}
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
+{% endblock %}

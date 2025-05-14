@@ -1,0 +1,141 @@
+{# templates/admin/employee/cinema_employee.html.twig #}
+{% extends '@EasyAdmin/crud/index.html.twig' %}
+{% trans_default_domain 'EasyAdminBundle' %}
+
+{% set some_results_are_hidden = false %}
+
+{% block page_actions %}
+    {{ parent() }}
+{% endblock %}
+
+{% block filters %}
+    {{ parent() }}
+{% endblock %}
+
+{% block main %}
+    <div class="custom-grid p-2"
+         style="display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                gap: 1.5rem;
+                margin-top: 1rem;">
+        {% for employee in paginator.results %}
+            {% set user = employee.getUser() %}
+            {% set cinema = employee.getCinema() %}
+            <div class="custom-card"
+                 style="border: 1px solid #e0e0e0;
+                        border-radius: 12px;
+                        padding: 1.2rem;
+                        background-color: #fff;
+                        box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;">
+
+                <div class="card-actions"
+                     style="display: flex; justify-content: flex-end; gap: 0.4rem; margin-bottom: 0.6rem;">
+                    <a href="{{ ea_url().setAction('detail').setEntityId(employee.id) }}"
+                       class="btn btn-sm ea-button-detail" title="Details">
+                        <i class="fa fa-eye"></i>
+                    </a>
+                    <a href="{{ ea_url().setAction('edit').setEntityId(employee.id) }}"
+                       class="btn btn-sm ea-button-edit" title="Edit">
+                        <i class="fa fa-pen"></i>
+                    </a>
+                    <a href="#"
+                       class="btn btn-sm ea-button-delete"
+                       title="Delete"
+                       data-bs-toggle="modal"
+                       data-bs-target="#modal-delete"
+                       data-delete-url="{{ ea_url().setAction('delete').setEntityId(employee.id) }}">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                </div>
+
+                {# Avatar ou initiales fallback #}
+                <div style="display: flex; justify-content: center; margin-bottom: 1rem;">
+                    {% if user.avatar %}
+                        <img src="{{ asset('pictures/uploads/' ~ user.avatar) }}"
+                             alt="{{ user.fullName }}"
+                             style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%; ">
+                    {% else %}
+                        <div style="width: 80px; height: 80px;
+                    border-radius: 50%;
+                    background-color: #eee;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: bold;
+                    font-size: 1.2rem;
+                    color: #333;
+                    border: 2px solid #ccc;">
+                            {{ user.firstName|slice(0,1)|upper }}{{ user.lastName|slice(0,1)|upper }}
+                        </div>
+                    {% endif %}
+                </div>
+
+
+                <h3 style="margin-bottom: 0.3rem; text-align: center;">{{ user.fullName }}</h3>
+                <p style="text-align: center; color: #777;">{{ employee.jobTitle }}</p>
+
+                <div style="font-size: 0.9rem; color: #555; margin-top: 0.5rem;">
+                    <p><strong>Cinema:</strong> {{ cinema.name }}</p>
+                    <p><strong>City:</strong> {{ cinema.city }}</p>
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    <p><strong>Phone:</strong> {{ user.phone }}</p>
+                    <p><strong>Since:</strong> {{ employee.assignedSince ? employee.assignedSince|date('d/m/Y') : '—' }}</p>
+                </div>
+
+                <div style="margin-top: 0.8rem;">
+                    {% if employee.isActive %}
+                        <span class="btn-active">
+                            <i class="fas fa-check-circle icon"></i> Active
+                        </span>
+                    {% else %}
+                        <span class="btn-cancelled">
+                            <i class="fas fa-times-circle"></i> Inactive
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        {% else %}
+            <p class="text-gray-600 col-span-full text-center">No cinema employees found.</p>
+        {% endfor %}
+    </div>
+
+    <form class="d-none" method="post" id="delete-form">
+        <input type="hidden" name="token" value="{{ csrf_token('ea-delete') }}" />
+    </form>
+
+    <div id="modal-delete" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h4>{{ 'delete_modal.title'|trans }}</h4>
+                    <p>{{ 'delete_modal.content'|trans }}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-bs-dismiss="modal" class="btn btn-secondary">
+                        <span class="btn-label">{{ 'action.cancel'|trans }}</span>
+                    </button>
+                    <button type="submit" class="btn btn-danger" id="modal-delete-button" form="delete-form">
+                        <span class="btn-label">{{ 'action.delete'|trans }}</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const deleteModal = document.getElementById('modal-delete');
+            deleteModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+                const deleteUrl = button.getAttribute('data-delete-url');
+                const form = document.getElementById('delete-form');
+                if (deleteUrl) {
+                    form.setAttribute('action', deleteUrl);
+                }
+            });
+        });
+    </script>
+{% endblock %}
