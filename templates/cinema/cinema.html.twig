@@ -1,67 +1,40 @@
-{# templates/cinema.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block title %}Cinemas — Cinéphoria{% endblock %}
 
 {% block body %}
-    <header class="fixed top-0 left-0 w-full h-20 z-40 bg-red-950/90 backdrop-blur-sm shadow-md">
-        <div class="container mx-auto flex items-center justify-between px-6 h-full">
-            <div class="flex items-center space-x-6">
-                <!-- Logo -->
-                <a href="{{ path('home') }}">
-                    <img src="{{ asset('pictures/logo.png') }}" alt="Cinéphoria Logo" class="max-h-16">
-                </a>
+    {% include 'partials/_header.html.twig' %}
 
-                <!-- Navbar -->
-                <nav class="flex space-x-8 text-2xl">
-                    <a href="{{ path('home') }}" class="text-white hover:text-gray-300">Home</a>
-                    <a href="{{ path('movies') }}" class="text-white hover:text-gray-300">Movies</a>
-                    <a href="{{ path('cinemas') }}" class="text-white ">Cinemas</a>
-                </nav>
-            </div>
+    <section class="cinema-page">
+        <h1 class="cinema-title">Our Cinemas</h1>
 
-            <div class="flex items-center space-x-4">
-                <!-- Search Button -->
-                <button class="w-[50px] h-[50px] flex items-center justify-center rounded-[20px] bg-white/20 hover:bg-white/30">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398l3.85 3.85a1 1 0 0 0 1.415-1.415l-3.85-3.85zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-                    </svg>
-                </button>
+        {% if cinemas|length > 0 %}
+            <div class="swiper cinema-swiper">
+                <div class="swiper-wrapper">
+                    {% for cinema in cinemas %}
+                        <div class="swiper-slide">
+                            <div class="cinema-card">
+                                <h2 class="cinema-name">{{ cinema.name }}</h2>
+                                <p class="cinema-info"><strong>City:</strong> {{ cinema.city }}</p>
+                                <p class="cinema-info"><strong>Address:</strong> {{ cinema.address }}</p>
+                                <p class="cinema-info"><strong>Postal Code:</strong> {{ cinema.postalCode }}</p>
+                                <p class="cinema-info"><strong>Country:</strong> {{ cinema.country }}</p>
+                                <p class="cinema-info"><strong>Phone:</strong> {{ cinema.phone }}</p>
+                                <p class="cinema-info"><strong>Email:</strong> {{ cinema.email }}</p>
 
-                <!-- Account Button -->
-                <a href="{{ path('app_login') }}" class="w-[50px] h-[50px] flex items-center justify-center rounded-[20px] bg-white/20 hover:bg-white/30">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5.216 6a6.986 6.986 0 0 1 10.432 0A.5.5 0 0 1 13 15H3a.5.5 0 0 1-.216-.984z"/>
-                    </svg>
-                </a>
-            </div>
-        </div>
-    </header>
-
-
-    <section>
-        <h1 class="sr-only">Our Cinemas</h1>
-        <div>
-            <h1 class="text-3xl font-bold mb-6">""</h1>
-        </div>
-
-        <div class="container mx-auto px-8 py-20">
-            <h1 class="text-3xl font-bold mb-6">Now Showing</h1>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {% for cinema in cinemas %}
-                <div class="bg-white rounded-xl shadow-md p-6 transition-transform duration-300 ease-in-out hover:shadow-lg hover:scale-105">
-                    <h2 class="text-xl font-semibold text-blue-800 mb-2">{{ cinema.name }}</h2>
-                    <p class="text-gray-700"><strong>City:</strong> {{ cinema.city }}</p>
-                    <p class="text-gray-700"><strong>Address:</strong> {{ cinema.address }}</p>
-                    <p class="text-gray-700"><strong>Postal Code:</strong> {{ cinema.postalCode }}</p>
-                    <p class="text-gray-700"><strong>Country:</strong> {{ cinema.country }}</p>
-                    <p class="text-gray-700"><strong>Phone:</strong> {{ cinema.phone }}</p>
-                    <p class="text-gray-700"><strong>Email:</strong> {{ cinema.email }}</p>
+                                <a href="{{ path('home', { id: cinema.id }) }}" class="cinema-link">
+                                    View showtimes
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
-            {% else %}
-                <p class="col-span-full text-center text-gray-500">No cinemas found.</p>
-            {% endfor %}
-        </div>
+
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        {% else %}
+            <p class="cinema-empty">No cinemas found.</p>
+        {% endif %}
     </section>
 {% endblock %}

@@ -3,89 +3,50 @@
 {% block title %}Movies — Cinéphoria{% endblock %}
 
 {% block body %}
-    <header class="fixed top-0 left-0 w-full h-20 z-40 bg-red-950/90 backdrop-blur-sm shadow-md">
-        <div class="container mx-auto flex items-center justify-between px-6 h-full">
-            <div class="flex items-center space-x-6">
-                <!-- Logo -->
-                <a href="{{ path('home') }}">
-                    <img src="{{ asset('pictures/logo.png') }}" alt="Cinéphoria Logo" class="max-h-16">
-                </a>
+    {% include 'partials/_header.html.twig' %}
 
-                <!-- Navbar -->
-                <nav class="flex space-x-8 text-2xl">
-                    <a href="{{ path('home') }}" class="text-white hover:text-gray-300">Home</a>
-                    <a href="{{ path('movies') }}" class="text-white ">Movies</a>
-                    <a href="{{ path('cinemas') }}" class="text-white hover:text-gray-300">Cinemas</a>
-                </nav>
+    <section class="movie-list-fullwidth">
+        <div class="movie-list-inner">
+            <h1 class="movie-list-title">Now Showing</h1>
+
+            <div class="genre-filter-group">
+                <a href="{{ path('movies') }}"
+                   class="genre-filter {% if not selectedGenre %}active{% endif %}">
+                    All movies
+                </a>
+                {% for genre in ['drama', 'action', 'fantasy', 'comedy', 'thriller', 'animation', 'horror'] %}
+                    <a href="{{ path('movies', { genre: genre }) }}"
+                       class="genre-filter {% if selectedGenre == genre %}active{% endif %}">
+                        {{ genre|capitalize }}
+                    </a>
+                {% endfor %}
             </div>
 
-            <div class="flex items-center space-x-4">
-                <!-- Search Button -->
-                <button class="w-[50px] h-[50px] flex items-center justify-center rounded-[20px] bg-white/20 hover:bg-white/30">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398l3.85 3.85a1 1 0 0 0 1.415-1.415l-3.85-3.85zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-                    </svg>
-                </button>
+            {% if selectedGenre %}
+                <h2 class="selected-genre-label">Genre: {{ selectedGenre|capitalize }}</h2>
+            {% endif %}
 
-                <!-- Account Button -->
-                <a href="{{ path('app_login') }}" class="w-[50px] h-[50px] flex items-center justify-center rounded-[20px] bg-white/20 hover:bg-white/30">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5.216 6a6.986 6.986 0 0 1 10.432 0A.5.5 0 0 1 13 15H3a.5.5 0 0 1-.216-.984z"/>
-                    </svg>
-                </a>
-            </div>
-        </div>
-    </header>
+            {% if movies|length > 0 %}
+                <div class="swiper movie-swiper">
+                    <div class="swiper-wrapper">
+                        {% for movie in movies %}
+                            <div class="swiper-slide">
+                                <a href="{{ path('movie_show', { id: movie.id }) }}" class="movie-card-link">
+                                    <img src="{{ asset('pictures/films/' ~ movie.posterUrl) }}"
+                                         alt="{{ movie.title }}"
+                                         class="movie-poster" />
+                                    <p class="movie-title">{{ movie.title }}</p>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
 
-    <div>
-        <h1 class="text-3xl font-bold mb-6">""</h1>
-    </div>
-
-    <div class="container mx-auto px-8 py-20">
-        <h1 class="text-3xl font-bold mb-6">Now Showing</h1>
-
-        <div class="mb-8 space-x-2">
-            <a href="{{ path('movies') }}"
-               class="inline-block px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 {% if not selectedGenre %}font-bold{% endif %}">
-                All movies
-            </a>
-            {% for genre in ['drama', 'action', 'fantasy', 'comedy', 'thriller', 'animation', 'horror'] %}
-                <a href="{{ path('movies', { genre: genre }) }}"
-                   class="inline-block px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 {% if selectedGenre == genre %}font-bold{% endif %}">
-                    {{ genre|capitalize }}
-                </a>
-            {% endfor %}
-        </div>
-
-        {% if selectedGenre %}
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">Genre: {{ selectedGenre|capitalize }}</h2>
-        {% endif %}
-
-        {% if movies|length > 0 %}
-            <div class="swiper">
-                <div class="swiper-wrapper">
-                    {% for movie in movies %}
-                        <div class="swiper-slide">
-                            <a href="{{ path('movie_show', { id: movie.id }) }}"
-                               class="group text-center transition duration-300 ease-in-out hover:scale-105 py-4 block">
-                                <img src="{{ asset('pictures/films/' ~ movie.posterUrl) }}"
-                                     alt="{{ movie.title }}"
-                                     class="w-[160px] sm:w-[180px] md:w-[200px] lg:w-[220px]
-                h-[240px] sm:h-[270px] md:h-[300px] lg:h-[330px]
-                object-cover rounded-xl shadow-md mx-auto" />
-                                <p class="mt-2 text-base sm:text-lg text-gray-900 font-medium group-hover:font-semibold transition">
-                                    {{ movie.title }}
-                                </p>
-                            </a>
-                        </div>
-                    {% endfor %}
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
                 </div>
-
-                <div class="swiper-button-next"></div>
-                <div class="swiper-button-prev"></div>
-            </div>
-        {% else %}
-            <p class="text-gray-600 mt-6">No movies found for this genre.</p>
-        {% endif %}
-    </div>
+            {% else %}
+                <p class="no-movies-message">No movies found for this genre.</p>
+            {% endif %}
+        </div>
+    </section>
 {% endblock %}
