@@ -4,7 +4,14 @@ module.exports = {
         './assets/**/*.js',
     ],
     theme: {
-        extend: {},
+        extend: {
+            backdropBlur: {
+                sm: '3px',
+            },
+            minHeight: {
+                '80vh': '80vh',
+            },
+        },
     },
     plugins: [],
 }
