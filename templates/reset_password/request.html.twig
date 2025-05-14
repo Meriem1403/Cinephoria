@@ -16,13 +16,12 @@
 
                 <h1 class="text-center text-3xl font-bold">Reset Your Password</h1>
 
-                {# Affiche les erreurs flash #}
                 {% for flash_error in app.flashes('reset_password_error') %}
                     <div class="bg-red-600 text-white p-2 rounded mb-4">{{ flash_error }}</div>
                 {% endfor %}
 
-                {{ form_start(form, { attr: { class: 'space-y-4' } }) }}
-                {{ form_row(form.email, {
+                {{ form_start(requestForm, { attr: { class: 'space-y-4' } }) }}
+                {{ form_row(requestForm.email, {
                     attr: {
                         placeholder: 'Enter your email',
                         class: 'w-full bg-white text-black rounded px-3 py-2 outline-none'
@@ -35,9 +34,9 @@
 
                 <button type="submit"
                         class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded w-full transition">
-                    Send Password Reset Email
+                    Send
                 </button>
-                {{ form_end(form) }}
+                {{ form_end(requestForm) }}
             </div>
         </div>
     </div>
