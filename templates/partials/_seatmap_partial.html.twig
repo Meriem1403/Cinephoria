@@ -1,0 +1,58 @@
+{# partial que l’on peut inclure en front et en admin #}
+{# Variables attendues : seats (array de Seat), adminMode (bool) #}
+
+{# Construction du grouping par rangée #}
+{% set grouped = {} %}
+{% for seat in seats %}
+    {% set row = seat.rowLabel %}
+    {% set grouped = grouped|merge({ (row): (grouped[row]|default([]))|merge([seat]) }) %}
+{% endfor %}
+{% set rows = grouped|keys|sort %}
+
+<div class="seat-grid">
+    {% for rowLabel in rows %}
+        <div class="seat-row">
+            {% for seat in grouped[rowLabel] %}
+                {% set colorClass =
+                    seat.isBroken   ? 'seat--broken'   :
+                    seat.isReserved ? 'seat--reserved' :
+                    seat.isPMR      ? 'seat--pmr'      :
+                    'seat--standard'
+                %}
+                {% if adminMode %}
+                    <div class="seat-container {{ colorClass }}">
+                        <div class="seat-body">{{ seat.label }}</div>
+                        <a
+                                href="{{ ea_url()
+                                    .setController('App\\Controller\\Admin\\SeatCrudController')
+                                    .setAction('edit')
+                                    .setEntityId(seat.id) }}"
+                                class="text-xs underline mt-1 block"
+                                style="color: inherit;"
+                        >Edit</a>
+                    </div>
+                {% else %}
+                    {% set disabled = seat.isBroken or seat.isReserved %}
+                    <label class="seat-container {{ colorClass }} {% if disabled %}cursor-not-allowed{% endif %}">
+                        {% if not disabled %}
+                            <input
+                                    type="checkbox"
+                                    name="seats[]"
+                                    value="{{ seat.id }}"
+                                    class="seat-checkbox"
+                            />
+                        {% endif %}
+                        <div class="seat-body">{{ seat.label }}</div>
+                    </label>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>
+
+<div class="legend mt-6 flex flex-wrap justify-center gap-6">
+    <div class="legend-item flex items-center gap-2"><span class="legend-color legend-standard"></span> Standard</div>
+    <div class="legend-item flex items-center gap-2"><span class="legend-color legend-pmr"></span> PMR</div>
+    <div class="legend-item flex items-center gap-2"><span class="legend-color legend-reserved"></span> Reserved</div>
+    <div class="legend-item flex items-center gap-2"><span class="legend-color legend-broken"></span> Defective</div>
+</div>

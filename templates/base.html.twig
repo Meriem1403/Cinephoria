@@ -7,6 +7,14 @@
     <title>{% block title %}Cinéphoria{% endblock %}</title>
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
+        {# FontAwesome CDN pour les icônes #}
+        <link
+                rel="stylesheet"
+                href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+                integrity="sha512-p8fWj+/6R+8qo3crzY6MQG/TpW7QXz9E3Nf3pSXlc3FMDZp8Ykh4/t8EIX5v4Z3OV+rPEfhtiPs0cw0QW4r9jg=="
+                crossorigin="anonymous"
+                referrerpolicy="no-referrer"
+        />
     {% endblock %}
 </head>
 
@@ -48,7 +56,7 @@
 {% endblock %}
 
 {# Footer (masqué si la variable hide_footer est définie ou si on est sur la page login) #}
-{% if hide_footer is not defined and app.request.attributes.get('_route') != 'app_login' %}
+{% if hide_header is not defined and app.request.attributes.get('_route') not in ['app_booking','booking_formulas'] %}
     {% include 'partials/_footer.html.twig' %}
 {% endif %}
 

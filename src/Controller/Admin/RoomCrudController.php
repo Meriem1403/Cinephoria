@@ -92,7 +92,7 @@ class RoomCrudController extends AbstractCrudController
         parent::persistEntity($entityManager, $entityInstance);
 
         $capacity = $entityInstance->getCapacity();
-        $columns = 7;
+        $columns = 11;
         $rows = ceil($capacity / $columns);
         $seatCounter = 0;
 

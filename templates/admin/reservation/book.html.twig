@@ -1,0 +1,187 @@
+{# templates/admin/reservation/book.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block header %}{% endblock %}
+
+{% block title %}
+    {{ showtime.movie.title }} – Seat Selection
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/admin.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="flex flex-col md:flex-row min-h-screen relative">
+
+        {# === COLONNE GAUCHE : DÉTAILS FILM === #}
+        <div class="relative w-full md:w-2/5 text-white overflow-auto">
+
+            <div
+                    class="absolute inset-0 bg-cover bg-center"
+                    style="background-image:url('{{ asset('pictures/hero/' ~ showtime.movie.heroImage) }}')"
+            ></div>
+            <div class="absolute inset-0 bg-black/70"></div>
+
+            <div class="relative z-10 px-6 py-6 md:py-10 h-full overflow-auto">
+
+                <div class="flex justify-center mb-4">
+                    <img src="{{ asset('pictures/logo.png') }}" alt="Cinéphoria" class="h-12 md:h-16">
+                </div>
+
+                <div class="flex justify-center mb-6">
+                    <img
+                            src="{{ asset('pictures/films/' ~ showtime.movie.posterUrl) }}"
+                            alt="{{ showtime.movie.title }}"
+                            class="w-48 h-64 object-cover rounded shadow-lg"
+                    >
+                </div>
+
+                <h1 class="text-2xl md:text-3xl text-center font-bold mb-2">
+                    {{ showtime.movie.title }}
+                </h1>
+                <p class="text-center text-gray-200 text-base md:text-lg mb-10">
+                    {% if showtime.room.cinema %}
+                        {{ showtime.room.cinema.name }} – {{ showtime.room.cinema.city }}
+                    {% endif %}
+                </p>
+
+                <div class="movie-details space-y-6 text-base md:text-lg lg:text-xl leading-snug">
+                    <div class="border-b border-white/50 pb-4">
+                        <span class="uppercase font-semibold text-white/80 block">Date</span>
+                        <span>{{ showtime.date|date('l d F Y') }}</span>
+                    </div>
+                    <div class="border-b border-white/50 pb-4">
+                        <span class="uppercase font-semibold text-white/80 block">Showtime</span>
+                        <span>{{ showtime.startTime|date('H:i') }}
+            <small class="ml-2">{{ showtime.chosenLanguage }}</small>
+          </span>
+                    </div>
+                    <div class="pb-4">
+                        <span class="uppercase font-semibold text-white/80 block">Ends at</span>
+                        <span>{{ showtime.endTime|date('H:i') }}</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        {# === COLONNE DROITE : SEATMAP === #}
+        <div class="flex-1 bg-gray-100 p-4 md:p-6 flex flex-col overflow-hidden">
+            <div class="flex items-center justify-between mb-2">
+                <h2 class="text-2xl md:text-3xl font-semibold">Select your seats</h2>
+                <div class="text-lg md:text-xl text-gray-600">
+                    <span id="seatCount">0</span> free seats
+                </div>
+            </div>
+
+            <form
+                    id="seatForm"
+                    method="POST"
+                    action="{{ path('app_booking', {'id': showtime.id}) }}"
+                    class="flex-1 flex flex-col overflow-hidden"
+            >
+                <div class="flex-1 overflow-auto mt-4 md:mt-6 content-center">
+
+                    {# --- Construction du tableau de sièges --- #}
+                    {% set grouped = {} %}
+                    {% for seat in seats %}
+                        {% set row = seat.rowLabel %}
+                        {% set grouped = grouped|merge({ (row): (grouped[row]|default([]))|merge([seat]) }) %}
+                    {% endfor %}
+                    {% set rows = grouped|keys|sort %}
+
+                    <div class="seat-grid">
+                        {% for rowLabel in rows %}
+                            <div class="seat-row">
+                                {% for seat in grouped[rowLabel] %}
+                                    {% set colorClass =
+                                        seat.isBroken   ? 'seat--broken'   :
+                                        seat.isReserved ? 'seat--reserved' :
+                                        seat.isPMR      ? 'seat--pmr'      :
+                                        'seat--standard'
+                                    %}
+                                    {% set disabled = seat.isBroken or seat.isReserved %}
+
+                                    <label class="seat-container {{ colorClass }}">
+                                        {% if not disabled %}
+                                            <input
+                                                    type="checkbox"
+                                                    name="seats[]"
+                                                    value="{{ seat.id }}"
+                                                    class="seat-checkbox"
+                                            />
+                                        {% endif %}
+                                        <div class="seat-body">
+                                            {{ seat.label }}
+                                        </div>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    {# --- Légende des sièges --- #}
+                    <div class="legend mt-6">
+                        <div class="legend-item">
+                            <span class="legend-color legend-standard"></span> Standard
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color legend-pmr"></span> PMR
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color legend-reserved"></span> Reserved
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color legend-broken"></span> Defective
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+        {# === OVERLAY FIXE === #}
+        <div
+                id="reserveOverlay"
+                class="flex fixed bottom-0 left-0 w-full bg-black/30 p-4 flex justify-end items-center z-50"
+        >
+            <button
+                    id="reserveButton"
+                    class="px-6 py-3 bg-green-600 text-white text-lg font-semibold rounded-full hover:bg-green-700 transition"
+                    aria-label="Reserve seats"
+            >Reserve my seats →
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const seatCheckboxes = document.querySelectorAll('.seat-checkbox');
+            const seatCountEl    = document.getElementById('seatCount');
+            const overlay        = document.getElementById('reserveOverlay');
+            const reserveBtn     = document.getElementById('reserveButton');
+            const form           = document.getElementById('seatForm');
+
+            function updateSeatCount() {
+                let count = 0;
+                seatCheckboxes.forEach(chk => { if (chk.checked) count++; });
+                seatCountEl.textContent = count;
+                if (count > 0) {
+                    overlay.classList.remove('hidden');
+                } else {
+                    overlay.classList.add('hidden');
+                }
+            }
+
+            seatCheckboxes.forEach(chk => {
+                chk.addEventListener('change', updateSeatCount);
+            });
+
+            reserveBtn.addEventListener('click', function() {
+                form.submit();
+            });
+        });
+    </script>
+{% endblock %}

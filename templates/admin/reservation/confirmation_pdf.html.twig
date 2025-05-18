@@ -1,0 +1,132 @@
+{# templates/admin/reservation/confirmation_pdf.html.twig #}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>E-Ticket {{ reservation.id }}</title>
+    <style>
+        /* ==== Page A4 ==== */
+        @page { size: A4 portrait; margin: 10mm; }
+        body { margin:0; padding:0; font-family: DejaVu Sans, sans-serif; color:#333; }
+
+        /* ==== Grille 2 colonnes ==== */
+        .tickets-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            column-gap: 10mm;
+            row-gap: 10mm;
+        }
+
+        /* ==== Ticket ==== */
+        .ticket {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            page-break-inside: avoid;
+        }
+
+        /* en-tête bannière */
+        .ticket-header {
+            position: relative;
+            height: 50mm;
+        }
+        .ticket-header img {
+            width:100%; height:100%; object-fit:cover;
+        }
+        .ticket-header .overlay {
+            position:absolute; bottom:0; left:0; right:0;
+            background:rgba(0,0,0,0.4); padding:4mm;
+        }
+        .ticket-header .overlay h2 {
+            margin:0; color:#fff; font-size:5mm;
+        }
+
+        /* badge */
+        .badge {
+            display:inline-block;
+            background:#e91e63; color:#fff;
+            text-transform:uppercase; font-size:3mm;
+            padding:1mm 2mm; border-radius:2mm;
+            margin:4px;
+        }
+
+        /* infos */
+        .info { padding:3mm; font-size:4mm; }
+        .info .row { display:flex; justify-content:space-between; margin-bottom:1mm; }
+        .info .label { color:#777; text-transform:uppercase; width:30%; }
+        .info .value { width:65%; text-align:right; }
+
+        /* perforation */
+        .perforation {
+            position:relative; height:4mm; background:#fafafa;
+        }
+        .perforation .line {
+            border-top:1px dashed #bbb;
+            position:absolute; top:50%; left:4mm; right:4mm; transform:translateY(-50%);
+        }
+        .perforation .hole {
+            position:absolute; top:50%; width:4mm; height:4mm;
+            background:#fff; border:1px solid #bbb; border-radius:50%;
+            transform:translateY(-50%);
+        }
+        .perforation .hole.left { left:-2mm; }
+        .perforation .hole.right { right:-2mm; }
+
+        /* qr & logo */
+        .qr-logo { text-align:center; padding:4mm; }
+        .qr-logo img { width:20mm; height:20mm; }
+        .qr-logo .logo { width:10mm; margin-top:2mm; }
+    </style>
+</head>
+<body>
+<div class="tickets-grid">
+    {% for rs in reservation.reservationSeats %}
+        <div class="ticket">
+            <!-- bannière -->
+            <div class="ticket-header">
+                <img src="{{ bannerDataUri }}" alt="">
+                <div class="overlay">
+                    <h2>{{ reservation.showtime.movie.title }}</h2>
+                </div>
+            </div>
+            <!-- badge et infos -->
+            <div class="info">
+                <span class="badge">e-ticket</span>
+                <div class="row">
+                    <div class="label">Date</div>
+                    <div class="value">{{ reservation.showtime.date|date('d/m/Y') }}</div>
+                </div>
+                <div class="row">
+                    <div class="label">Seats</div>
+                    <div class="value">{{ rs.seat.getLabel() }}</div>
+                </div>
+                <div class="row">
+                    <div class="label">Location</div>
+                    <div class="value">{{ reservation.showtime.room.cinema.name }}</div>
+                </div>
+                <div class="row">
+                    <div class="label">Time</div>
+                    <div class="value">{{ reservation.showtime.startTime|date('H:i') }}</div>
+                </div>
+                <div class="row">
+                    <div class="label">Order</div>
+                    <div class="value">{{ reservation.id }}</div>
+                </div>
+            </div>
+            <!-- perforation -->
+            <div class="perforation">
+                <div class="hole left"></div>
+                <div class="line"></div>
+                <div class="hole right"></div>
+            </div>
+            <!-- QR code + logo -->
+            <div class="qr-logo">
+                <img src="{{ qr_code_data_uri(rs.seat.getLabel() ~ '|' ~ reservation.id) }}" alt="QR">
+                <br>
+                <img src="{{ logoDataUri }}" class="logo" alt="Logo">
+            </div>
+        </div>
+    {% endfor %}
+</div>
+</body>
+</html>

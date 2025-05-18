@@ -54,11 +54,12 @@
 }
 .legend {
     display: flex;
-    gap: 48px; /* espacement entre chaque item */
-    margin-top: 40px;
-    margin-bottom: 40px;
+    justify-content: center; /* <— ici */
+    gap: 1.5rem;
+    margin: 2.5rem 0;
     flex-wrap: wrap;
 }
+
 
 .legend-item {
     display: flex;
@@ -114,13 +115,13 @@
 
 /* Style de base pour chaque siège */
 .seat {
-    width: 5rem;
-    height: 5rem;
+    width: 3rem;
+    height: 3rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border-radius: 0.45rem;
+    border-radius: 0.55rem;
     font-family: 'ABeeZee', sans-serif;
     font-style: normal;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -581,19 +582,19 @@
     transition: background-color 0.2s ease-in-out;
 }
 
-.cinema-link:hover {
-    background-color: #0A7ACC;
-}
+    .cinema-link:hover {
+        background-color: #0A7ACC;
+    }
 
-/* === END CINEMA PUBLIC PAGE === */
+    /* === END CINEMA PUBLIC PAGE === */
 
-/* === START SHOWTIME PUBLIC PAGE === */
+    /* === START SHOWTIME PUBLIC PAGE === */
 
-.cinema-show-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-}
+    .cinema-show-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
 
 .cinema-show-card {
     background-color: #fff;
@@ -608,4 +609,153 @@
     gap: 0.4rem;
 }
 
-/* === END SHOWTIME PUBLIC PAGE === */
+    /* === END SHOWTIME PUBLIC PAGE === */
+
+    /* === START BOOKING PUBLIC PAGE === */
+
+    .booking-title {
+        font-family: 'ABeeZee', sans-serif;
+        font-weight: bold;
+        color: #fff;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .booking-poster {
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+.seat-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 6rem;         /* ajustez à la taille souhaitée */
+    aspect-ratio: 1 / 1; /* garde la hauteur égale à la largeur */
+    border-radius: 0.55rem;
+    font-weight: bold;
+    font-size: 1rem;
+    font-family: 'ABeeZee', sans-serif;
+    cursor: pointer;
+    position: relative;
+}
+
+    /* On masque la checkbox */
+
+    .seat-checkbox {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    /* Au clic, on grise tout le .seat-body */
+
+    .seat-container input[type="checkbox"]:checked + .seat-body {
+        background-color: #D5D5D5;
+        color: #333;
+        text-decoration: none;
+        border-radius: 0.55rem;
+    }
+
+    .seat-body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        /* On peut garder la couleur selon seat--standard, pmr, etc. si on veut
+           ou on applique la classe seat--xxx à la seat-container, up to you.
+        */
+    }
+
+
+/* === END BOOKING PUBLIC PAGE === */
+
+/* dans tailwind.css */
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+/* Container “ticket” pour HTML */
+.ticket-card {
+    width: 100%;
+    max-width: 16rem; /* = 256px environ, équivalent à w-64 */
+    margin: 0 auto 1.5rem; /* centré et espacement vertical */
+    border: 1px solid #ddd;
+    border-radius: 0.75rem; /* rounded-xl */
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+/* Perforation line & holes */
+.ticket-perforation {
+    position: relative;
+}
+.ticket-perforation .line {
+    border-top: 2px dashed #ccc;
+    margin: 0.75rem 0;
+}
+.ticket-perforation .hole {
+    position: absolute;
+    top: 0;
+    width: 1rem;
+    height: 1rem;
+    background: #f3f4f6;
+    border-radius: 50%;
+}
+.ticket-perforation .hole.left  { left: -0.5rem; }
+.ticket-perforation .hole.right { right: -0.5rem; }
+
+/* Banner overlay */
+.ticket-card .banner {
+    position: relative;
+    height: 6rem; /* h-24 */
+    background-size: cover;
+    background-position: center;
+}
+.ticket-card .banner .overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 0.75rem;
+}
+
+/* Grid info */
+.ticket-card .info {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    color: #4a5568; /* text-gray-700 */
+}
+
+/* Stub & QR */
+.ticket-card .qr-container,
+.ticket-card .logo-container {
+    text-align: center;
+    padding: 1rem;
+}
+.ticket-card .qr-container img {
+    width: 10rem; /* 160px */
+    height: 10rem;
+}
+.ticket-card .logo-container img {
+    height: 2rem; /* h-8 */
+    margin-top: 0.75rem;
+}
+
+/* Flex wrapper */
+.ticket-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem; /* gap-6 */
+}

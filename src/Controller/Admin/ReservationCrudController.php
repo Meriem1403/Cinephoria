@@ -89,10 +89,19 @@ class ReservationCrudController extends AbstractCrudController
             return;
         }
 
+        // Marquer les sièges comme réservés
+        foreach ($entityInstance->getReservationSeats() as $rs) {
+            $seat = $rs->getSeat();
+            if ($seat) {
+                $seat->setIsReserved(true);
+                $entityManager->persist($seat);
+            }
+        }
+
         // Calcul automatique du prix total à partir des sièges
         $total = 0;
-        foreach ($entityInstance->getReservationSeats() as $seat) {
-            $total += $seat->getPrice();
+        foreach ($entityInstance->getReservationSeats() as $rs) {
+            $total += $rs->getPrice();
         }
         $entityInstance->setTotalPrice($total);
 
@@ -105,10 +114,21 @@ class ReservationCrudController extends AbstractCrudController
             return;
         }
 
-        // Recalcul aussi lors de la mise à jour
+        // Si annulation -> libérer les sièges
+        if ($entityInstance->getStatus() === 'cancelled') {
+            foreach ($entityInstance->getReservationSeats() as $rs) {
+                $seat = $rs->getSeat();
+                if ($seat) {
+                    $seat->setIsReserved(false);
+                    $entityManager->persist($seat);
+                }
+            }
+        }
+
+        // Recalcul automatique du prix total
         $total = 0;
-        foreach ($entityInstance->getReservationSeats() as $seat) {
-            $total += $seat->getPrice();
+        foreach ($entityInstance->getReservationSeats() as $rs) {
+            $total += $rs->getPrice();
         }
         $entityInstance->setTotalPrice($total);
 

@@ -1,0 +1,112 @@
+{# templates/booking/confirmation.html.twig #}
+{% extends 'base.html.twig' %}
+{% block title %}Thanks for your purchase – Cinéphoria{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/admin.css') }}">
+    <style>
+        .ticket-perforation {
+            position: relative;
+        }
+        .ticket-perforation .line {
+            border-top: 2px dashed #ccc;
+            margin: 0.75rem 0;
+        }
+        .ticket-perforation .hole {
+            position: absolute;
+            top: 0;
+            width: 1rem;
+            height: 1rem;
+            background: #f3f4f6;
+            border-radius: 50%;
+        }
+        .ticket-perforation .hole.left  { left: -0.5rem; }
+        .ticket-perforation .hole.right { right: -0.5rem; }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <section class="bg-gray-100 py-12 text-center">
+        <h1 class="text-4xl font-bold">Thanks for your purchase</h1>
+        <p class="text-lg text-gray-600 mt-2">We appreciate your order.</p>
+    </section>
+
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex flex-wrap justify-center gap-6">
+            {% for rs in reservation.reservationSeats %}
+                <div class="ticket-card bg-gray-50 rounded-xl shadow-lg overflow-hidden w-64">
+                    {# Bannière #}
+                    <div class="h-24 bg-cover bg-center" style="background-image:url('{{ asset('pictures/hero/' ~ reservation.showtime.movie.heroImage) }}')">
+                        <div class="h-full bg-black/40 flex items-center justify-between px-3">
+                            <span class="text-white font-semibold">{{ reservation.showtime.movie.title }}</span>
+                            <span class="text-red-700 uppercase font-semibold text-sm">e-ticket</span>
+                        </div>
+                    </div>
+
+                    {# Infos 2×3 #}
+                    <div class="grid grid-cols-2 gap-4 px-4 py-3 text-sm text-gray-700">
+                        <div>
+                            <span class="block text-gray-500 uppercase text-xs">Date</span>
+                            <span class="font-medium">{{ reservation.showtime.date|date('d/m/Y') }}</span>
+                        </div>
+                        <div>
+                            <span class="block text-gray-500 uppercase text-xs">Seats</span>
+                            <span class="font-medium">{{ rs.seat.getLabel() }}</span>
+                        </div>
+                        <div>
+                            <span class="block text-gray-500 uppercase text-xs">Location</span>
+                            <span class="font-medium">{{ reservation.showtime.room.cinema.name }}</span>
+                        </div>
+                        <div>
+                            <span class="block text-gray-500 uppercase text-xs">Time</span>
+                            <span class="font-medium">{{ reservation.showtime.startTime|date('H:i') }}</span>
+                        </div>
+                        <div>
+                            <span class="block text-gray-500 uppercase text-xs">Room</span>
+                            <span class="font-medium">{{ reservation.showtime.room.name }}</span>
+                        </div>
+                        <div>
+                            <span class="block text-gray-500 uppercase text-xs">Order</span>
+                            <span class="font-medium">{{ reservation.id }}</span>
+                        </div>
+                    </div>
+
+                    {# Ligne de perforation #}
+                    <div class="ticket-perforation bg-gray-50">
+                        <div class="hole left"></div>
+                        <div class="line"></div>
+                        <div class="hole right"></div>
+                    </div>
+
+                    {# QR Code sous la perforation #}
+                    <div class="px-4 pb-4 text-center">
+                        <img
+                                src="{{ path('qr_code_route', {'text': rs.seat.getLabel() ~ '|' ~ reservation.id}) }}"
+                                alt="QR Code {{ rs.seat.getLabel() }}"
+                                class="mx-auto w-40 h-40"
+                        />
+                    </div>
+
+                    {# Stub – logo #}
+                    <div class="px-4 pb-4 text-center">
+                        <img
+                                src="{{ asset('pictures/logo.png') }}"
+                                alt="Cinéphoria logo"
+                                class="mx-auto mt-3 h-8"
+                        />
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="text-center mt-12">
+            <a
+                    href="{{ path('booking_confirmation_download', {'reservationId': reservation.id}) }}"
+                    class="inline-block bg-blue-400 hover:bg-blue-500 text-white font-semibold px-8 py-3 rounded-full shadow transition"
+            >
+                Download E-Ticket
+            </a>
+        </div>
+    </div>
+{% endblock %}

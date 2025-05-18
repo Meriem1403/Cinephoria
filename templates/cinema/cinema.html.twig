@@ -1,40 +1,84 @@
+{# templates/cinema/index.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Cinemas — Cinéphoria{% endblock %}
+{% block title %}Our Cinemas – Cinéphoria{% endblock %}
 
 {% block body %}
-    {% include 'partials/_header.html.twig' %}
+    <section class="container mx-auto px-4 py-12">
+        <h1 class="text-4xl font-extrabold text-gray-800 mb-6">Our Cinemas</h1>
 
-    <section class="cinema-page">
-        <h1 class="cinema-title">Our Cinemas</h1>
+        {# Search input #}
+        <div class="mb-6">
+            <input
+                    id="cinemaSearch"
+                    type="text"
+                    placeholder="Search by name or city..."
+                    class="w-full md:w-1/2 px-4 py-2 border border-gray-300 bg-white text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+            />
+        </div>
 
         {% if cinemas|length > 0 %}
-            <div class="swiper cinema-swiper">
-                <div class="swiper-wrapper">
-                    {% for cinema in cinemas %}
-                        <div class="swiper-slide">
-                            <div class="cinema-card">
-                                <h2 class="cinema-name">{{ cinema.name }}</h2>
-                                <p class="cinema-info"><strong>City:</strong> {{ cinema.city }}</p>
-                                <p class="cinema-info"><strong>Address:</strong> {{ cinema.address }}</p>
-                                <p class="cinema-info"><strong>Postal Code:</strong> {{ cinema.postalCode }}</p>
-                                <p class="cinema-info"><strong>Country:</strong> {{ cinema.country }}</p>
-                                <p class="cinema-info"><strong>Phone:</strong> {{ cinema.phone }}</p>
-                                <p class="cinema-info"><strong>Email:</strong> {{ cinema.email }}</p>
+            <div id="cinemaGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {% for cinema in cinemas %}
+                    <div
+                            class="cinema-card flex flex-col bg-white/60 backdrop-blur-md rounded-xl p-6 shadow-md hover:shadow-lg transition-transform duration-200"
+                            data-name="{{ cinema.name|lower }}"
+                            data-city="{{ cinema.city|lower }}"
+                    >
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4">{{ cinema.name }}</h2>
 
-                                <a href="{{ path('home', { id: cinema.id }) }}" class="cinema-link">
-                                    View showtimes
-                                </a>
-                            </div>
+                        {# Badges City / Postal / Country #}
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="text-xs font-medium px-2 py-1 rounded-full bg-blue-200 text-blue-800">{{ cinema.city }}</span>
+                            <span class="text-xs font-medium px-2 py-1 rounded-full bg-green-200 text-green-800">{{ cinema.postalCode }}</span>
+                            <span class="text-xs font-medium px-2 py-1 rounded-full bg-indigo-200 text-indigo-800">{{ cinema.country }}</span>
                         </div>
-                    {% endfor %}
-                </div>
 
-                <div class="swiper-button-next"></div>
-                <div class="swiper-button-prev"></div>
+                        <ul class="space-y-3 text-gray-700 mb-6 flex-1">
+                            <li class="flex items-center gap-2">
+                                {# FontAwesome: Map Marker #}
+                                <i class="fas fa-map-marker-alt text-lg text-gray-600"></i>
+                                <span>{{ cinema.address }}</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                {# FontAwesome: Phone Alt #}
+                                <i class="fas fa-phone-alt text-lg text-gray-600"></i>
+                                <span>{{ cinema.phone }}</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                {# FontAwesome: Envelope #}
+                                <i class="fas fa-envelope text-lg text-gray-600"></i>
+                                <a href="mailto:{{ cinema.email }}" class="underline text-gray-700">{{ cinema.email }}</a>
+                            </li>
+                        </ul>
+
+                        <div class="mt-auto">
+                            <a
+                                    href="{{ path('home', { id: cinema.id }) }}"
+                                    class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold px-5 py-2 rounded-full transition-colors duration-200"
+                            >
+                                View Showtimes
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
         {% else %}
-            <p class="cinema-empty">No cinemas found.</p>
+            <p class="text-center text-gray-500">No cinemas found.</p>
         {% endif %}
     </section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.getElementById('cinemaSearch').addEventListener('input', function(e) {
+            const q = e.target.value.toLowerCase();
+            document.querySelectorAll('#cinemaGrid .cinema-card').forEach(card => {
+                const name = card.dataset.name;
+                const city = card.dataset.city;
+                card.style.display = name.includes(q) || city.includes(q) ? '' : 'none';
+            });
+        });
+    </script>
 {% endblock %}
