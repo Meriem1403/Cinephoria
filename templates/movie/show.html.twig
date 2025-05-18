@@ -1,166 +1,165 @@
+{# templates/movie/detail.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ movie.title }} – Cinéphoria{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/admin.css') }}">
+{% endblock %}
+
 {% block body %}
-    <section
-            class="relative bg-cover bg-center min-h-[80vh] pt-32 pb-16 text-white"
-            style="background-image:url('{{ asset('pictures/hero/' ~ movie.heroImage) }}')"
-    >
-        <!-- Overlay sombre + blur -->
-        <div class="absolute inset-0 bg-gradient-to-b from-black/40 to-black/70 backdrop-blur-sm"></div>
+    <section class="relative bg-cover bg-center min-h-[80vh] pt-24 pb-16 text-white" style="background-image: url('{{ asset('pictures/hero/' ~ movie.heroImage) }}')">
+        <!-- Overlay plus foncé -->
+        <div class="absolute inset-0 bg-gradient-to-b from-black/80 to-black/100"></div>
 
         <div class="relative z-10 container mx-auto px-4 flex flex-col lg:flex-row gap-8">
-            <!-- Affiche du film -->
-            <img
-                    class="w-60 h-[360px] rounded-xl shadow-2xl flex-shrink-0"
-                    src="{{ asset('pictures/films/' ~ movie.posterUrl) }}"
-                    alt="{{ movie.title }}"
-            >
+            <!-- Affiche -->
+            <img src="{{ asset('pictures/films/' ~ movie.posterUrl) }}" alt="{{ movie.title }} Poster" loading="lazy"
+                 class="w-60 h-[360px] rounded-xl shadow-2xl flex-shrink-0" />
 
             <!-- Métadonnées -->
             <div class="flex-1 space-y-4">
-                <h1 class="text-4xl font-bold">{{ movie.title }}</h1>
+                <h1 class="text-4xl lg:text-5xl font-bold drop-shadow-lg">{{ movie.title }}</h1>
 
-                {# Durée formatée en HH:MM:SS #}
-                {% set mins = movie.duration %}
-                {% set h = mins // 60 %}
-                {% set m = mins % 60 %}
-                {% set fmt = '%02d:%02d:00'|format(h, m) %}
-
-                <ul class="space-y-2 text-base">
-                    <li class="flex items-center gap-2">
-                        <i data-lucide="film" class="w-5 h-5"></i>
-                        <strong>Genres:</strong> {{ movie.genre|join(', ') }}
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <i data-lucide="globe" class="w-5 h-5"></i>
-                        <strong>Languages:</strong> {{ movie.language|join(', ') }}
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <i data-lucide="calendar-days" class="w-5 h-5"></i>
-                        <strong>Release Date:</strong> {{ movie.releaseDate|date('F j, Y') }}
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <i data-lucide="clock" class="w-5 h-5"></i>
-                        <strong>Duration:</strong> {{ mins }} min ({{ fmt }})
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <i data-lucide="shield-check" class="w-5 h-5"></i>
-                        <strong>Age Rating:</strong> {{ movie.ageRating }}
-                    </li>
-                    {% if movie.isFavorite %}
-                        <li class="flex items-center gap-2 text-yellow-400">
-                            <i data-lucide="star" class="w-5 h-5"></i>
-                            <strong>Marked as Favorite</strong>
-                        </li>
+                {# Pouces colorés selon la note #}
+                <div class="flex flex-wrap items-center gap-4 mt-2">
+                    {% if movie.rating is not null %}
+                        {% set r = movie.rating %}
+                        <span class="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium bg-white/20 {% if r < 1.5 %}text-red-400{% elseif r < 2.5 %}text-yellow-400{% else %}text-green-400{% endif %}">
+            {% if r < 1.5 %}
+                {# Pouce vers le bas #}
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 17h4a2 2 0 002-2V9a2 2 0 00-2-2h-4V2L5 8l5 9v-0z"/>
+              </svg>
+            {% elseif r < 2.5 %}
+                {# Un pouce vers le haut #}
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 3H6a2 2 0 00-2 2v6a2 2 0 002 2h4v5l5-6V5l-5-2z"/>
+              </svg>
+            {% else %}
+                {# Deux pouces vers le haut #}
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 3H6a2 2 0 00-2 2v6a2 2 0 002 2h4v5l5-6V5l-5-2z"/>
+              </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 3H6a2 2 0 00-2 2v6a2 2 0 002 2h4v5l5-6V5l-5-2z"/>
+              </svg>
+            {% endif %}
+            <span class="ml-1">{{ r|number_format(1, '.', '') }}/3</span>
+          </span>
                     {% endif %}
-                </ul>
+                    {% if movie.isFavorite %}
+                        <span class="inline-flex items-center bg-yellow-500/20 text-yellow-400 rounded-full px-3 py-1 text-sm font-medium">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.97a1 1 0 00.950.69h4.18c.969 0 1.371 1.24.588 1.81l-3.385 2.46a1 1 0 00-.364 1.118l1.286 3.97c.3.921-.755 1.688-1.540 1.118l-3.385-2.46a1 1 0 00-1.175 0l-3.385 2.46c-.784.570-1.838-.197-1.540-1.118l1.286-3.97a1 1 0 00-.364-1.118L2.045 9.397c-.783-.570-.380-1.810.588-1.810h4.180a1 1 0 00.950-.690L9.049 2.927z"/>
+            </svg>
+            Favorite
+          </span>
+                    {% endif %}
+                </div>
 
-                <p class="prose prose-invert">
+                {# Infos date, genres, durée #}
+                {% set h = movie.duration // 60 %}
+                {% set m = movie.duration % 60 %}
+                <p class="text-sm text-gray-300">{{ movie.releaseDate|date('d/m/Y') }} &middot; {{ movie.genre|join(', ') }} &middot; {{ h }}h {{ m }}m</p>
+
+                <div class="prose prose-invert max-w-none leading-relaxed">
                     {{ movie.description|striptags }}
-                </p>
+                </div>
             </div>
         </div>
 
-        <!-- Selector + Slider + Showtimes -->
-        <div class="relative z-10 container mx-auto px-4 mt-12 space-y-6">
-            <!-- Barre de sélection de cinéma -->
-            <div class="flex justify-center items-center gap-4">
-                <label for="cinemaSelect" class="font-semibold text-lg">Sélectionnez un cinéma:</label>
-                <div class="relative">
-                    <select
-                            id="cinemaSelect"
-                            class="inline-block px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-800
-                         focus:outline-none focus:ring-2 focus:ring-blue-600 transition"
-                            onchange="filterByCinema(this.value)"
-                    >
-                        <option value="">-- Tous les cinémas --</option>
-                        {% for cinema in cinemas %}
-                            <option value="{{ cinema.id }}">{{ cinema.name }} – {{ cinema.city }}</option>
-                        {% endfor %}
-                    </select>
-                    <i data-lucide="chevron-down"
-                       class="pointer-events-none absolute top-1/2 right-3 w-4 h-4 text-gray-600 -translate-y-1/2">
-                    </i>
-                </div>
-            </div>
-
-            <!-- Slider de dates -->
-            <div class="flex items-center justify-center gap-3 overflow-x-auto no-scrollbar px-2 py-2 bg-black/30 rounded-xl">
-                {% set seen = [] %}
-                {% for st in showtimes %}
-                    {% set dayKey = st.date|date('Y-m-d') %}
-                    {% set dayFmt = st.date|date('D d M') %}
-                    {% if dayKey not in seen %}
-                        {% set seen = seen|merge([dayKey]) %}
-                        <button
-                                class="flex-shrink-0 px-4 py-2 bg-white text-gray-800 rounded-xl font-semibold
-                             hover:bg-blue-600 hover:text-white transition"
-                                onclick="filterByDate('{{ dayKey }}')"
-                        >
-                            {{ dayFmt }}
-                        </button>
-                    {% endif %}
+        {# Slider des dates (inchangé) #}
+        <div class="relative z-10 container mx-auto px-4 mt-8">
+            <!-- Flèches -->
+            <button type="button" onclick="scrollDates(-1)"
+                    class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 items-center justify-center w-10 h-10 rounded-full bg-white/50 hover:bg-white text-gray-800 shadow focus:outline-none"
+                    aria-label="Previous dates">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 18l-6-6 6-6" />
+                </svg>
+            </button>
+            <div id="dateSlider" class="flex overflow-x-auto no-scrollbar bg-white/10 rounded-xl py-4 px-2 gap-3 items-center" style="scroll-behavior: smooth; -webkit-overflow-scrolling: touch;">
+                {% set today = date() %}
+                {% for i in 0..19 %}
+                    {% set d = today|date_modify('+' ~ i ~ ' day') %}
+                    {% set iso = d|date('Y-m-d') %}
+                    <button type="button" data-date="{{ iso }}" onclick="filterByDate('{{ iso }}'); highlightSelectedDay(this);"
+                            class="flex-shrink-0 w-16 h-20 bg-white/20 text-white rounded-lg flex flex-col items-center justify-center hover:bg-white/30 focus:outline-none relative{% if i == 0 %} selected-day{% endif %}">
+                        <span class="text-xs uppercase">{{ d|date('D') }}</span>
+                        <span class="text-xl font-semibold">{{ d|date('d') }}</span>
+                        <span class="text-xs uppercase">{{ d|date('M') }}</span>
+                        {% if i == 0 %}
+                            <span class="absolute bottom-0 h-1 w-full bg-orange-500 rounded-t"></span>
+                        {% endif %}
+                    </button>
                 {% endfor %}
-                <button
-                        class="flex-shrink-0 px-3 py-2 bg-white/90 text-gray-600 rounded-xl hover:bg-blue-600 hover:text-white transition
-                     flex items-center gap-2"
-                        aria-label="Ouvrir le calendrier"
-                >
-                    <i data-lucide="calendar" class="w-5 h-5"></i>
-                    <span class="hidden sm:inline">Calendrier</span>
-                </button>
             </div>
+            <button type="button" onclick="scrollDates(1)"
+                    class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 items-center justify-center w-10 h-10 rounded-full bg-white/50 hover:bg-white text-gray-800 shadow focus:outline-none"
+                    aria-label="Next dates">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 18l6-6-6-6" />
+                </svg>
+            </button>
+        </div>
 
-            <!-- Liste/Grille des séances -->
-            <div id="showtimeList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {% if showtimes is empty %}
-                    <p class="text-center text-gray-300 col-span-full">Aucune séance disponible.</p>
-                {% else %}
-                    {% for st in showtimes %}
-                        <div
-                                class="flex flex-col items-center p-4 bg-white/90 rounded-xl shadow-lg
-                             transform hover:scale-[1.02] hover:shadow-xl transition
-                             text-gray-800"
-                                data-cinema="{{ st.room.cinema.id }}"
-                                data-date="{{ st.date|date('Y-m-d') }}"
-                        >
-                            <span class="text-2xl font-semibold">{{ st.startTime|date('H:i') }}</span>
-                            <span class="text-sm text-gray-500 mb-2">{{ st.chosenLanguage }}</span>
-                            <a
-                                    href="{{ path('home', { id: st.id }) }}"
-                                    class="mt-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition
-                                 font-semibold"
-                            >
-                                Réserver
-                            </a>
+        {# Cinémas & séances stylisées #}
+        <div id="cinemasList" class="relative z-10 container mx-auto px-4 mt-8 space-y-12">
+            {% for cinema in cinemas %}
+                {% set sessions = showtimes|filter(st => st.room.cinema.id == cinema.id) %}
+                {% if sessions is not empty %}
+                    <div data-cinema-block class="bg-white/10 rounded-xl p-6">
+                        <h2 class="text-2xl font-semibold text-white mb-2">{{ cinema.name }}</h2>
+                        <p class="text-sm text-gray-300 mb-4">{{ cinema.city }}</p>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+                            {% for st in sessions %}
+                                <a href="{{ path('app_booking',{id:st.id}) }}" data-date="{{ st.date|date('Y-m-d') }}"
+                                   class="session-card group flex flex-col items-center p-4 bg-white/20 hover:bg-white/30 rounded-xl shadow-lg transition focus:outline-none" aria-label="Book session at {{ st.startTime|date('H:i') }}">
+                                    <span class="text-2xl text-center font-bold text-white group-hover:text-gray-900">{{ st.startTime|date('H:i') }}</span>
+                                    <div class="mt-2 inline-block flex-wrap gap-2">
+                                        <span class="text-xs font-medium px-2 py-1 rounded-full bg-white/30 text-white group-hover:text-gray-900">{{ st.chosenLanguage }}</span>
+                                    </div>
+                                </a>
+                            {% endfor %}
                         </div>
-                    {% endfor %}
+                    </div>
                 {% endif %}
-            </div>
+            {% else %}
+                <p class="text-center text-white">No cinemas available.</p>
+            {% endfor %}
         </div>
     </section>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="https://unpkg.com/lucide@latest"></script>
     <script>
-        window.addEventListener('DOMContentLoaded', () => lucide.createIcons());
-
-        function filterByCinema(id) {
-            const cards = document.querySelectorAll('#showtimeList > div');
-            cards.forEach(el => {
-                el.style.display = (!id || el.dataset.cinema === id) ? 'flex' : 'none';
-            });
+        function scrollDates(dir) {
+            document.getElementById('dateSlider').scrollBy({ left: dir*200, behavior: 'smooth' });
         }
-
         function filterByDate(date) {
-            const cards = document.querySelectorAll('#showtimeList > div');
-            cards.forEach(el => {
-                el.style.display = (el.dataset.date === date) ? 'flex' : 'none';
+            document.querySelectorAll('#cinemasList [data-date]').forEach(el => {
+                el.style.display = el.dataset.date === date ? 'flex' : 'none';
+            });
+            document.querySelectorAll('[data-cinema-block]').forEach(block => {
+                const any = Array.from(block.querySelectorAll('[data-date]')).some(el => el.style.display !== 'none');
+                block.style.display = any ? 'block' : 'none';
             });
         }
+        function highlightSelectedDay(btn) {
+            document.querySelectorAll('#dateSlider button').forEach(b => {
+                b.classList.remove('selected-day');
+                const bar = b.querySelector('span.absolute'); if (bar) bar.remove();
+            });
+            btn.classList.add('selected-day');
+            const bar = document.createElement('span');
+            bar.className = 'absolute bottom-0 h-1 w-full bg-orange-500 rounded-t';
+            btn.append(bar);
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date().toISOString().split('T')[0]; filterByDate(today);
+        });
     </script>
 {% endblock %}
