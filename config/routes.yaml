@@ -3,3 +3,7 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+api_seats_by_room:
+        path: /api/seats/by-room/{id}
+        controller: App\Controller\Api\SeatApiController::byRoom
+        methods: [ GET ]
