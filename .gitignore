@@ -22,6 +22,8 @@
 ###> symfony/asset-mapper ###
 /public/assets/
 /assets/vendor/
+/npm-debug.log
+/yarn-error.log
 ###< symfony/asset-mapper ###
 
 # Autres fichiers d'environnement
@@ -53,3 +55,12 @@ npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 
+
+# Mobile (Expo/React Native)
+### Mobile (Expo/React Native) ###
+/mobile/node_modules/
+/mobile/yarn.lock
+/mobile/expo-debug.*
+/mobile/.expo/
+/mobile/dist/
+/mobile/web-build/

@@ -9,9 +9,11 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use ApiPlatform\Metadata\ApiResource;
 
 
 #[ORM\Entity(repositoryClass: MovieRepository::class)]
+#[ApiResource]
 #[ORM\HasLifecycleCallbacks]
 class Movie
 {
