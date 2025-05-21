@@ -1,4 +1,11 @@
-# 🎬 Cinéphoria
+# 🎬 Cinéphoria Web - Experience User & Admin
+
+![Platform](https://img.shields.io/badge/platform-web-lightgrey)
+![Symfony](https://img.shields.io/badge/Symfony-7.0-blue)
+![PHP](https://img.shields.io/badge/PHP-8.4.5-777bb3)
+![Status](https://img.shields.io/badge/status-in%20progress-yellow)
+![License: MIT](https://img.shields.io/badge/license-MIT-green)
+
 
 **Projet de TP – Développeur d’Applications (CDA) – 2025**  
 Cinéphoria est une application **multi-plateformes** (web, mobile, desktop) de gestion de séances de cinéma.
