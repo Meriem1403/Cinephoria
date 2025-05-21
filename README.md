@@ -1,7 +1,7 @@
 # 🎬 Cinéphoria
 
 **Projet de TP – Développeur d’Applications (CDA) – 2025**  
-Cinéphoria est une application **multi-plateformes** (web, mobile, bureau) de gestion de séances de cinéma.
+Cinéphoria est une application **multi-plateformes** (web, mobile, desktop) de gestion de séances de cinéma.
 
 Le projet permet :
 - la réservation de séances,
@@ -15,7 +15,7 @@ Le projet permet :
 
 Ce projet est réalisé dans le cadre de la validation du **TP CDA**. Il permet de démontrer les compétences en :
 - Développement web fullstack (Symfony, PHP, JS)
-- Développement mobile (Flutter)
+- Développement mobile (React Native / Expo)
 - Développement bureautique (Python Tkinter)
 - Utilisation de bases de données relationnelle et NoSQL
 - Versionning avec Git & GitHub
@@ -28,11 +28,11 @@ Ce projet est réalisé dans le cadre de la validation du **TP CDA**. Il permet 
 
 | Plateforme | Technologies                                                            |
 |------------|-------------------------------------------------------------------------|
-| Web        | PHP 8, Symfony 7, HTML5, CSS3, JavaScript                               |
-| Mobile     | Flutter / Dart                                                          |
+| Web        | PHP 8.4.5, Symfony 7, HTML5, CSS3, JavaScript, Tailwind CSS, Webpack Encore |
+| Mobile     | React Native / Expo                                                     |
 | Bureau     | Python / Tkinter                                                        |
-| Base de données | MySQL (relationnelle) & MongoDB (NoSQL)                                 |
-| Outils     | Git, GitHub, Composer, Node.js, Webpack Encore, Yarn, VS Code, PhpStorm |
+| Base de données | MySQL (relationnelle), MongoDB (NoSQL)                                 |
+| Outils     | Git, GitHub, Composer, Node.js, Yarn, Mailpit, Apache24, HeidiSQL       |
 
 ---
 
@@ -43,7 +43,7 @@ Ce projet est réalisé dans le cadre de la validation du **TP CDA**. Il permet 
 
 ---
 
-## 🚀 Installation rapide (partie web Symfony)
+## 🚀 Installation manuelle (Symfony sans Docker)
 
 ```bash
 # Cloner le dépôt
@@ -52,12 +52,12 @@ cd Cinephoria
 
 # Installer les dépendances
 composer install
-npm install
-npm run dev
+yarn install
+yarn dev
 
 # Créer la base de données
 php bin/console doctrine:database:create
 php bin/console doctrine:migrations:migrate
 
-# Lancer le serveur
-symfony server:start
+# Lancer le serveur local Symfony (via PHP natif)
+php -S 0.0.0.0:8000 -t public
