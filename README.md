@@ -1,5 +1,6 @@
 # 🎬 Cinéphoria Web - Experience User & Admin
 
+
 ![Platform](https://img.shields.io/badge/platform-web-lightgrey)
 ![Symfony](https://img.shields.io/badge/Symfony-7.0-blue)
 ![PHP](https://img.shields.io/badge/PHP-8.4.5-777bb3)
@@ -50,7 +51,9 @@ Ce projet est réalisé dans le cadre de la validation du **TP CDA**. Il permet 
 
 ---
 
-## 🚀 Installation manuelle (Symfony sans Docker)
+---
+
+## 🚀 Installation (mannuelle ou avec Docker)
 
 ```bash
 # Cloner le dépôt
@@ -68,3 +71,25 @@ php bin/console doctrine:migrations:migrate
 
 # Lancer le serveur local Symfony (via PHP natif)
 php -S 0.0.0.0:8000 -t public
+
+
+---
+
+## 🐳 Lancer le projet avec Docker (environnement complet)
+
+> Cette méthode est recommandée pour exécuter le projet avec PHP, MySQL et Mailpit sans configuration manuelle.
+
+### 📦 Prérequis
+
+- Docker Desktop installé (https://www.docker.com/products/docker-desktop)
+- Git installé
+
+### ▶️ Commandes à exécuter
+
+```bash
+# Cloner le projet
+git clone https://github.com/Meriem1403/cinephoria-web.git
+cd cinephoria-web
+
+# Lancer tous les services
+docker compose up --build
