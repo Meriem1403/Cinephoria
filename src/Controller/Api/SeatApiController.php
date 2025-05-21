@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class SeatApiController extends AbstractController
 {
-    #[Route('/api/seats/room/{id}', name: 'api_seats_by_room', methods: ['GET'])]
+    #[Route('/api/seats/by-room/{id}', name: 'api_seats_by_room', methods: ['GET'])]
     public function byRoom(Room $room): JsonResponse
     {
         $seats = $room->getSeats();

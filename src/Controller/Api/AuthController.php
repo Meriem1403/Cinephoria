@@ -24,7 +24,7 @@ class AuthController extends AbstractController
 
         $user = $userRepo->findOneBy(['email' => $email]);
         if (!$user || !$passwordHasher->isPasswordValid($user, $password)) {
-            return $this->json(['error' => 'Identifiants invalides'], 401);
+            return $this->json(['error' => 'Invalid credentials'], 401);
         }
 
         $payload = [
