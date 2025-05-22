@@ -1,4 +1,4 @@
-# 🎬 Cinéphoria Web - Experience User & Admin
+# 🎬 Cinéphoria Web - Experience User Employee & Admin
 
 
 ![Platform](https://img.shields.io/badge/platform-web-lightgrey)
@@ -60,18 +60,34 @@ Ce projet est réalisé dans le cadre de la validation du **TP CDA**. Il permet 
 git clone https://github.com/Meriem1403/Cinephoria.git
 cd Cinephoria
 
-# Installer les dépendances
-composer install
-yarn install
-yarn dev
+## ⚡ Installation rapide (dev/local)
 
-# Créer la base de données
-php bin/console doctrine:database:create
+```bash
+# Cloner le projet
+git clone https://github.com/Meriem1403/Cinephoria.git
+cd Cinephoria
+
+# Installer les dépendances PHP
+composer install
+
+# Installer les assets front (si besoin)
+yarn install
+yarn build
+
+# Copier le fichier d'environnement
+cp .env .env.local
+# Adapter les variables d'environnement à ton contexte
+
+# Lancer les migrations
 php bin/console doctrine:migrations:migrate
 
-# Lancer le serveur local Symfony (via PHP natif)
-php -S 0.0.0.0:8000 -t public
+# (Optionnel) Charger les fixtures de test
+php bin/console doctrine:fixtures:load
 
+# Lancer le serveur Symfony
+symfony serve
+# ou
+php -S 0.0.0.0:8000 -t public
 
 ---
 
@@ -86,10 +102,12 @@ php -S 0.0.0.0:8000 -t public
 
 ### ▶️ Commandes à exécuter
 
-```bash
 # Cloner le projet
 git clone https://github.com/Meriem1403/cinephoria-web.git
 cd cinephoria-web
 
 # Lancer tous les services
 docker compose up --build
+      
+
+```
