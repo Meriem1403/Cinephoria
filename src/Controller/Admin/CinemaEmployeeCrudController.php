@@ -14,6 +14,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\{
     TextField
 };
 use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 
 class CinemaEmployeeCrudController extends AbstractCrudController
 {
@@ -39,17 +41,25 @@ class CinemaEmployeeCrudController extends AbstractCrudController
             AssociationField::new('user')
                 ->setRequired(true)
                 ->setLabel('User')
-                ->setFormTypeOption('choice_label', 'fullName'),
+                ->setFormTypeOption('choice_label', 'fullName')
+                ->setFormTypeOption('disabled', true),
 
             AssociationField::new('cinema')
-                ->setRequired(true),
+                ->setRequired(true)
+                ->setFormTypeOption('disabled', true),
 
-            TextField::new('jobTitle'),
+            TextField::new('jobTitle')->setFormTypeOption('disabled', true),
 
-            DateField::new('assignedSince'),
+            DateField::new('assignedSince')->setFormTypeOption('disabled', true),
 
-            BooleanField::new('isActive')->renderAsSwitch(),
+            BooleanField::new('isActive')->renderAsSwitch()->setFormTypeOption('disabled', true),
         ];
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            ->disable(Action::NEW, Action::EDIT, Action::DELETE);
     }
 
     public function configureFilters(Filters $filters): Filters
@@ -57,5 +67,4 @@ class CinemaEmployeeCrudController extends AbstractCrudController
         return $filters
             ->add(EntityFilter::new('cinema')->setLabel('Cinema'));
     }
-
 }

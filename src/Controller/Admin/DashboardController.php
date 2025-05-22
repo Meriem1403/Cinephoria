@@ -30,7 +30,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 use Symfony\UX\Chartjs\Model\Chart;
 
-#[IsGranted('ROLE_ADMIN')]
+
+#[IsGranted('ROLE_EMPLOYEE')]
 #[AdminDashboard(routePath: '/admin', routeName: 'admin')]
 class DashboardController extends AbstractDashboardController
 {
@@ -70,16 +71,16 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Booked Seats', 'fa-solid fa-th', ReservationSeats::class);
 
         yield MenuItem::section('Users');
-        yield MenuItem::linkToCrud('Users', 'fa-solid fa-user', User::class);
+        yield MenuItem::linkToCrud('Users', 'fa-solid fa-user', User::class)->setPermission('ROLE_ADMIN');
         yield MenuItem::linkToCrud('Cinema Staff', 'fa-solid fa-users-gear', CinemaEmployee::class);
-        yield MenuItem::linkToCrud('Roles', 'fa-solid fa-user-shield', Role::class);
+        yield MenuItem::linkToCrud('Roles', 'fa-solid fa-user-shield', Role::class)->setPermission('ROLE_ADMIN');
 
         yield MenuItem::section('Customer Feedback');
         yield MenuItem::linkToCrud('Incidents', 'fa-solid fa-triangle-exclamation', Incident::class);
         yield MenuItem::linkToCrud('Reviews', 'fa-solid fa-star', Review::class);
 
         yield MenuItem::section('Settings');
-        yield MenuItem::linkToCrud('Cinemas', 'fa-solid fa-building', Cinema::class);
+        yield MenuItem::linkToCrud('Cinemas', 'fa-solid fa-building', Cinema::class)->setPermission('ROLE_ADMIN');;
         yield MenuItem::linkToUrl('Homepage', 'fa-solid fa-home', $this->generateUrl('home'));
     }
 
@@ -101,7 +102,7 @@ class DashboardController extends AbstractDashboardController
         return parent::configureUserMenu($user)
             ->setAvatarUrl($user->getAvatarUrl())
             ->setMenuItems([
-                MenuItem::linkToUrl('My profile', 'fa-solid fa-user', $this->generateUrl('home')),
+                MenuItem::linkToUrl('My profile', 'fa-solid fa-user', $this->generateUrl('app_settings')),
                 MenuItem::linkToLogout('Logout', 'fa-solid fa-sign-out-alt'),
             ]);
     }
@@ -118,7 +119,6 @@ class DashboardController extends AbstractDashboardController
             ->showEntityActionsInlined()
             ->setPaginatorPageSize(8);
     }
-
     private function createChart(): Chart
     {
         $chart = $this->chartBuilder->createChart(Chart::TYPE_LINE);

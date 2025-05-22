@@ -21,7 +21,6 @@ use Symfony\Component\Validator\Constraints as Assert;
     fields: ['email'],
     message: 'Email is already used.',
 )]
-
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -37,7 +36,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
     private ?string $lastName = null;
-
 
     #[Assert\NotBlank(message: 'Email is required.')]
     #[Assert\Email(message: 'Email is not valid.')]
@@ -90,6 +88,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: CinemaEmployee::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $cinemaEmployees;
 
+    #[ORM\Column(type: 'json')]
+    private array $roles = [];
+
     public function __construct()
     {
         $this->reviews = new ArrayCollection();
@@ -115,9 +116,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->email;
     }
 
+    // 👉 Correction ici : retourne bien le champ natif $roles
     public function getRoles(): array
     {
-        return [$this->role->getName() ?? 'ROLE_USER'];
+        $roles = $this->roles;
+        $roles[] = 'ROLE_USER'; // Toujours garantir ce rôle minimal
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = (empty($roles) ? ['ROLE_USER'] : $roles);
+        return $this;
     }
 
     public function eraseCredentials(): void
@@ -167,8 +177,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->firstName . ' ' . $this->lastName;
     }
-
-
 
     public function getEmail(): ?string
     {
@@ -311,7 +319,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->getFullName();
     }
-
 
     /** @return Collection<int, Review> */
     public function getReviews(): Collection

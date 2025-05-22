@@ -7,6 +7,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AvatarField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CountryField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
@@ -27,24 +28,26 @@ class UserCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+        $currentUser = $this->getUser();
+
         return [
             IdField::new('id')->hideOnForm(),
 
-            FormField::addPanel('Personnel information')->addCssClass('panel-section'),
+            FormField::addPanel('Personal information')->addCssClass('panel-section'),
 
             AvatarField::new('avatar')
-            ->formatValue(static function ($value, User $user) {
-                return $user->getAvatarUrl();
-            })
-            ->hideOnForm(),
+                ->formatValue(static function ($value, User $user) {
+                    return $user->getAvatarUrl();
+                })
+                ->hideOnForm(),
 
             ImageField::new('avatar')
-            ->setBasePath('/pictures/uploads/')
-            ->setUploadDir('public/pictures/uploads/')
+                ->setBasePath('/pictures/uploads/')
+                ->setUploadDir('public/pictures/uploads/')
                 ->setUploadedFileNamePattern('[slug]-[timestamp].[extension]')
-            ->setHelp('Choose a picture for your profile')
-            ->OnlyOnForms(),
-
+                ->setHelp('Choose a picture for your profile')
+                ->onlyOnForms(),
 
             TextField::new('firstName')->onlyOnForms(),
             TextField::new('lastName')->onlyOnForms(),
@@ -61,8 +64,21 @@ class UserCrudController extends AbstractCrudController
 
             FormField::addPanel('Connexion')->addCssClass('panel-section'),
             TextField::new('password')->hideOnIndex(),
-            BooleanField::new('isActive')->renderAsSwitch(false),
-            AssociationField::new('role')->setLabel('Role')->autocomplete()->setHelp('Sélectionnez un rôle pour cet utilisateur'),
+            BooleanField::new('isActive')->renderAsSwitch(false)
+                ->setFormTypeOption('disabled', !$isAdmin),
+
+            // ➡️ Le champ "roles" non modifiable sauf pour admin
+            ChoiceField::new('roles')
+                ->setLabel('Roles')
+                ->allowMultipleChoices()
+                ->setChoices([
+                    'Admin'    => 'ROLE_ADMIN',
+                    'Employee' => 'ROLE_EMPLOYEE',
+                    'User'     => 'ROLE_USER',
+                ])
+                ->renderExpanded(false)
+                ->setHelp('Sélectionne un ou plusieurs rôles pour cet utilisateur.')
+                ->setFormTypeOption('disabled', !$isAdmin),
 
             FormField::addPanel('Système')->addCssClass('panel-section')->onlyOnDetail(),
             DateTimeField::new('createdAt')->onlyOnDetail(),

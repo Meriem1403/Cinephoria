@@ -20,6 +20,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\{ArrayField,
     TimeField};
 use Symfony\Component\Form\ChoiceList\ArrayChoiceList;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ShowtimeCrudController extends AbstractCrudController
 {
@@ -37,9 +38,12 @@ class ShowtimeCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+
         return [
             IdField::new('id')->hideOnForm(),
 
+            // Movie : non modifiable pour l'employé
             AssociationField::new('movie')
                 ->setFormTypeOption('choice_label', 'title')
                 ->setFormTypeOption('attr', [
@@ -47,8 +51,10 @@ class ShowtimeCrudController extends AbstractCrudController
                     'data-action' => 'change->showtime-form#render'
                 ])
                 ->setRequired(true)
-                ->setColumns(6),
+                ->setColumns(6)
+                ->setFormTypeOption('disabled', !$isAdmin),
 
+            // Room : non modifiable pour l'employé
             AssociationField::new('room')
                 ->setFormTypeOption('choice_label', 'name')
                 ->setFormTypeOption('attr', [
@@ -56,17 +62,20 @@ class ShowtimeCrudController extends AbstractCrudController
                     'data-action' => 'change->showtime-form#loadRoomData'
                 ])
                 ->setRequired(true)
-                ->setColumns(6),
+                ->setColumns(6)
+                ->setFormTypeOption('disabled', !$isAdmin),
 
             DateField::new('date')
-                ->setColumns(4),
+                ->setColumns(4)
+                ->setFormTypeOption('disabled', !$isAdmin), // Par exemple
 
             TimeField::new('startTime')
                 ->setFormTypeOption('attr', [
                     'data-showtime-form-target' => 'startTime',
                     'data-action' => 'change->showtime-form#handleStartTimeChange'
                 ])
-                ->setColumns(4),
+                ->setColumns(4)
+                ->setFormTypeOption('disabled', !$isAdmin),
 
             TimeField::new('endTime')
                 ->setFormTypeOption('disabled', true)
@@ -86,10 +95,10 @@ class ShowtimeCrudController extends AbstractCrudController
                         'data-showtime-form-target' => 'language',
                         'class' => 'language-select',
                     ],
+                    'disabled' => !$isAdmin, // Non modifiable pour employé
                 ])
                 ->setHelp('Language loaded from the selected movie')
                 ->setColumns(6),
-
 
             IntegerField::new('availableSeats')
                 ->setLabel('Room capacity')
@@ -108,10 +117,12 @@ class ShowtimeCrudController extends AbstractCrudController
             MoneyField::new('price')
                 ->setCurrency('EUR')
                 ->setNumDecimals(2)
-                ->setColumns(4),
+                ->setColumns(4)
+                ->setFormTypeOption('disabled', !$isAdmin),
 
             BooleanField::new('specialPrice')
-                ->setLabel('Enable special pricing'),
+                ->setLabel('Enable special pricing')
+                ->setFormTypeOption('disabled', !$isAdmin),
 
             CollectionField::new('specialPrices')
                 ->setEntryType(SpecialPriceType::class)
@@ -120,7 +131,8 @@ class ShowtimeCrudController extends AbstractCrudController
                 ->allowAdd()
                 ->allowDelete()
                 ->setColumns(12)
-                ->setHelp('Each price includes a label, a value and an optional note'),
+                ->setHelp('Each price includes a label, a value and an optional note')
+                ->setFormTypeOption('disabled', !$isAdmin),
         ];
     }
 

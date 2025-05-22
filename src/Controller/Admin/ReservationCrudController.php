@@ -14,7 +14,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\{
     MoneyField,
     TextField
 };
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_EMPLOYEE')]
 class ReservationCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
@@ -32,12 +34,21 @@ class ReservationCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+
         return [
             IdField::new('id')->onlyOnIndex(),
 
             AssociationField::new('user')
                 ->formatValue(fn ($value, $entity) => $entity->getUser()?->getFullName())
-                ->setLabel('User'),
+                ->setLabel('User')
+                ->setFormTypeOption('disabled', !$isAdmin),
+
+            // Showtimes non éditable par l'employé
+            AssociationField::new('showtime')
+                ->setLabel('Showtime')
+                ->setFormTypeOption('disabled', !$isAdmin)
+                ->hideOnIndex(),
 
             TextField::new('showtimeInfo', 'Showtime')
                 ->onlyOnIndex()
@@ -79,7 +90,8 @@ class ReservationCrudController extends AbstractCrudController
                     'pending' => 'warning',
                     'confirmed' => 'success',
                     'cancelled' => 'danger',
-                ]),
+                ])
+                ->setFormTypeOption('disabled', !$isAdmin), // seul l'admin peut changer le status
         ];
     }
 

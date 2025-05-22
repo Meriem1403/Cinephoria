@@ -18,6 +18,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Form\Exception\LogicException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class RoomCrudController extends AbstractCrudController
 {
@@ -36,22 +37,24 @@ class RoomCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        $projectionOptions = ['4K', 'IMAX', 'Dolby Sound'];
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         return [
             IdField::new('id')->hideOnForm(),
-            TextField::new('name'),
-            AssociationField::new('cinema'),
-            NumberField::new('capacity'),
-            TextEditorField::new('notes'),
+            TextField::new('name')->setFormTypeOption('disabled', !$isAdmin),
+            AssociationField::new('cinema')->setFormTypeOption('disabled', !$isAdmin),
+            NumberField::new('capacity')->setFormTypeOption('disabled', !$isAdmin),
+            TextEditorField::new('notes')->setFormTypeOption('disabled', !$isAdmin),
             ChoiceField::new('projectionEquipment')
-                ->setChoices(array_combine($projectionOptions, $projectionOptions))
+                ->setChoices(['4K' => '4K', 'IMAX' => 'IMAX', 'Dolby Sound' => 'Dolby Sound'])
                 ->allowMultipleChoices()
                 ->renderExpanded()
-                ->renderAsBadges(),
+                ->renderAsBadges()
+                ->setFormTypeOption('disabled', !$isAdmin),
             AssociationField::new('seats')->onlyOnDetail(),
         ];
     }
+
 
 
     public function configureActions(Actions $actions): Actions
@@ -61,7 +64,17 @@ class RoomCrudController extends AbstractCrudController
             ->setIcon('fa fa-chair')
             ->setCssClass('btn btn-primary');
 
+        // Employé : uniquement Seat Map (ni edit, ni delete, ni new)
+        if ($this->isGranted('ROLE_ADMIN')) {
+            return $actions
+                ->add(Crud::PAGE_DETAIL, $seatMap)
+                ->add(Crud::PAGE_INDEX, $seatMap);
+            // admin aura toutes les actions par défaut
+        }
+
+        // Employé : supprime tout sauf Seat Map
         return $actions
+            ->disable(Action::EDIT, Action::DELETE, Action::NEW)
             ->add(Crud::PAGE_DETAIL, $seatMap)
             ->add(Crud::PAGE_INDEX, $seatMap);
     }

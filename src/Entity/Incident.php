@@ -78,6 +78,7 @@ class Incident
         return $this;
     }
 
+
     public function getShowtime(): ?Showtime
     {
         return $this->showtime;

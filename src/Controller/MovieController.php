@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Movie;
 use App\Repository\CinemaRepository;
 use App\Repository\ShowtimeRepository;
+use App\Repository\ReviewRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,18 +54,25 @@ final class MovieController extends AbstractController
 
     #[Route('/movies/{id}', name: 'movie_show')]
     public function show(
-        Movie              $movie,
-        CinemaRepository   $cinemaRepository,
-        ShowtimeRepository $showtimeRepository
-    ): Response
-    {
+        Movie $movie,
+        CinemaRepository $cinemaRepository,
+        ShowtimeRepository $showtimeRepository,
+        ReviewRepository $reviewRepository
+    ): Response {
         $cinemas = $cinemaRepository->findAll();
         $showtimes = $showtimeRepository->findBy(['movie' => $movie]);
+
+        // ✅ On récupère uniquement les avis approuvés
+        $reviews = $reviewRepository->findBy([
+            'movie' => $movie,
+            'isApproved' => true
+        ]);
 
         return $this->render('movie/show.html.twig', [
             'movie' => $movie,
             'cinemas' => $cinemas,
             'showtimes' => $showtimes,
+            'reviews' => $reviews,
         ]);
     }
 }
