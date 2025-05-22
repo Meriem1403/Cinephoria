@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cinephoria_php
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - mysql
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/html/public
+
+  mysql:
+    image: mysql:8
+    container_name: cinephoria_mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: cinephoria
+      MYSQL_USER: cineuser
+      MYSQL_PASSWORD: cinepass
+    volumes:
+      - db_data:/var/lib/mysql
+
+  mailpit:
+    image: axllent/mailpit
+    container_name: cinephoria_mailpit
+    ports:
+      - "8025:8025"
+
+volumes:
+  db_data:
