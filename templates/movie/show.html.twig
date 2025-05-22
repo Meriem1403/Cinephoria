@@ -1,4 +1,3 @@
-{# templates/movie/detail.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ movie.title }} – Cinéphoria{% endblock %}
@@ -11,7 +10,7 @@
 {% block body %}
     <section class="relative bg-cover bg-center min-h-[80vh] pt-24 pb-16 text-white" style="background-image: url('{{ asset('pictures/hero/' ~ movie.heroImage) }}')">
         <!-- Overlay plus foncé -->
-        <div class="absolute inset-0 bg-gradient-to-b from-black/80 to-black/100"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-black/70 to-black/85"></div>
 
         <div class="relative z-10 container mx-auto px-4 flex flex-col lg:flex-row gap-8">
             <!-- Affiche -->
@@ -58,6 +57,16 @@
           </span>
                     {% endif %}
                 </div>
+                <div class="mt-4 flex gap-4">
+                    <a href="{{ path('review_new', { movieId: movie.id }) }}"
+                       class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-full shadow transition">
+                        Leave a review
+                    </a>
+                    <button onclick="document.getElementById('reviewsModal').classList.remove('hidden')"
+                            class="bg-white text-gray-800 text-sm font-semibold px-4 py-2 rounded-full shadow transition">
+                        View reviews
+                    </button>
+                </div>
 
                 {# Infos date, genres, durée #}
                 {% set h = movie.duration // 60 %}
@@ -67,6 +76,7 @@
                 <div class="prose prose-invert max-w-none leading-relaxed">
                     {{ movie.description|striptags }}
                 </div>
+
             </div>
         </div>
 
@@ -129,6 +139,35 @@
             {% else %}
                 <p class="text-center text-white">No cinemas available.</p>
             {% endfor %}
+        </div>
+        <div id="reviewsModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center">
+            <div class="bg-white w-full max-w-xl rounded-xl shadow-lg p-6 relative">
+                <button onclick="document.getElementById('reviewsModal').classList.add('hidden')"
+                        class="absolute top-3 right-4 text-gray-400 hover:text-black text-xl font-bold">&times;</button>
+                <h2 class="text-2xl font-bold mb-4 text-gray-800">Reviews for {{ movie.title }}</h2>
+
+                {% set hasReviews = false %}
+                <div class="space-y-4 max-h-[60vh] overflow-y-auto">
+                    {% for review in reviews %}
+                        {% if review.isApproved and review.movie.id == movie.id %}
+                            {% set hasReviews = true %}
+                            <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                                <div class="flex justify-between text-sm text-gray-600 mb-1">
+                                    <span>Rating: <strong>{{ review.rating }}/3</strong></span>
+                                    <span>{{ review.createdAt|date('d/m/Y H:i') }}</span>
+                                </div>
+                                {% if review.comment %}
+                                    <p class="text-sm text-gray-800 italic">“{{ review.comment }}”</p>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if not hasReviews %}
+                        <p class="text-sm text-gray-500 italic">No reviews yet for this movie.</p>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </section>
 {% endblock %}

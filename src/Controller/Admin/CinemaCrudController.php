@@ -3,6 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Cinema;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -16,7 +18,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\{AssociationField,
     TelephoneField,
     TextareaField,
     TextField};
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_ADMIN')]
 class CinemaCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
@@ -56,5 +60,14 @@ class CinemaCrudController extends AbstractCrudController
             AssociationField::new('rooms')->hideOnForm()->setLabel('Rooms'),
             AssociationField::new('employees')->hideOnForm()->setLabel('Staff'),
         ];
+    }
+    public function configureActions(Actions $actions): Actions
+    {
+        // Si l'employé n'est PAS admin, il n'a pas l'action "edit"
+        if ($this->isGranted('ROLE_EMPLOYEE') && !$this->isGranted('ROLE_ADMIN')) {
+            return $actions
+                ->disable(Action::EDIT);
+        }
+        return $actions;
     }
 }

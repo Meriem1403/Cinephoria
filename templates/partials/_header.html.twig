@@ -34,7 +34,7 @@
                     <circle cx="12" cy="7" r="4"></circle>
                 </svg>
                 {% if app.user %}
-                    <span class="text-white font-semibold">{{ app.user.fullName }}</span> {# CHANGED: font-semibold #}
+                    <span class="text-white font-semibold">{{ app.user.fullName }}</span>
                 {% endif %}
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2"
                      viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
@@ -44,16 +44,15 @@
 
             <div id="accountDropdown"
                  class="hidden absolute right-0 mt-2 w-56 bg-white rounded-xl drop-shadow-2xl divide-y divide-gray-200 overflow-hidden z-50 transition-transform origin-top-right transform scale-95 opacity-0">
-                {# CHANGED:
-               - rounded-xl pour coins plus doux
-               - drop-shadow-2xl pour ombre prononcée
-               - divide-y pour séparer items
-               - transition transform/opacity pour animation #}
                 {% if app.user %}
                     <div class="px-5 py-4 text-gray-800 text-sm font-medium">
                         {{ app.user.fullName }}
                     </div>
-                    <a href="{{ path('app_register') }}" {# ici, si vous vouliez profil, changez la route #}
+                    <a href="{{ path('my_reservations') }}"
+                       class="block px-5 py-3 text-gray-700 text-sm hover:bg-gray-100 transition-colors">
+                        My Reservations
+                    </a>
+                    <a href="{{ path('app_settings') }}"
                        class="block px-5 py-3 text-gray-700 text-sm hover:bg-gray-100 transition-colors">
                         Settings
                     </a>
@@ -78,4 +77,3 @@
         </div>
     </div>
 </header>
-

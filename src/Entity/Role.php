@@ -58,6 +58,7 @@ class Role
         $this->description = $description;
         return $this;
     }
+
     public function __toString(): string
     {
         return $this->name;

@@ -15,14 +15,12 @@ class RoleCrudController extends AbstractCrudController
         return Role::class;
     }
 
-    /*
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id'),
-            TextField::new('title'),
-            TextEditorField::new('description'),
+            IdField::new('id')->onlyOnIndex(),
+            TextField::new('name')->setLabel('Role name'), // ex : ROLE_ADMIN, ROLE_EMPLOYEE, ROLE_USER
+            TextEditorField::new('description')->setLabel('Description'),
         ];
     }
-    */
 }

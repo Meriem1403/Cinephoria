@@ -34,7 +34,8 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $admin->setPhone('0102030405');
         $admin->setCreatedAt(new DateTimeImmutable());
         $admin->setIsActive(true);
-        $admin->setRole($this->getReference('role_admin', Role::class));
+        $admin->setRoles(['ROLE_ADMIN']); // 👈 sécurité Symfony/EasyAdmin
+        $admin->setRole($this->getReference('role_admin', Role::class)); // 👈 (optionnel) affichage/description
         $manager->persist($admin);
         $this->addReference('admin-user', $admin);
 
@@ -51,6 +52,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $employee->setPhone('0607080910');
         $employee->setCreatedAt(new DateTimeImmutable());
         $employee->setIsActive(true);
+        $employee->setRoles(['ROLE_EMPLOYEE']); // 👈 sécurité
         $employee->setRole($this->getReference('role_employe', Role::class));
         $manager->persist($employee);
         $this->addReference('employee-user-1', $employee);
@@ -69,8 +71,8 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $user->setPhone('0611223344');
         $user->setCreatedAt(new DateTimeImmutable());
         $user->setIsActive(true);
+        $user->setRoles(['ROLE_USER']); // 👈 sécurité
         $user->setRole($this->getReference('role_user', Role::class));
-        $user->setAvatar('meriem.jpg');
         $manager->persist($user);
         $this->addReference('user-client-1', $user);
 

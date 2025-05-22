@@ -35,7 +35,7 @@ class SeatCrudController extends AbstractCrudController
             AssociationField::new('room', 'Room')->setFormTypeOption('disabled',
                 $pageName == Crud::PAGE_EDIT),
             BooleanField::new('isPMR', 'PMR'),
-            BooleanField::new('isReserved', 'Reserved'),
+            BooleanField::new('isReserved', 'Reserved')->setFormTypeOption('disabled', true),
             BooleanField::new('isBroken', 'Defective'),
 
             ];

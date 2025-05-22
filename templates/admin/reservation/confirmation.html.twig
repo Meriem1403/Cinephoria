@@ -32,6 +32,23 @@
         <p class="text-lg text-gray-600 mt-2">We appreciate your order.</p>
     </section>
 
+    {# ✅ Boutons en haut à gauche #}
+    <div class="container mx-auto px-4 mt-4">
+        <div class="flex justify-start gap-4">
+            <a href="{{ path('home') }}"
+               class="inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium px-6 py-3 rounded-full shadow transition">
+                ← Return to Home
+            </a>
+
+            <button
+                    onclick="navigator.share && navigator.share({ title: 'Your ticket', url: window.location.href })"
+                    class="inline-block bg-green-600 hover:bg-green-700 text-white font-medium px-6 py-3 rounded-full shadow transition"
+            >
+                Share Ticket
+            </button>
+        </div>
+    </div>
+
     <div class="container mx-auto px-4 py-8">
         <div class="flex flex-wrap justify-center gap-6">
             {% for rs in reservation.reservationSeats %}
@@ -79,7 +96,7 @@
                         <div class="hole right"></div>
                     </div>
 
-                    {# QR Code sous la perforation #}
+                    {# QR Code #}
                     <div class="px-4 pb-4 text-center">
                         <img
                                 src="{{ path('qr_code_route', {'text': rs.seat.getLabel() ~ '|' ~ reservation.id}) }}"
@@ -88,7 +105,7 @@
                         />
                     </div>
 
-                    {# Stub – logo #}
+                    {# Logo Cinéphoria #}
                     <div class="px-4 pb-4 text-center">
                         <img
                                 src="{{ asset('pictures/logo.png') }}"
