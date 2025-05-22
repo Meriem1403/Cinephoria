@@ -10,10 +10,10 @@ RUN a2enmod rewrite
 # Installe Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-
-COPY docker/000-default.conf /etc/apache2/sites-available/000-default.conf
-
 COPY . /var/www/html
+
+# >>> Ce doit être APRÈS le COPY du projet !
+COPY docker/000-default.conf /etc/apache2/sites-available/000-default.conf
 
 RUN chown -R www-data:www-data /var/www/html
 
@@ -28,7 +28,3 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
 RUN yarn install && yarn build
 
 EXPOSE 10000
-
-# Pour Apache, change la config du VirtualHost pour Listen 10000,
-# OU passe sur php:8.2-cli et CMD serveur Symfony :
-# CMD ["php", "-S", "0.0.0.0:10000", "-t", "public"]
