@@ -10,8 +10,8 @@ RUN a2enmod rewrite
 # Installe Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# (Optionnel) Copie la config Apache custom si besoin
-# COPY docker/000-default.conf /etc/apache2/sites-available/000-default.conf
+
+COPY docker/000-default.conf /etc/apache2/sites-available/000-default.conf
 
 COPY . /var/www/html
 
