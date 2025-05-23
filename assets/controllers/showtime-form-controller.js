@@ -1,7 +1,6 @@
 // assets/controllers/showtime-form_controller.js
 import { Controller } from '@hotwired/stimulus'
 import "core-js/modules/web.url-search-params.js";
-import "core-js/stable";
 
 export default class extends Controller {
     static targets = [
