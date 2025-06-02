@@ -4,8 +4,6 @@ Encore
     .setOutputPath('public/build/')
     .setPublicPath('/build')
 
-    .enableStimulusBridge('./assets/controllers.json')
-
     .addEntry('app', './assets/app.js')
     .addEntry('admin', './assets/admin.js')
 
@@ -18,8 +16,6 @@ Encore
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')
 
-    // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
-    .enableStimulusBridge('./assets/controllers.json')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     //.enableStimulusBridge('./assets/controllers.json')

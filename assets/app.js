@@ -66,6 +66,6 @@ document.addEventListener('turbo:load', () => {
             currentIndex = (currentIndex + 1) % totalSlides;
             heroCarousel.style.transform = `translateX(-${currentIndex * 100}%)`;
             footerCarousel.style.transform = `translateX(-${currentIndex * 100}%)`;
-        }, 15000);
+        }, 5000);
     }
 });
