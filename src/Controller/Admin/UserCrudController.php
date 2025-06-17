@@ -29,7 +29,6 @@ class UserCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         $isAdmin = $this->isGranted('ROLE_ADMIN');
-        $currentUser = $this->getUser();
 
         return [
             IdField::new('id')->hideOnForm(),
@@ -67,9 +66,14 @@ class UserCrudController extends AbstractCrudController
             BooleanField::new('isActive')->renderAsSwitch(false)
                 ->setFormTypeOption('disabled', !$isAdmin),
 
-            // ➡️ Le champ "roles" non modifiable sauf pour admin
+            // 🔹 Rôle Doctrine ManyToOne obligatoire
+            AssociationField::new('role')
+                ->setRequired(true)
+                ->setHelp('Choisissez un rôle Doctrine pour l’utilisateur'),
+
+            // 🔹 Rôles Symfony JSON
             ChoiceField::new('roles')
-                ->setLabel('Roles')
+                ->setLabel('Symfony Roles')
                 ->allowMultipleChoices()
                 ->setChoices([
                     'Admin'    => 'ROLE_ADMIN',
@@ -77,7 +81,7 @@ class UserCrudController extends AbstractCrudController
                     'User'     => 'ROLE_USER',
                 ])
                 ->renderExpanded(false)
-                ->setHelp('Sélectionne un ou plusieurs rôles pour cet utilisateur.')
+                ->setHelp('Rôles Symfony utilisés pour l’authentification.')
                 ->setFormTypeOption('disabled', !$isAdmin),
 
             FormField::addPanel('Système')->addCssClass('panel-section')->onlyOnDetail(),

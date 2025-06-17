@@ -27,7 +27,7 @@ class Incident
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Showtime $showtime = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'incidents')]
     private ?Room $room = null;
 
     #[ORM\ManyToOne]
@@ -77,7 +77,6 @@ class Incident
         $this->user = $user;
         return $this;
     }
-
 
     public function getShowtime(): ?Showtime
     {
@@ -134,17 +133,6 @@ class Incident
         return $this;
     }
 
-    public function getReportedBy(): ?User
-    {
-        return $this->reportedBy;
-    }
-
-    public function setReportedBy(?User $user): self
-    {
-        $this->reportedBy = $user;
-        return $this;
-    }
-
     public function getStatus(): ?string
     {
         return $this->status;
@@ -153,6 +141,17 @@ class Incident
     public function setStatus(string $status): self
     {
         $this->status = $status;
+        return $this;
+    }
+
+    public function getReportedBy(): ?User
+    {
+        return $this->reportedBy;
+    }
+
+    public function setReportedBy(?User $reportedBy): self
+    {
+        $this->reportedBy = $reportedBy;
         return $this;
     }
 
@@ -187,5 +186,10 @@ class Incident
     {
         $this->category = $category;
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->title ?? 'Incident #' . $this->id;
     }
 }

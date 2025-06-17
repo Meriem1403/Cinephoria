@@ -11,7 +11,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use ApiPlatform\Metadata\ApiResource;
 
-
 #[ORM\Entity(repositoryClass: MovieRepository::class)]
 #[ApiResource]
 #[ORM\HasLifecycleCallbacks]
@@ -33,7 +32,6 @@ class Movie
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?DateTimeInterface $releaseDate = null;
-
 
     #[ORM\Column(length: 5, nullable: true)]
     private ?string $ageRating = null;
@@ -65,6 +63,9 @@ class Movie
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $heroImage = null;
 
+    #[ORM\OneToMany(mappedBy: 'movie', targetEntity: Showtime::class, orphanRemoval: true)]
+    private Collection $showtimes;
+
     #[ORM\PrePersist]
     public function setCreatedAtValue(): void
     {
@@ -73,25 +74,10 @@ class Movie
         }
     }
 
-    public function getReviews(): Collection
-    {
-        return $this->reviews;
-    }
-
-    public function setRating(?float $rating): self
-    {
-        $this->rating = $rating;
-        return $this;
-    }
-
-    public function getRating(): ?float
-    {
-        return $this->rating;
-    }
-
     public function __construct()
     {
         $this->reviews = new ArrayCollection();
+        $this->showtimes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -165,7 +151,6 @@ class Movie
         return $this;
     }
 
-
     public function getIsFavorite(): ?bool
     {
         return $this->isFavorite;
@@ -174,6 +159,17 @@ class Movie
     public function setIsFavorite(bool $isFavorite): self
     {
         $this->isFavorite = $isFavorite;
+        return $this;
+    }
+
+    public function getRating(): ?float
+    {
+        return $this->rating;
+    }
+
+    public function setRating(?float $rating): self
+    {
+        $this->rating = $rating;
         return $this;
     }
 
@@ -198,6 +194,7 @@ class Movie
         $this->atCinema = $atCinema;
         return $this;
     }
+
     public function getGenre(): array
     {
         return $this->genre;
@@ -208,6 +205,7 @@ class Movie
         $this->genre = $genre;
         return $this;
     }
+
     public function getLanguage(): array
     {
         return $this->language;
@@ -218,6 +216,7 @@ class Movie
         $this->language = $language;
         return $this;
     }
+
     public function getHeroImage(): ?string
     {
         return $this->heroImage;
@@ -228,9 +227,39 @@ class Movie
         $this->heroImage = $heroImage;
         return $this;
     }
+
+    public function getReviews(): Collection
+    {
+        return $this->reviews;
+    }
+
+    /** @return Collection<int, Showtime> */
+    public function getShowtimes(): Collection
+    {
+        return $this->showtimes;
+    }
+
+    public function addShowtime(Showtime $showtime): self
+    {
+        if (!$this->showtimes->contains($showtime)) {
+            $this->showtimes[] = $showtime;
+            $showtime->setMovie($this);
+        }
+        return $this;
+    }
+
+    public function removeShowtime(Showtime $showtime): self
+    {
+        if ($this->showtimes->removeElement($showtime)) {
+            if ($showtime->getMovie() === $this) {
+                $showtime->setMovie(null);
+            }
+        }
+        return $this;
+    }
+
     public function __toString(): string
     {
         return $this->title;
     }
-
 }

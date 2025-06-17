@@ -309,7 +309,6 @@ class Showtime
     public function setChosenLanguage(?string $chosenLanguage): static
     {
         $this->chosenLanguage = $chosenLanguage;
-
         return $this;
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Entity;
+
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
@@ -116,11 +117,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->email;
     }
 
-    // 👉 Correction ici : retourne bien le champ natif $roles
     public function getRoles(): array
     {
         $roles = $this->roles;
-        $roles[] = 'ROLE_USER'; // Toujours garantir ce rôle minimal
+        $roles[] = 'ROLE_USER';
         return array_unique($roles);
     }
 
@@ -132,7 +132,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials(): void
     {
-        // sensitive data
+        // Clear temporary, sensitive data
     }
 
     public function getPassword(): ?string
@@ -342,5 +342,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getCinemaEmployees(): Collection
     {
         return $this->cinemaEmployees;
+    }
+
+    public function addCinemaEmployee(CinemaEmployee $cinemaEmployee): self
+    {
+        if (!$this->cinemaEmployees->contains($cinemaEmployee)) {
+            $this->cinemaEmployees[] = $cinemaEmployee;
+            $cinemaEmployee->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCinemaEmployee(CinemaEmployee $cinemaEmployee): self
+    {
+        if ($this->cinemaEmployees->removeElement($cinemaEmployee)) {
+            if ($cinemaEmployee->getUser() === $this) {
+                $cinemaEmployee->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }
