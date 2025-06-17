@@ -182,9 +182,9 @@ class Room
     public function setProjectionEquipment(?array $projectionEquipment): static
     {
         $this->projectionEquipment = $projectionEquipment;
-
         return $this;
     }
+
     public function __toString(): string
     {
         return $this->name;
