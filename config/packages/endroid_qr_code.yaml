@@ -1,0 +1,18 @@
+endroid_qr_code:
+    default:
+        writer: Endroid\QrCode\Writer\PngWriter
+        size: 300
+        margin: 10
+        encoding: 'UTF-8'
+        error_correction_level: 'low'
+        round_block_size_mode: 'margin'
+        validate_result: false
+    # Builder SVG : pas besoin de l'extension GD (utilisé pour la page confirmation)
+    svg:
+        writer: Endroid\QrCode\Writer\SvgWriter
+        size: 300
+        margin: 10
+        encoding: 'UTF-8'
+        error_correction_level: 'low'
+        round_block_size_mode: 'margin'
+        validate_result: false

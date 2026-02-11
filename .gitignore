@@ -1,0 +1,64 @@
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
+
+###> symfony/phpunit-bridge ###
+.phpunit.result.cache
+/phpunit.xml
+###< symfony/phpunit-bridge ###
+
+###> symfony/asset-mapper ###
+/public/assets/
+/assets/vendor/
+/npm-debug.log
+/yarn-error.log
+###< symfony/asset-mapper ###
+
+# Autres fichiers d'environnement
+.env.dev
+
+# Dossiers éditeurs de code
+.idea/
+.vscode/
+
+# Node & Webpack Encore
+node_modules/
+public/build/
+yarn.lock
+package-lock.json
+
+# Caches et logs
+*.log
+*.cache
+
+# Systèmes d'exploitation
+.DS_Store
+Thumbs.db
+
+###> symfony/webpack-encore-bundle ###
+/node_modules/
+/public/build/
+npm-debug.log
+yarn-error.log
+###< symfony/webpack-encore-bundle ###
+
+
+# Mobile (Expo/React Native)
+### Mobile (Expo/React Native) ###
+/mobile/node_modules/
+/mobile/yarn.lock
+/mobile/expo-debug.*
+/mobile/.expo/
+/mobile/dist/
+/mobile/web-build/
