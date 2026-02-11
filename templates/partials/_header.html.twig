@@ -1,0 +1,79 @@
+{# templates/partials/header.html.twig #}
+<header class="flex items-center justify-between p-4 absolute top-0 left-0 w-full z-50 bg-black/70 backdrop-blur-lg">
+    <div class="flex items-center space-x-6">
+        <!-- Logo -->
+        <a href="{{ path('home') }}">
+            <img src="{{ asset('pictures/logo.png') }}" alt="Cinéphoria Logo" class="max-h-16">
+        </a>
+
+        <!-- Navbar -->
+        <nav class="flex space-x-8 text-white text-lg font-semibold">
+            <a href="{{ path('home') }}" class="hover:text-gray-300 transition-colors">Home</a>
+            <a href="{{ path('movies') }}" class="hover:text-gray-300 transition-colors">Movies</a>
+            <a href="{{ path('cinemas') }}" class="hover:text-gray-300 transition-colors">Cinemas</a>
+        </nav>
+    </div>
+
+    <div class="flex items-center space-x-4">
+        <!-- Search Button -->
+        <button class="flex items-center justify-center w-12 h-12 rounded-full bg-white/10 hover:bg-white/25 transition-colors focus:outline-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2"
+                 viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+        </button>
+
+        <!-- Account Dropdown -->
+        <div class="relative">
+            <button id="accountBtn"
+                    class="flex items-center space-x-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/25 transition-colors focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2"
+                     viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 21v-2a4 4 0 1 0-8 0v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                {% if app.user %}
+                    <span class="text-white font-semibold">{{ app.user.fullName }}</span>
+                {% endif %}
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2"
+                     viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </button>
+
+            <div id="accountDropdown"
+                 class="hidden absolute right-0 mt-2 w-56 bg-white rounded-xl drop-shadow-2xl divide-y divide-gray-200 overflow-hidden z-50 transition-transform origin-top-right transform scale-95 opacity-0">
+                {% if app.user %}
+                    <div class="px-5 py-4 text-gray-800 text-sm font-medium">
+                        {{ app.user.fullName }}
+                    </div>
+                    <a href="{{ path('my_reservations') }}"
+                       class="block px-5 py-3 text-gray-700 text-sm hover:bg-gray-100 transition-colors">
+                        My Reservations
+                    </a>
+                    <a href="{{ path('app_settings') }}"
+                       class="block px-5 py-3 text-gray-700 text-sm hover:bg-gray-100 transition-colors">
+                        Settings
+                    </a>
+                    <form method="post" action="{{ path('app_logout') }}">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
+                        <button type="submit"
+                                class="w-full text-left px-5 py-3 text-gray-700 text-sm hover:bg-gray-100 transition-colors">
+                            Logout
+                        </button>
+                    </form>
+                {% else %}
+                    <a href="{{ path('app_login') }}"
+                       class="block px-5 py-3 text-gray-700 text-sm hover:bg-gray-100 transition-colors">
+                        Login
+                    </a>
+                    <a href="{{ path('app_register') }}"
+                       class="block px-5 py-3 text-gray-700 text-sm hover:bg-gray-100 transition-colors">
+                        Sign Up
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</header>

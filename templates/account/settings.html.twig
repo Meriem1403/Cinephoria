@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Settings{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/admin.css') }}">
+{% endblock %}
+
+{% block body %}
+    <section class="settings-page max-w-3xl mx-auto py-12 px-6 bg-white shadow-xl rounded-xl mt-12">
+        <h1 class="text-4xl font-bold text-center text-gray-900 mb-10">Your Settings</h1>
+
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="bg-green-100 text-green-700 px-4 py-2 rounded mb-6 text-center">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+        {{ form_start(form, {'attr': {'class': 'settings-form'}}) }}
+
+        <fieldset>
+            <legend class="text-xl font-semibold text-gray-800 mb-4 border-b pb-1">👤 Personal Information</legend>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {{ form_row(form.firstName) }}
+                {{ form_row(form.lastName) }}
+            </div>
+        </fieldset>
+
+        <fieldset class="mt-10">
+            <legend class="text-xl font-semibold text-gray-800 mb-4 border-b pb-1">📞 Contact</legend>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {{ form_row(form.email) }}
+                {{ form_row(form.phone) }}
+                {{ form_row(form.address) }}
+                {{ form_row(form.postalCode) }}
+                {{ form_row(form.city) }}
+                {{ form_row(form.country) }}
+            </div>
+        </fieldset>
+
+        <fieldset class="mt-10">
+            <legend class="text-xl font-semibold text-gray-800 mb-4 border-b pb-1">🌍 Preferences</legend>
+            <div>
+                {{ form_row(form.siteLanguage) }}
+            </div>
+        </fieldset>
+
+        <div class="text-center pt-10">
+            <button type="submit" class="save-button">💾 Save changes</button>
+        </div>
+
+        {{ form_end(form) }}
+    </section>
+{% endblock %}

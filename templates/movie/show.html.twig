@@ -1,0 +1,202 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ movie.title }} – Cinephoria{% endblock %}
+
+{% block body %}
+    {% include 'partials/_header.html.twig' %}
+
+    <section class="relative bg-cover bg-center min-h-[80vh] pt-24 pb-16 text-white" style="background-image: url('{{ asset('pictures/hero/' ~ movie.heroImage) }}')">
+        <div class="absolute inset-0 bg-gradient-to-b from-black/70 to-black/85"></div>
+
+        <div class="relative z-10 container mx-auto px-4 pt-6">
+            <a href="{{ path('movies') }}"
+               class="inline-flex items-center gap-2 text-white/90 hover:text-white text-sm font-semibold mb-6 transition-colors px-3 py-2 rounded-lg hover:bg-white/10 -ml-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+                </svg>
+                Back to movies
+            </a>
+
+            <div class="flex flex-col lg:flex-row gap-8">
+                <img src="{{ asset('pictures/films/' ~ movie.posterUrl) }}" alt="{{ movie.title }}"
+                     class="w-52 h-[312px] rounded-xl shadow-2xl flex-shrink-0 object-cover" />
+
+                <div class="flex-1 space-y-4">
+                    <h1 class="text-4xl lg:text-5xl font-bold drop-shadow-lg">{{ movie.title }}</h1>
+
+                    {# Badges: note (sur 10) + favori + langues (VO, VF, etc.) #}
+                    <div class="flex flex-wrap items-center gap-3">
+                        {% if movie.rating is not null %}
+                            <span class="inline-flex items-center gap-1.5 rounded-md bg-white/15 backdrop-blur px-3 py-1.5 text-sm font-medium text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-amber-400 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                </svg>
+                                {{ movie.rating|number_format(1) }}/10
+                            </span>
+                        {% endif %}
+                        {% if movie.isFavorite %}
+                            <span class="inline-flex items-center gap-1.5 rounded-md bg-amber-500/20 px-3 py-1.5 text-sm font-medium text-amber-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                                </svg>
+                                Favorite
+                            </span>
+                        {% endif %}
+                        {% if movie.language|length > 0 %}
+                            <span class="inline-flex items-center gap-1.5 rounded-md bg-white/15 backdrop-blur px-3 py-1.5 text-sm font-medium text-white">
+                                {# Icône pellicule cinéma (VO / VF) #}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0 text-white/80" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <path d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"/>
+                                </svg>
+                                {{ movie.language|join(', ') }}
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    <div class="flex flex-wrap gap-3">
+                        <a href="{{ path('review_new', { movieId: movie.id }) }}"
+                           class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow transition">
+                            Leave a review
+                        </a>
+                        <button type="button" onclick="document.getElementById('reviewsModal').classList.remove('hidden')"
+                                class="bg-white/20 hover:bg-white/30 text-white text-sm font-semibold px-4 py-2 rounded-lg border border-white/30 transition">
+                            View reviews
+                        </button>
+                    </div>
+
+                    {% set h = movie.duration // 60 %}
+                    {% set m = movie.duration % 60 %}
+                    <p class="text-sm text-gray-300">{{ movie.releaseDate|date('d/m/Y') }} · {{ movie.genre|join(', ') }} · {{ h }}h {{ m }}min</p>
+                    {% if movie.ageRating %}
+                        <p class="text-sm text-gray-300">Age rating: {{ movie.ageRating }}</p>
+                    {% endif %}
+
+                    <div class="prose prose-invert max-w-none text-gray-200 leading-relaxed">
+                        {{ movie.description|striptags }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Dates slider #}
+        <div class="relative z-10 container mx-auto px-4 mt-8">
+            <button type="button" onclick="window.movieShowScrollDates(-1)" aria-label="Previous dates"
+                    class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/50 hover:bg-white text-gray-800 shadow items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <div id="dateSlider" class="flex overflow-x-auto gap-3 items-center py-4 px-2 bg-white/10 rounded-xl" style="scroll-behavior: smooth;" data-today="{{ date()|date('Y-m-d') }}">
+                {% set today = date() %}
+                {% for i in 0..19 %}
+                    {% set d = today|date_modify('+' ~ i ~ ' day') %}
+                    {% set iso = d|date('Y-m-d') %}
+                    <button type="button" data-date="{{ iso }}" onclick="window.movieShowFilterByDate('{{ iso }}'); window.movieShowHighlightDay(this);"
+                            class="relative flex-shrink-0 w-16 h-20 bg-white/20 text-white rounded-lg flex flex-col items-center justify-center hover:bg-white/30 focus:outline-none{% if i == 0 %} selected-day{% endif %}">
+                        <span class="text-xs uppercase">{{ d|date('D') }}</span>
+                        <span class="text-xl font-semibold">{{ d|date('d') }}</span>
+                        <span class="text-xs uppercase">{{ d|date('M') }}</span>
+                        {% if i == 0 %}<span class="absolute bottom-0 left-0 right-0 h-1 bg-orange-500 rounded-b-lg"></span>{% endif %}
+                    </button>
+                {% endfor %}
+            </div>
+            <button type="button" onclick="window.movieShowScrollDates(1)" aria-label="Next dates"
+                    class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/50 hover:bg-white text-gray-800 shadow items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+        </div>
+
+        {# Cinémas et séances #}
+        <div id="cinemasList" class="relative z-10 container mx-auto px-4 mt-8 space-y-8">
+            {% for cinema in cinemas %}
+                {% set sessions = showtimes|filter(st => st.room.cinema.id == cinema.id) %}
+                {% if sessions is not empty %}
+                    <div data-cinema-block class="bg-white/10 rounded-xl p-6">
+                        <h2 class="text-2xl font-semibold text-white mb-1">{{ cinema.name }}</h2>
+                        <p class="text-sm text-gray-300 mb-4">{{ cinema.city }}</p>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                            {% for st in sessions %}
+                                <a href="{{ path('app_booking', { id: st.id }) }}" data-date="{{ st.date|date('Y-m-d') }}"
+                                   class="session-card flex flex-col items-center p-4 bg-white/20 hover:bg-white/30 rounded-xl transition">
+                                    <span class="text-2xl font-bold text-white">{{ st.startTime|date('H:i') }}</span>
+                                    {% if st.chosenLanguage %}
+                                        <span class="mt-2 text-xs font-medium px-2 py-1 rounded-md bg-white/30 text-white">{{ st.chosenLanguage }}</span>
+                                    {% endif %}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% else %}
+                <p class="text-center text-white">No cinemas available.</p>
+            {% endfor %}
+        </div>
+
+        {# Modal avis #}
+        <div id="reviewsModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center">
+            <div class="bg-white w-full max-w-xl rounded-xl shadow-lg p-6 relative mx-4">
+                <button type="button" onclick="document.getElementById('reviewsModal').classList.add('hidden')"
+                        class="absolute top-3 right-4 text-gray-400 hover:text-black text-xl font-bold">&times;</button>
+                <h2 class="text-2xl font-bold mb-4 text-gray-800">Reviews for {{ movie.title }}</h2>
+                <div class="space-y-4 max-h-[60vh] overflow-y-auto">
+                    {% for review in reviews %}
+                        <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                            <div class="flex justify-between text-sm text-gray-600 mb-1">
+                                <span>Rating: <strong>{{ review.rating }}/3</strong></span>
+                                <span>{{ review.createdAt|date('d/m/Y H:i') }}</span>
+                            </div>
+                            {% if review.comment %}
+                                <p class="text-sm text-gray-800 italic">"{{ review.comment }}"</p>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <p class="text-sm text-gray-500 italic">No reviews yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        (function() {
+            function scrollDates(dir) {
+                var el = document.getElementById('dateSlider');
+                if (el) el.scrollBy({ left: dir * 200, behavior: 'smooth' });
+            }
+            function filterByDate(date) {
+                document.querySelectorAll('#cinemasList [data-date]').forEach(function(el) {
+                    el.style.display = el.dataset.date === date ? 'flex' : 'none';
+                });
+                document.querySelectorAll('[data-cinema-block]').forEach(function(block) {
+                    var any = Array.from(block.querySelectorAll('[data-date]')).some(function(el) { return el.style.display !== 'none'; });
+                    block.style.display = any ? 'block' : 'none';
+                });
+            }
+            function highlightDay(btn) {
+                document.querySelectorAll('#dateSlider button').forEach(function(b) {
+                    b.classList.remove('selected-day');
+                    var bar = b.querySelector('.absolute');
+                    if (bar) bar.remove();
+                });
+                if (btn) {
+                    btn.classList.add('selected-day');
+                    var bar = document.createElement('span');
+                    bar.className = 'absolute bottom-0 left-0 right-0 h-1 bg-orange-500 rounded-b-lg';
+                    btn.appendChild(bar);
+                }
+            }
+            function init() {
+                var slider = document.getElementById('dateSlider');
+                var today = (slider && slider.dataset.today) ? slider.dataset.today : new Date().toISOString().split('T')[0];
+                filterByDate(today);
+            }
+            window.movieShowScrollDates = scrollDates;
+            window.movieShowFilterByDate = filterByDate;
+            window.movieShowHighlightDay = highlightDay;
+            if (document.readyState !== 'loading') {
+                init();
+            } else {
+                document.addEventListener('DOMContentLoaded', init);
+            }
+            document.addEventListener('turbo:load', init);
+        })();
+    </script>
+{% endblock %}

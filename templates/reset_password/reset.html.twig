@@ -1,0 +1,46 @@
+{# templates/reset_password/reset.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Reset Your Password — Cinéphoria{% endblock %}
+
+{% block body %}
+    <div style="
+            background: url('{{ asset('pictures/hp.jpg') }}') no-repeat center center fixed;
+            background-size: cover;
+            ">
+        <div class="min-h-screen flex items-center justify-center px-4 text-white">
+            <div class="bg-gradient-to-b from-black/20 to-white/20 p-6 sm:p-10 rounded-lg shadow-lg w-full max-w-xl backdrop-blur-sm">
+                <div class="flex justify-center mb-6">
+                    <img src="{{ asset('pictures/logo.png') }}"
+                         alt="Cinéphoria Logo"
+                         class="h-28 pb-7">
+                </div>
+
+                <h1 class="text-center text-2xl font-semibold mb-6">Reset Your Password</h1>
+
+                {# Display any form errors #}
+                {% for flash_error in app.flashes('reset_password_error') %}
+                    <div class="bg-red-600 text-white p-2 rounded mb-4">{{ flash_error }}</div>
+                {% endfor %}
+
+                {{ form_start(resetForm, { attr: { class: 'space-y-4' } }) }}
+                {{ form_row(resetForm.plainPassword, { attr: {
+                    class: 'w-full bg-white text-black rounded px-3 py-2 outline-none'
+                } }) }}
+
+                <button type="submit"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded w-full transition">
+                    Reset Password
+                </button>
+                {{ form_end(resetForm) }}
+
+                <div class="mt-4 text-center">
+                    <a href="{{ path('app_login') }}"
+                       class="text-blue-400 underline hover:text-blue-500">
+                        Back to Log In
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

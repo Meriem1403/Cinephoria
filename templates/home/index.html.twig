@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% include 'partials/_header.html.twig' %}
+
+    {% include 'partials/_hero.html.twig' with {
+        backgroundImages: heroImages,
+        title: 'Welcome to Cinephoria',
+        subtitle: 'Experience cinema like never before',
+        button: {
+            href: '#movies',
+            text: 'Discover'
+        }
+    } %}
+
+    {% for section in sections %}
+        {% include 'partials/_section_movies.html.twig' with section|merge({ sectionId: loop.first ? 'movies' : null }) %}
+    {% endfor %}
+
+{% endblock %}

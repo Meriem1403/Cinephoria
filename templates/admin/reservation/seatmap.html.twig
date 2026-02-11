@@ -1,0 +1,19 @@
+{# seat.html.twig côté admin #}
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}Seat Map – {{ room.name }}{% endblock %}
+
+{% block main %}
+    <!-- On inclut le partial en mode "admin" -->
+    {% include 'partials/_seatmap_partial.html.twig' with {
+        seats: room.seats,
+        adminMode: true
+    } only %}
+
+    <div>
+        <a href="{{ ea_url().setController('App\\Controller\\Admin\\RoomCrudController').setAction('index') }}"
+           class="back-to-room">
+            ← Back to Room list
+        </a>
+    </div>
+{% endblock %}

@@ -1,0 +1,129 @@
+{# templates/booking/confirmation.html.twig #}
+{% extends 'base.html.twig' %}
+{% block title %}Thanks for your purchase – Cinéphoria{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/admin.css') }}">
+    <style>
+        .ticket-perforation { position: relative; }
+        .ticket-perforation .line { border-top: 2px dashed #ccc; margin: 0.75rem 0; }
+        .ticket-perforation .hole {
+            position: absolute; top: 0; width: 1rem; height: 1rem;
+            background: #f3f4f6; border-radius: 50%;
+        }
+        .ticket-perforation .hole.left  { left: -0.5rem; }
+        .ticket-perforation .hole.right { right: -0.5rem; }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="min-h-screen bg-gray-100">
+        {# Navigation + message de succès bien placé #}
+        <div class="container mx-auto px-4 pt-8 pb-4">
+            <div class="flex flex-wrap items-center gap-3 mb-6">
+                <a href="{{ path('home') }}"
+                   class="inline-flex items-center gap-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium px-5 py-2.5 rounded-lg shadow transition">
+                    <span aria-hidden="true">←</span> Home
+                </a>
+                <a href="{{ path('my_reservations') }}"
+                   class="inline-flex items-center gap-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium px-5 py-2.5 rounded-lg shadow transition">
+                    My reservations
+                </a>
+            </div>
+
+            <div class="bg-green-600 text-white rounded-xl px-6 py-4 mb-8 shadow">
+                <p class="text-lg font-semibold m-0">Reservation successful!</p>
+                <p class="text-green-100 text-sm mt-1 m-0">Your e-tickets are below. You can download them as PDF or reload this page anytime from My reservations.</p>
+            </div>
+
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-800">Thanks for your purchase</h1>
+                <p class="text-gray-600 mt-1">We appreciate your order.</p>
+            </div>
+        </div>
+
+    <div class="container mx-auto px-4 pb-8">
+        <div class="flex flex-wrap justify-center gap-6">
+            {% for rs in reservation.reservationSeats %}
+                <div class="ticket-card bg-gray-50 rounded-xl shadow-lg overflow-hidden w-64">
+                    {# Bannière #}
+                    <div class="h-24 bg-cover bg-center" style="background-image:url('{{ asset('pictures/hero/' ~ reservation.showtime.movie.heroImage) }}')">
+                        <div class="h-full bg-black/40 flex items-center justify-between px-3">
+                            <span class="text-white font-semibold">{{ reservation.showtime.movie.title }}</span>
+                            <span class="text-red-700 uppercase font-semibold text-sm">e-ticket</span>
+                        </div>
+                    </div>
+
+                    {# Infos 2×3 #}
+                    <div class="grid grid-cols-2 gap-4 px-4 py-3 text-sm text-gray-700">
+                        <div>
+                            <span class="block text-gray-500 uppercase text-xs">Date</span>
+                            <span class="font-medium">{{ reservation.showtime.date|date('d/m/Y') }}</span>
+                        </div>
+                        <div>
+                            <span class="block text-gray-500 uppercase text-xs">Seats</span>
+                            <span class="font-medium">{{ rs.seat.getLabel() }}</span>
+                        </div>
+                        <div>
+                            <span class="block text-gray-500 uppercase text-xs">Location</span>
+                            <span class="font-medium">{{ reservation.showtime.room.cinema.name }}</span>
+                        </div>
+                        <div>
+                            <span class="block text-gray-500 uppercase text-xs">Time</span>
+                            <span class="font-medium">{{ reservation.showtime.startTime|date('H:i') }}</span>
+                        </div>
+                        <div>
+                            <span class="block text-gray-500 uppercase text-xs">Room</span>
+                            <span class="font-medium">{{ reservation.showtime.room.name }}</span>
+                        </div>
+                        <div>
+                            <span class="block text-gray-500 uppercase text-xs">Order</span>
+                            <span class="font-medium">{{ reservation.id }}</span>
+                        </div>
+                    </div>
+
+                    {# Ligne de perforation #}
+                    <div class="ticket-perforation bg-gray-50">
+                        <div class="hole left"></div>
+                        <div class="line"></div>
+                        <div class="hole right"></div>
+                    </div>
+
+                    {# QR Code en data URI (pas de requête séparée, affichage fiable) #}
+                    <div class="px-4 pb-4 text-center">
+                        {% set qrText = rs.seat.getLabel() ~ '-' ~ reservation.id %}
+                        <img
+                                src="{{ qr_code_data_uri(qrText, 'svg') }}"
+                                alt="QR Code {{ rs.seat.getLabel() }}"
+                                class="mx-auto w-40 h-40 object-contain"
+                                width="160"
+                                height="160"
+                        />
+                    </div>
+
+                    {# Logo Cinéphoria #}
+                    <div class="px-4 pb-4 text-center">
+                        <img
+                                src="{{ asset('pictures/logo.png') }}"
+                                alt="Cinéphoria logo"
+                                class="mx-auto mt-3 h-8"
+                        />
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="text-center mt-10 mb-10">
+            <a href="{{ path('booking_confirmation_download', { reservationId: reservation.id }) }}"
+               target="_blank"
+               rel="noopener"
+               data-turbo="false"
+               class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-lg shadow transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                Download E-Ticket (PDF)
+            </a>
+        </div>
+    </div>
+    </div>
+{% endblock %}

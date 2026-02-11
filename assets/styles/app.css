@@ -1,0 +1,196 @@
+@import "tailwindcss/preflight";
+@import "tailwindcss/utilities";
+@import "tailwindcss/theme.css";
+@import "tailwindcss/index.css";
+
+body {
+    background-color: white;
+}
+
+.fade-hero {
+    @apply opacity-0 scale-95 transition-all duration-1000 ease-in-out;
+}
+
+.fade-hero.visible {
+    @apply opacity-100 scale-100;
+}
+
+/* Carousel: espacement entre les affiches (garanti par CSS) */
+.swiper-movies .swiper-slide {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    box-sizing: border-box;
+}
+@media (min-width: 640px) {
+    .swiper-movies .swiper-slide {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+@media (min-width: 1024px) {
+    .swiper-movies .swiper-slide {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
+}
+
+/* Carousel: flèches de navigation — rond, standard, lisible */
+.swiper-movies .swiper-button-next,
+.swiper-movies .swiper-button-prev {
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-top: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+    background: #fff;
+    color: #1f2937;
+    border-radius: 50%;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: background 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.swiper-movies .swiper-button-next:hover,
+.swiper-movies .swiper-button-prev:hover {
+    background: #f9fafb;
+    color: #111827;
+    transform: translateY(-50%) scale(1.05);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12), 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.swiper-movies .swiper-button-next::after,
+.swiper-movies .swiper-button-prev::after {
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+.swiper-movies .swiper-button-prev {
+    left: 0.25rem;
+}
+
+.swiper-movies .swiper-button-next {
+    right: 0.25rem;
+}
+
+@media (min-width: 640px) {
+    .swiper-movies .swiper-button-prev { left: 0.5rem; }
+    .swiper-movies .swiper-button-next { right: 0.5rem; }
+}
+
+@media (min-width: 1024px) {
+    .swiper-movies .swiper-button-next,
+    .swiper-movies .swiper-button-prev {
+        width: 2.75rem;
+        height: 2.75rem;
+    }
+    .swiper-movies .swiper-button-next::after,
+    .swiper-movies .swiper-button-prev::after {
+        font-size: 1rem;
+    }
+}
+/* assets/styles/app.css */
+
+/* Reset Password Email Template Styles */
+.reset-email-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 40px auto;
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.reset-email-header {
+    background-color: #1f2937;
+    padding: 20px;
+    text-align: center;
+}
+
+.reset-email-header img {
+    max-height: 40px;
+}
+
+.reset-email-content {
+    padding: 30px 20px;
+    color: #333;
+    font-family: Arial, sans-serif;
+}
+
+.reset-email-content h1 {
+    font-size: 24px;
+    margin-bottom: 16px;
+    color: #111827;
+}
+
+.reset-email-content p {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 16px;
+}
+
+.reset-email-button {
+    display: inline-block;
+    background-color: #3b82f6;
+    color: #fff !important;
+    padding: 12px 24px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.reset-email-footer {
+    background-color: #f3f4f6;
+    text-align: center;
+    padding: 16px;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+/* Auth container */
+.auth-container {
+    @apply bg-gradient-to-b from-black/20 to-white/20 p-6 sm:p-10 rounded-lg shadow-lg w-full max-w-xl backdrop-blur-sm;
+}
+
+/* Logo */
+.logo-image {
+    @apply h-28 pb-7;
+}
+
+/* Title */
+.auth-title {
+    @apply text-center text-2xl font-semibold mb-6;
+}
+
+/* Text paragraphs */
+.auth-text {
+    @apply text-base;
+}
+
+/* Primary link */
+.link-primary {
+    @apply text-blue-400 underline hover:text-blue-500;
+}
+
+/* Primary button */
+.btn-primary {
+    @apply inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded transition;
+}
+
+
+.flash-error {
+    @apply bg-red-600 text-white p-2 rounded mb-4;
+}
+
+.input-field {
+    @apply w-full bg-white text-black rounded px-3 py-2 outline-none;
+}
+.btn-primary:hover {
+    background-color: #1e40af;
+}
+
+
