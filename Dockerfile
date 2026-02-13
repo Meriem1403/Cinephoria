@@ -11,8 +11,11 @@ RUN apt-get update && apt-get install -y \
   && rm /tmp/wkhtmltox.deb \
   && ( [ -x /usr/local/bin/wkhtmltopdf ] && ln -sf /usr/local/bin/wkhtmltopdf /usr/bin/wkhtmltopdf ; true )
 
-# 2. Activer rewrite pour Symfony
-RUN a2enmod rewrite
+# 2. Apache : un seul MPM (éviter "More than one MPM loaded") + rewrite pour Symfony
+RUN a2dismod mpm_event 2>/dev/null || true \
+ && a2dismod mpm_worker 2>/dev/null || true \
+ && a2enmod mpm_prefork \
+ && a2enmod rewrite
 
 # 3. Installer Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
