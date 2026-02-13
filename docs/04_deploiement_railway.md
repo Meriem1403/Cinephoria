@@ -48,6 +48,7 @@ Dans **Variables** du service Cinephoria, configurer :
 | `APP_ENV` | `prod` | Environnement Symfony |
 | `APP_DEBUG` | `0` | Désactiver le mode debug |
 | `APP_SECRET` | *clé longue aléatoire* | Générer une clé sécurisée (ex. `openssl rand -hex 32`) |
+| `LOAD_DEMO_DATA` | `1` (optionnel) | Si défini à `1`, au démarrage le conteneur charge les fixtures (films, etc.) et génère des séances sur 14 jours. Utile pour une démo avec une base vide. Après le premier déploiement, tu peux retirer la variable. |
 
 Ne pas commiter de secrets : tout est configuré dans l’interface Railway.
 

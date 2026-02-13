@@ -10,6 +10,12 @@ if [ ! -f /var/www/html/.env ]; then
     touch /var/www/html/.env
 fi
 
+# Vérifier que DATABASE_URL est définie (obligatoire sur Railway)
+if [ -z "${DATABASE_URL}" ]; then
+    echo "ERREUR: DATABASE_URL n'est pas définie. Dans Railway > Service Cinephoria > Variables, ajoutez: DATABASE_URL = \${{MySQL.MYSQL_URL}} (adapter le nom du service MySQL)." >&2
+    exit 1
+fi
+
 # Un seul MPM au démarrage (éviter "More than one MPM loaded" sur Railway)
 rm -f /etc/apache2/mods-enabled/mpm_*.load /etc/apache2/mods-enabled/mpm_*.conf 2>/dev/null || true
 a2enmod mpm_prefork 2>/dev/null || true
@@ -27,9 +33,20 @@ fi
 # Exécuter les migrations (ignorer si aucune migration)
 php bin/console doctrine:migrations:migrate --no-interaction --env=prod 2>/dev/null || true
 
+# Optionnel : charger films + séances de démo (Railway : ajouter variable LOAD_DEMO_DATA=1, déployer, puis retirer la variable)
+if [ "${LOAD_DEMO_DATA}" = "1" ]; then
+    php bin/console doctrine:fixtures:load --no-interaction --env=prod 2>/dev/null || true
+    php bin/console app:showtimes:generate --days=14 --env=prod 2>/dev/null || true
+fi
+
+# Créer var/cache et var/log (exclus du build par .dockerignore) et donner les droits à Apache
+mkdir -p /var/www/html/var/cache /var/www/html/var/log
+chown -R www-data:www-data /var/www/html/var
+
 # Vider le cache prod pour prendre en compte la config à jour (ex. CORS, params)
 php bin/console cache:clear --env=prod --no-warmup 2>/dev/null || true
 php bin/console cache:warmup --env=prod 2>/dev/null || true
+chown -R www-data:www-data /var/www/html/var
 
 # Installer les assets des bundles (EasyAdmin, etc.)
 php bin/console assets:install --env=prod
