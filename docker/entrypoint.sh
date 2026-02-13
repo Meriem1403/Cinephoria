@@ -16,6 +16,16 @@ if [ -z "${DATABASE_URL}" ]; then
     exit 1
 fi
 
+# Créer .env.local avec les variables Railway pour que Symfony les charge (Apache ne passe pas toujours les env vars)
+cat > /var/www/html/.env.local <<EOF
+# Variables générées depuis Railway au démarrage du conteneur
+APP_ENV=${APP_ENV:-prod}
+APP_DEBUG=${APP_DEBUG:-0}
+APP_SECRET=${APP_SECRET:-}
+DATABASE_URL=${DATABASE_URL}
+EOF
+chmod 644 /var/www/html/.env.local
+
 # Un seul MPM au démarrage (éviter "More than one MPM loaded" sur Railway)
 rm -f /etc/apache2/mods-enabled/mpm_*.load /etc/apache2/mods-enabled/mpm_*.conf 2>/dev/null || true
 a2enmod mpm_prefork 2>/dev/null || true
