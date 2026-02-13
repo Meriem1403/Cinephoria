@@ -1,0 +1,19 @@
+# Ne pas copier les fichiers d'environnement locaux : en prod (Railway)
+# seul DATABASE_URL (et les autres variables) fournis par Railway doivent être utilisés.
+# Sinon .env avec 127.0.0.1 provoque "Connection refused".
+.env
+.env.*
+!.env.example
+
+# Déjà installés dans l'image
+/node_modules
+/vendor
+/var
+
+# Git et IDE
+.git
+.idea
+.vscode
+
+# Assets buildés dans l'image
+/public/build
