@@ -4,6 +4,12 @@ set -e
 # Forcer prod pour éviter de charger DebugBundle (non installé en --no-dev)
 export APP_ENV="${APP_ENV:-prod}"
 
+# Symfony exige un fichier .env au démarrage ; en prod (Railway) il est exclu du build.
+# Créer un .env vide si absent : les vraies valeurs viennent des variables d'environnement.
+if [ ! -f /var/www/html/.env ]; then
+    touch /var/www/html/.env
+fi
+
 # Un seul MPM au démarrage (éviter "More than one MPM loaded" sur Railway)
 rm -f /etc/apache2/mods-enabled/mpm_*.load /etc/apache2/mods-enabled/mpm_*.conf 2>/dev/null || true
 a2enmod mpm_prefork 2>/dev/null || true

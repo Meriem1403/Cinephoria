@@ -23,7 +23,7 @@ La demarche DevOps vise a rapprocher le developpement (Dev) et l'exploitation (O
 
 Principes appliques sur Cinephoria:
 - **collaboration:** code, infrastructure et deploiement sont versionnes dans GitHub;
-- **automatisation:** build et deploiement executes via GitHub Actions;
+- **automatisation:** build (GitHub Actions ou local), deploiement continu via Railway au push;
 - **mesure et feedback:** verification des statuts de jobs CI/CD avant validation;
 - **amelioration continue:** correction des pipelines et scripts apres incidents.
 
@@ -62,9 +62,10 @@ Dans ce projet, YAML est utilise pour:
 - standardiser les executions de build/deploiement.
 
 Exemples de fichiers:
-- `.github/workflows/Cinephoria-build.yaml`
-- `.github/workflows/Cinephoria-orchestration.yaml`
-- `.github/workflows/deploy-to-ionos.yaml` (legacy, non retenu pour le deploiement final)
+- `.github/workflows/Cinephoria-build.yaml` (etapes de build)
+- `.github/workflows/Cinephoria-orchestration.yaml` (orchestration)
+
+Le deploiement en production est assure par **Railway** (liaison GitHub → build Dockerfile a chaque push). Voir `docs/04_deploiement_railway.md`.
 
 ---
 
@@ -92,14 +93,14 @@ Objectif CD:
 - deployer automatiquement une version validee vers une cible d'hebergement.
 
 Elements CD identifies:
-- orchestration de deploiement via workflow dedie;
-- transmission d'artefacts vers la plateforme de deploiement;
-- execution des etapes de deploiement automatisables vers un hebergeur cible.
+- deploiement continu via **Railway** (connexion du depot GitHub au projet Railway);
+- a chaque push sur la branche suivie, Railway rebuild l'image (Dockerfile) et redéploie;
+- variables d'environnement et base MySQL configurees sur Railway.
 
 Preuves observables:
-- run GitHub Actions avec statut;
-- version associee au SHA Git;
-- traces de deploiement.
+- run GitHub Actions (build) avec statut;
+- deploiements Railway declenches au push (logs et tableau de bord);
+- version associee au SHA Git.
 
 ---
 
@@ -155,9 +156,9 @@ Amelioration immediate recommandee:
 |---|---|---|
 | Bases de la demarche DevOps | Pipelines versionnes + scripts d'automatisation | `.github/workflows/`, `scripts/` |
 | Methodes Agile | Historique de livraison incrementale (commits, evolutions fonctionnelles) | historique GitHub du projet |
-| Introduction YAML | Workflows CI/CD en YAML | `.github/workflows/Cinephoria-build.yaml`, `.github/workflows/Cinephoria-orchestration.yaml`, `.github/workflows/deploy-to-ionos.yaml` |
+| Introduction YAML | Workflows CI/CD en YAML | `.github/workflows/Cinephoria-build.yaml`, `.github/workflows/Cinephoria-orchestration.yaml` |
 | Mise en place CI | Build front + install composer automatise | `.github/workflows/Cinephoria-build.yaml` |
-| Mise en place CD | Orchestration + deploiement continu vers Railway (liaison GitHub, build Dockerfile) ; workflows legacy IONOS conserves en reference | `.github/workflows/Cinephoria-orchestration.yaml` ; deploiement cible : Railway |
+| Mise en place CD | Deploiement continu vers Railway (liaison GitHub, build Dockerfile a chaque push) | Railway ; `docs/04_deploiement_railway.md` |
 | Environnement de test | Environnement conteneurise + fixtures | `compose.yaml`, `scripts/load-fixtures.sh`, `src/DataFixtures/` |
 | Preparation du deploiement | Dockerfile, compose, scripts et workflow de livraison | `Dockerfile`, `compose.yaml`, `.github/workflows/` |
 | Documentation du processus | Dossier `docs/` | `docs/` |
@@ -169,11 +170,12 @@ Amelioration immediate recommandee:
 Pour transformer ce document en preuve exam, joindre les captures suivantes:
 
 1. **Capture GitHub Actions - build OK**
-   - onglet Actions, run "Deploy Now: Execute Build"
+   - onglet Actions, run du workflow de build (Cinephoria-build ou orchestration)
    - statut vert + SHA du commit.
 
-2. **Capture GitHub Actions - orchestration/deploiement**
-   - run "Deploy Now: Orchestration" puis deploiement.
+2. **Capture deploiement Railway**
+   - tableau de bord Railway : services Cinephoria + MySQL ;
+   - ou Deploy Logs montrant un deploy reussi apres un push.
 
 3. **Capture des fichiers YAML**
    - visualisation de `Cinephoria-build.yaml` montrant les etapes `yarn` et `composer`.
@@ -199,9 +201,9 @@ docker compose exec php php bin/console app:showtimes:generate --days=14
 ```
 
 Commandes CI/CD (preuve pipeline):
-- push sur branche de deploiement pour declencher le workflow;
-- verifier le statut dans GitHub Actions;
-- associer le run au commit SHA du lot livre.
+- push sur la branche connectee a Railway (`main`) pour declencher le build et le deploiement;
+- verifier le statut dans GitHub Actions (build) et dans le tableau de bord Railway (deploy);
+- associer le deploy au commit SHA.
 
 ---
 
