@@ -4,6 +4,10 @@ set -e
 # Forcer prod pour éviter de charger DebugBundle (non installé en --no-dev)
 export APP_ENV="${APP_ENV:-prod}"
 
+# Un seul MPM au démarrage (éviter "More than one MPM loaded" sur Railway)
+rm -f /etc/apache2/mods-enabled/mpm_*.load /etc/apache2/mods-enabled/mpm_*.conf 2>/dev/null || true
+a2enmod mpm_prefork 2>/dev/null || true
+
 # Installer les dépendances si vendor est vide (volume monté)
 if [ ! -f /var/www/html/vendor/autoload.php ]; then
     composer install --no-dev --optimize-autoloader
