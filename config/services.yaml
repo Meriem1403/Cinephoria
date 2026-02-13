@@ -7,6 +7,8 @@ parameters:
     # Valeurs par défaut pour KnpSnappy (PDF / image) si les variables d'env ne sont pas définies
     wkhtmltopdf_binary: '/usr/bin/wkhtmltopdf'
     wkhtmltoimage_binary: '/usr/bin/wkhtmltoimage'
+    # CORS : utilisé par NelmioCors quand CORS_ALLOW_ORIGIN n'est pas définie (ex. Railway)
+    cors_allow_origin_default: '^https?://.*'
 
 services:
     # default configuration for services in *this* file

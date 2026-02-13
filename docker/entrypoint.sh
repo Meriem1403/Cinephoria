@@ -21,6 +21,10 @@ fi
 # Exécuter les migrations (ignorer si aucune migration)
 php bin/console doctrine:migrations:migrate --no-interaction --env=prod 2>/dev/null || true
 
+# Vider le cache prod pour prendre en compte la config à jour (ex. CORS, params)
+php bin/console cache:clear --env=prod --no-warmup 2>/dev/null || true
+php bin/console cache:warmup --env=prod 2>/dev/null || true
+
 # Installer les assets des bundles (EasyAdmin, etc.)
 php bin/console assets:install --env=prod
 
