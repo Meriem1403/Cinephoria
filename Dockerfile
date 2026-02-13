@@ -12,8 +12,7 @@ RUN apt-get update && apt-get install -y \
   && ( [ -x /usr/local/bin/wkhtmltopdf ] && ln -sf /usr/local/bin/wkhtmltopdf /usr/bin/wkhtmltopdf ; true )
 
 # 2. Apache : un seul MPM (éviter "More than one MPM loaded") + rewrite pour Symfony
-RUN a2dismod mpm_event 2>/dev/null || true \
- && a2dismod mpm_worker 2>/dev/null || true \
+RUN rm -f /etc/apache2/mods-enabled/mpm_*.load /etc/apache2/mods-enabled/mpm_*.conf \
  && a2enmod mpm_prefork \
  && a2enmod rewrite
 
