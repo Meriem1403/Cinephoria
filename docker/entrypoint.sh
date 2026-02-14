@@ -10,19 +10,23 @@ if [ ! -f /var/www/html/.env ]; then
     touch /var/www/html/.env
 fi
 
-# Vérifier que DATABASE_URL est définie (obligatoire sur Railway)
-if [ -z "${DATABASE_URL}" ]; then
-    echo "ERREUR: DATABASE_URL n'est pas définie. Dans Railway > Service Cinephoria > Variables, ajoutez: DATABASE_URL = \${{MySQL.MYSQL_URL}} (adapter le nom du service MySQL)." >&2
+# DATABASE_URL : utiliser DATABASE_URL si définie, sinon MYSQL_URL (injecté par Railway quand MySQL est connecté)
+if [ -n "${DATABASE_URL}" ]; then
+    DB_URL="${DATABASE_URL}"
+elif [ -n "${MYSQL_URL}" ]; then
+    DB_URL="${MYSQL_URL}"
+else
+    echo "ERREUR: Aucune URL de base. Définir DATABASE_URL ou MYSQL_URL (Variables Cinephoria), ou copier MYSQL_URL depuis le service MySQL." >&2
     exit 1
 fi
 
-# Créer .env.local avec les variables Railway pour que Symfony les charge (Apache ne passe pas toujours les env vars)
+# Créer .env.local avec les variables pour que Symfony les charge (Apache ne les passe pas à PHP)
 cat > /var/www/html/.env.local <<EOF
-# Variables générées depuis Railway au démarrage du conteneur
+# Généré au démarrage depuis Railway
 APP_ENV=${APP_ENV:-prod}
 APP_DEBUG=${APP_DEBUG:-0}
 APP_SECRET=${APP_SECRET:-}
-DATABASE_URL=${DATABASE_URL}
+DATABASE_URL=${DB_URL}
 EOF
 chmod 644 /var/www/html/.env.local
 

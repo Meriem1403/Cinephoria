@@ -44,7 +44,7 @@ Dans **Variables** du service Cinephoria, configurer :
 
 | Variable | Valeur | Remarque |
 |----------|--------|----------|
-| `DATABASE_URL` | `${{NomDuServiceMySQL.MYSQL_URL}}` | Référence au service MySQL. **Remplacer `NomDuServiceMySQL`** par le nom exact du service MySQL dans le projet (ex. `MySQL` ou `mysql`, sensible à la casse). Railway injecte alors l’URL interne (réseau privé). |
+| `DATABASE_URL` ou `MYSQL_URL` | Soit `${{MySQL.MYSQL_URL}}`, soit la valeur copiée depuis MySQL (ex. `mysql://root:...@mysql.railway.internal:3306/railway`). Si **MYSQL_URL** est déjà injectée par Railway (service MySQL connecté), inutile d’ajouter DATABASE_URL : l’entrypoint l’utilise. |
 | `APP_ENV` | `prod` | Environnement Symfony |
 | `APP_DEBUG` | `0` | Désactiver le mode debug |
 | `APP_SECRET` | *clé longue aléatoire* | Générer une clé sécurisée (ex. `openssl rand -hex 32`) |
